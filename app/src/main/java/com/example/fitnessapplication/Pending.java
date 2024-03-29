@@ -149,10 +149,10 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
                                 recyclerViewPendingTransactions.setAdapter(adapter);
                                 if (pendingTransactions.isEmpty()) {
                                     // Show "No Pending Transaction" message
-                                    findViewById(R.id.textViewNoPendingTransaction).setVisibility(View.VISIBLE);
+                                    findViewById(R.id.NoPendingTransaction).setVisibility(View.VISIBLE);
                                 }
                                 else{
-                                    findViewById(R.id.textViewNoPendingTransaction).setVisibility(View.GONE);
+                                    findViewById(R.id.NoPendingTransaction).setVisibility(View.GONE);
 
                                 }
                             }

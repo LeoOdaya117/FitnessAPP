@@ -120,8 +120,8 @@
                 android:layout_height="wrap_content"
                 android:text="Calculate BMI"
                 android:layout_marginTop="24dp"
-                android:background="@color/loginbtn_color"
-                android:textColor="@color/title_text_color"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:padding="16dp" />
 

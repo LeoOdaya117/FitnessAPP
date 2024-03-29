@@ -1,12 +1,14 @@
 package com.example.fitnessapplication;
 
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class BMR extends AppCompatActivity {
     private ImageView backbutton;
@@ -62,6 +65,16 @@ public class BMR extends AppCompatActivity {
 
     private void calculateBMR() {
         // Retrieve input values
+        if (TextUtils.isEmpty(editTextAge.getText())
+                || TextUtils.isEmpty(editTextWeight.getText())
+                || TextUtils.isEmpty(editTextHeight.getText())
+                || radioGroupGender.getCheckedRadioButtonId() == -1
+                || radioGroupActivityLevel.getCheckedRadioButtonId() == -1) {
+            // Display toast message indicating all fields are required
+            Toast.makeText(this, "All fields are required", Toast.LENGTH_SHORT).show();
+            return; // Exit the method
+        }
+
         int age = Integer.parseInt(editTextAge.getText().toString());
         double weight = Double.parseDouble(editTextWeight.getText().toString());
         double height = Double.parseDouble(editTextHeight.getText().toString());
@@ -78,11 +91,15 @@ public class BMR extends AppCompatActivity {
 
         // Adjust BMR based on activity level
         double activityMultiplier;
-        if (activityLevelId == R.id.radioButtonLow) {
+        if (activityLevelId == R.id.Sedentary) {
             activityMultiplier = 1.2;
-        } else if (activityLevelId == R.id.radioButtonModerate) {
+        } else if (activityLevelId == R.id.lightlyactive) {
+            activityMultiplier = 1.375;
+        } else if (activityLevelId == R.id.moderateactive) {
             activityMultiplier = 1.55;
-        } else if (activityLevelId == R.id.radioButtonHigh) {
+        } else if (activityLevelId == R.id.VeryActive) {
+            activityMultiplier = 1.725;
+        } else if (activityLevelId == R.id.ExtraActive) {
             activityMultiplier = 1.9;
         } else {
             activityMultiplier = 1.0; // Default to sedentary
@@ -91,14 +108,30 @@ public class BMR extends AppCompatActivity {
         bmr *= activityMultiplier;
 
         // Display result in a dialog
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("BMR Calculation Result");
-        builder.setMessage(String.format("Your BMR is %.2f calories per day.", bmr));
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                // Do nothing, dialog will close
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(BMR.this);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog_layout, null);
+
+        builder.setView(dialogView);
+
+        TextView titleTextView = dialogView.findViewById(R.id.dialog_title);
+        TextView messageTextView = dialogView.findViewById(R.id.bmr_message);
+        Button okButton = dialogView.findViewById(R.id.ok_button);
+
+        titleTextView.setText("Your Basal Metabolic Rate (BMR)");
+        messageTextView.setText("Your BMR is: " + bmr + " calories per day");
+
+        AlertDialog dialog = builder.create();
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss(); // Dismiss the dialog when the OK button is clicked
+
             }
         });
-        builder.show();
+
+        dialog.show();
     }
 }

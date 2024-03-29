@@ -241,26 +241,40 @@
                     android:layout_marginLeft="40dp">
 
                     <RadioButton
-                        android:id="@+id/radioButtonLow"
+                        android:id="@+id/Sedentary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Low"
+                        android:text="Sedentary"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
                     <RadioButton
-                        android:id="@+id/radioButtonModerate"
+                        android:id="@+id/lightlyactive"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Moderate"
+                        android:text="Lightly Active"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
 
                     <RadioButton
-                        android:id="@+id/radioButtonHigh"
+                        android:id="@+id/moderateactive"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="High"
+                        android:text="Moderate Active"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"/>
+                    <RadioButton
+                        android:id="@+id/VeryActive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Very Active"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"/>
+                    <RadioButton
+                        android:id="@+id/ExtraActive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Extra Active"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"/>
                 </RadioGroup>
@@ -273,8 +287,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Calculate"
-                android:background="@color/loginbtn_color"
-                android:textColor="@android:color/black"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/white"
                 android:textSize="18sp"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

@@ -1,0 +1,79 @@
+<!-- popup_subscription_alert.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Card Background -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white">
+
+        <!-- Modal Content -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Subscription Icon -->
+            <ImageView
+                android:id="@+id/subscriptionIconImageView"
+                android:layout_width="249dp"
+                android:layout_height="153dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/subscriptioncolored" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Subscription Alert"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/subscriptionIconImageView"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Subscription Details -->
+            <TextView
+                android:id="@+id/subscriptionDetailsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your subscription is approaching or due for renewal. Kindly click the Renew button to renew your subscription."
+                android:textSize="16sp"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/titleTextView"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Action Button -->
+            <Button
+                android:id="@+id/renewButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Renew Subscription"
+                android:backgroundTint="@color/black"
+                android:textColor="@android:color/white"
+                android:layout_below="@id/subscriptionDetailsTextView" />
+
+            <!-- Dismiss Button -->
+            <Button
+                android:id="@+id/dismissButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="Dismiss"
+                android:backgroundTint="#7A7A7A"
+                android:layout_below="@id/renewButton" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -41,7 +42,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -60,6 +67,8 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     private PopupWindow popupWindow;
 
     private boolean dismiss = false;
+    private boolean subscriptionAlertdismiss = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +137,10 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
                     finish(); // Finish the current activity to prevent going back to it
                 }
                 if (url != null && url.endsWith("index.php")) {
+                    String username = getIntent().getStringExtra("username");
+
                     checkDietPlanRecord();
+                    checkUsersSubscription(username);
 
                 }
 
@@ -426,5 +438,107 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             return activeNetworkInfo != null && activeNetworkInfo.isConnected();
         }
         return false;
+    }
+
+    private void checkUsersSubscription(String username) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Construct the URL with the username
+        String url = websiteurl + "/Gym_Website/user/fetch_membership_user.php?Username=" + username;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // Handle failure appropriately
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String jsonData = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(jsonData);
+
+                        String dueDate = jsonObject.getString("dueDate");
+
+
+                        // Parse dueDate to Date object
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                        Date dueDateObj = sdf.parse(dueDate);
+                        // Calculate today's date
+                        Calendar today = Calendar.getInstance();
+                        today.set(Calendar.HOUR_OF_DAY, 0);
+                        today.set(Calendar.MINUTE, 0);
+                        today.set(Calendar.SECOND, 0);
+                        today.set(Calendar.MILLISECOND, 0);
+                        // Calculate the difference in days between today and dueDate
+                        long diffInMillis = dueDateObj.getTime() - today.getTimeInMillis();
+                        long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis);
+
+                        // Check if dueDate is today or within 3 days
+                        if (diffInDays >= 0 && diffInDays <= 3 && subscriptionAlertdismiss == false) {
+                            // Show AlertDialog on the UI thread
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    showSubscriptionAlert();
+                                }
+                            });
+                        }
+
+                    } catch (JSONException | ParseException e) {
+                        e.printStackTrace();
+                    } catch (java.text.ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    // Handle unsuccessful response
+                    System.out.println("Error: " + response.code());
+                }
+            }
+        });
+    }
+
+    private void showSubscriptionAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WEB.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.subscriptionalert, null);
+        builder.setView(dialogView);
+
+        Button setupButton = dialogView.findViewById(R.id.renewButton);
+        Button closeButton = dialogView.findViewById(R.id.dismissButton);
+
+        AlertDialog dialog = builder.create();
+
+        setupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                subscriptionAlertdismiss = true;
+                dialog.dismiss(); // Dismiss the dialog when the OK button is clicked
+                Intent intent = new Intent(WEB.this, Subscription.class);
+                startActivity(intent);
+            }
+        });
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss(); // Dismiss the dialog when the close button is clicked
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                subscriptionAlertdismiss = true;
+            }
+        });
+
+        dialog.show();
     }
 }

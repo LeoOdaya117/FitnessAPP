@@ -55,18 +55,31 @@
     </androidx.cardview.widget.CardView>
 
 
-
-    <!-- No Pending Transaction Message -->
-    <TextView
-        android:id="@+id/textViewNoPendingTransaction"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/NoPendingTransaction"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="No Pending Transaction"
-        android:textColor="@color/black"
-        android:textSize="18sp"
         android:layout_marginTop="10dp"
-        android:visibility="invisible" />
+        android:padding="20dp"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="8dp"
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No Pending Transaction"
+            android:textColor="@color/black"
+
+            android:textSize="18sp"
+            android:padding="20dp"
+            android:visibility="visible" />
+
+    </androidx.cardview.widget.CardView>
+
 
     <!-- Pending Transactions Container -->
     <androidx.recyclerview.widget.RecyclerView
