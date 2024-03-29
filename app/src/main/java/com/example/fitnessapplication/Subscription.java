@@ -2,6 +2,7 @@ package com.example.fitnessapplication;
 
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +21,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -129,10 +139,40 @@ public class Subscription extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // Update the textViewCurrentMembershipDetails
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                                Date dueDateObj = null;
+                                try {
+                                    dueDateObj = sdf.parse(dueDate);
+                                } catch (ParseException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                // Calculate today's date
+                                Calendar today = Calendar.getInstance();
+                                today.set(Calendar.HOUR_OF_DAY, 0);
+                                today.set(Calendar.MINUTE, 0);
+                                today.set(Calendar.SECOND, 0);
+                                today.set(Calendar.MILLISECOND, 0);
+
+                                // Calculate the difference in days between today and dueDate
+                                long diffInMillis = dueDateObj.getTime() - today.getTimeInMillis();
+                                long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis);
+
+                                // Check if dueDate is today or within 3 days or has already passed
+                                if (diffInDays <= 3 ) {
+                                    CardView cardView = findViewById(R.id.cardViewCurrentMembership);
+                                    cardView.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Subscription.this, R.color.orange)));
+                                }else if ((diffInDays >= 0 &&  diffInDays < 0)) {
+                                    CardView cardView = findViewById(R.id.cardViewCurrentMembership);
+                                    cardView.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Subscription.this, R.color.red)));
+                                }
+
+
                                 String membershipDetails = "You are currently subscribed to the " + plan + " plan. "
                                         + "Enjoy unlimited access to our gym facilities!\n\n"
                                         + "Membership End Date: " + dueDate;
                                 textViewCurrentMembershipDetails.setText(membershipDetails);
+
                             }
                         });
 

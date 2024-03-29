@@ -11,7 +11,7 @@
     <color name="no_internet_bg">#DDDADA</color>
     <color name="red">#FF0000</color>
     <color name="bottom_nav_color">#FF0000</color> <!-- Replace #FF0000 with your desired color code -->
-
+    <color name="orange">#FF5722</color>
     <color name="icon_normal">#A5A5A5</color> <!-- Default color for the icon -->
     <color name="icon_pressed">#050505</color> <!-- Color when the icon is pressed -->
     <color name="icon_focused">#00AAFF</color> <!-- Color when the icon is focused -->

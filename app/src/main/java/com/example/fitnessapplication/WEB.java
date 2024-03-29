@@ -1,5 +1,7 @@
 package com.example.fitnessapplication;
 
+import static java.lang.Boolean.getBoolean;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -440,6 +442,13 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         return false;
     }
 
+    public  void showAlert(Context context, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(message)
+                .setPositiveButton("OK", null)
+                .show();
+    }
+
     private void checkUsersSubscription(String username) {
         OkHttpClient client = new OkHttpClient();
 
@@ -461,27 +470,33 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
                     String jsonData = response.body().string();
+
+
                     try {
+
                         JSONObject jsonObject = new JSONObject(jsonData);
 
                         String dueDate = jsonObject.getString("dueDate");
 
 
+
                         // Parse dueDate to Date object
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
                         Date dueDateObj = sdf.parse(dueDate);
+
                         // Calculate today's date
                         Calendar today = Calendar.getInstance();
                         today.set(Calendar.HOUR_OF_DAY, 0);
                         today.set(Calendar.MINUTE, 0);
                         today.set(Calendar.SECOND, 0);
                         today.set(Calendar.MILLISECOND, 0);
+
                         // Calculate the difference in days between today and dueDate
                         long diffInMillis = dueDateObj.getTime() - today.getTimeInMillis();
                         long diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis);
 
-                        // Check if dueDate is today or within 3 days
-                        if (diffInDays >= 0 && diffInDays <= 3 && subscriptionAlertdismiss == false) {
+                        // Check if dueDate is today or within 3 days or has already passed
+                        if ((diffInDays >= 0 && diffInDays <= 3) || diffInDays < 0) {
                             // Show AlertDialog on the UI thread
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -492,10 +507,13 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
                         }
 
                     } catch (JSONException | ParseException e) {
+
                         e.printStackTrace();
+
                     } catch (java.text.ParseException e) {
                         throw new RuntimeException(e);
                     }
+
                 } else {
                     // Handle unsuccessful response
                     System.out.println("Error: " + response.code());
@@ -529,6 +547,35 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             @Override
             public void onClick(View view) {
                 dialog.dismiss(); // Dismiss the dialog when the close button is clicked
+            }
+        });
+
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                subscriptionAlertdismiss = true;
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void subscribenNow() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WEB.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.subscribenow, null);
+        builder.setView(dialogView);
+
+        Button setupButton = dialogView.findViewById(R.id.renewButton);
+
+        AlertDialog dialog = builder.create();
+
+        setupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss(); // Dismiss the dialog when the OK button is clicked
+                Intent intent = new Intent(WEB.this, Subscription.class);
+                startActivity(intent);
             }
         });
 
