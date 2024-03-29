@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/other_background"
+    android:padding="30dp">
+
+    <!-- Logo -->
+
+    <!-- Question -->
+
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="15dp"
+        android:src="@drawable/boxlogo" />
+
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoImageView"
+        android:layout_centerHorizontal="true"
+        android:text="What is your fitness goal?"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Diet Options -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/questionTextView"
+        >
+
+
+
+        <!-- None of the Above -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/lossWeightCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCardClicked"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- None of the Above Image -->
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="8dp"
+                    android:src="@drawable/lossweight" />
+
+                <TextView
+                    android:layout_width="149dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Loss Weight"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+
+                    <!-- Check Image -->
+                    <ImageView
+                        android:id="@+id/lossWeightecheck"
+                        android:layout_width="48dp"
+                        android:layout_height="85dp"
+                        android:padding="8dp"
+                        android:src="@drawable/check"
+                        android:visibility="invisible"
+
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <!-- None of the Above -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/gainWeightCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCardClicked"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- None of the Above Image -->
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="8dp"
+                    android:src="@drawable/gain" />
+
+                <TextView
+                    android:layout_width="149dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Gain Weight"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+
+                    <!-- Check Image -->
+                    <ImageView
+                        android:id="@+id/gainWeightcheck"
+                        android:layout_width="48dp"
+                        android:layout_height="85dp"
+                        android:padding="8dp"
+                        android:src="@drawable/check"
+                        android:visibility="invisible"
+
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <!-- None of the Above -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/maitainWeightCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCardClicked"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- None of the Above Image -->
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="8dp"
+                    android:src="@drawable/maintain" />
+
+                <TextView
+                    android:layout_width="149dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Maintain Weight"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+
+                    <!-- Check Image -->
+                    <ImageView
+                        android:id="@+id/maintainWeightcheck"
+                        android:layout_width="48dp"
+                        android:layout_height="85dp"
+                        android:padding="8dp"
+                        android:src="@drawable/check"
+                        android:visibility="invisible"
+
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/gainMuscleCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCardClicked"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <!-- None of the Above Image -->
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:padding="8dp"
+                    android:src="@drawable/muscle" />
+
+                <TextView
+                    android:layout_width="149dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Muscle Gain"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+
+                    <!-- Check Image -->
+                    <ImageView
+                        android:id="@+id/gainMusclecheck"
+                        android:layout_width="48dp"
+                        android:layout_height="85dp"
+                        android:padding="8dp"
+                        android:src="@drawable/check"
+                        android:visibility="invisible"
+
+                        />
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+
+    <!-- Back Button -->
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@color/white"
+        android:backgroundTint="#070706"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- Continue Button -->
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:backgroundTint="#FF5722"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"/>
+
+</RelativeLayout>

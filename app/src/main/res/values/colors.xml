@@ -1,0 +1,21 @@
+<resources>
+    <color name="background_color">#000000</color>
+    <color name="other_background">#f6f9ff</color>
+    <color name="black">#000000</color>
+    <color name="title_text_color">#000000</color>
+    <color name="hint_text_color">#808080</color>
+    <color name="hint_text_color2">#676767</color>
+    <color name="register_link_color">#3B3BF8</color>
+    <color name="loginbtn_color">#00970F</color>
+    <color name="white">#FFFFFF</color>
+    <color name="no_internet_bg">#DDDADA</color>
+    <color name="red">#FF0000</color>
+    <color name="bottom_nav_color">#FF0000</color> <!-- Replace #FF0000 with your desired color code -->
+
+    <color name="icon_normal">#A5A5A5</color> <!-- Default color for the icon -->
+    <color name="icon_pressed">#050505</color> <!-- Color when the icon is pressed -->
+    <color name="icon_focused">#00AAFF</color> <!-- Color when the icon is focused -->
+    <!-- Add more colors if needed -->
+    <color name="primary_color">#070707</color> <!-- You can change the color value to any color you prefer -->
+
+</resources>

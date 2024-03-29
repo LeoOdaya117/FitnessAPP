@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/other_background"
+    android:orientation="vertical">
+
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        >
+
+        <!-- Horizontal LinearLayout to hold back button, header title, and details button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical">
+
+            <!-- Back Button -->
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/back"
+                android:layout_marginLeft="20dp"/>
+
+            <!-- Header Title with layout weight to center it -->
+            <TextView
+                android:id="@+id/textViewPageTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="Transaction History"
+                android:textSize="24sp"
+                android:layout_gravity="center_vertical"
+                />
+
+            <!-- Details Button -->
+            <ImageView
+                android:id="@+id/details"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                app:srcCompat="@drawable/dots" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Date Pickers -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp">
+
+        <TextView
+            android:id="@+id/textviewFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/black"
+            android:text="Filter Date From:"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- From Date -->
+        <EditText
+            android:id="@+id/editTextFromDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="From Date "
+            android:inputType="date" />
+
+        <TextView
+            android:id="@+id/textviewFilterto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:text="To:"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <!-- To Date -->
+        <EditText
+            android:id="@+id/editTextToDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="To Date"
+            android:inputType="date" />
+
+
+
+    </LinearLayout>
+
+    <!-- Pending Transactions Container -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTransactionHistory"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"/>
+
+</LinearLayout>

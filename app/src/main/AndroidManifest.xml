@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/loginlogo"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/loginlogo"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.FitnessApplication"
+        tools:targetApi="31">
+        <activity
+            android:name=".BMR"
+            android:exported="false" />
+        <activity
+            android:name=".BMI"
+            android:exported="false" />
+        <activity
+            android:name=".TransactionHistory"
+            android:exported="false" />
+        <activity
+            android:name=".Pending"
+            android:exported="false" />
+        <activity
+            android:name=".Subscription"
+            android:exported="false" />
+        <activity
+            android:name=".About"
+            android:exported="false" />
+        <activity
+            android:name=".Account"
+            android:exported="false" />
+        <activity
+            android:name=".signupFinish"
+            android:exported="false" />
+        <activity
+            android:name=".SignupUserAvailability"
+            android:exported="false" />
+        <activity
+            android:name=".SignupFitnessLevel"
+            android:exported="false" />
+        <activity
+            android:name=".signup1"
+            android:exported="false" />
+        <activity
+            android:name=".SignupActivityFactor"
+            android:exported="false" />
+        <activity
+            android:name=".SignupGoal"
+            android:exported="false" />
+        <activity
+            android:name=".SignupHeight"
+            android:exported="false" />
+        <activity
+            android:name=".SignupWeight"
+            android:exported="false" />
+        <activity
+            android:name=".SignupAge"
+            android:exported="false" />
+        <activity
+            android:name=".SignupGender"
+            android:exported="false" />
+        <activity
+            android:name=".Settings"
+            android:exported="false" />
+        <activity
+            android:name=".WEB"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPassword"
+            android:exported="false" />
+        <activity
+            android:name=".Signup"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

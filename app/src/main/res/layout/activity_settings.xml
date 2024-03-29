@@ -1,0 +1,242 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/other_background"
+    android:orientation="vertical">
+
+    <!-- Settings heading -->
+    <TextView
+        android:id="@+id/text_settings"
+        android:text="Settings"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textColor="@android:color/black"/>
+
+    <!-- Settings CardView -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Account -->
+            <LinearLayout
+                android:id="@+id/account_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/user"
+                    />
+
+                <TextView
+                    android:id="@+id/text_account"
+                    android:text="Account"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+            </LinearLayout>
+
+            <!-- Subscription -->
+            <LinearLayout
+                android:id="@+id/subscription_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/subscriptioncolored"/>
+
+                <TextView
+                    android:id="@+id/text_subscription"
+                    android:text="Subscription"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+
+            </LinearLayout>
+
+            <!-- Pending -->
+            <LinearLayout
+                android:id="@+id/pending_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/pending"/>
+
+                <TextView
+                    android:id="@+id/text_pending"
+                    android:text="Pending Transations"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+
+            </LinearLayout>
+
+            <!-- History -->
+            <LinearLayout
+                android:id="@+id/history_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/history"/>
+
+                <TextView
+                    android:id="@+id/text_history"
+                    android:text="Transactions History"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Tools heading -->
+    <TextView
+        android:id="@+id/text_tools"
+        android:text="Tools"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textColor="@android:color/black"/>
+
+    <!-- Tools CardView -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- BMI Calculator -->
+            <LinearLayout
+                android:id="@+id/bmi_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/bmi"
+                    android:contentDescription="BMI Calculator Icon"/>
+
+                <TextView
+                    android:text="BMI Calculator"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+
+            </LinearLayout>
+
+            <!-- BMR Calculator -->
+            <LinearLayout
+                android:id="@+id/bmr_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/bmr"
+                    android:contentDescription="BMR Calculator Icon"/>
+
+                <TextView
+                    android:text="BMR Calculator"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+
+            </LinearLayout>
+
+            <!-- Logout -->
+            <LinearLayout
+                android:id="@+id/logout_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:background="@drawable/custom_selectable_item_background">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/logout"
+                    android:contentDescription="Logout Icon"/>
+
+                <TextView
+                    android:id="@+id/text_logout"
+                    android:text="Logout"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="16dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+</LinearLayout>

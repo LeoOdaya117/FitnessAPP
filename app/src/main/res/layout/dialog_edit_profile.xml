@@ -1,0 +1,240 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="wrap_content"
+    android:background="@color/other_background"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textView_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Account Details"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/label_first_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="First Name"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/textView_header"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_first_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="First Name"
+        android:inputType="text"
+        android:layout_below="@id/label_first_name"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/label_last_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Last Name"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_first_name"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_last_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Last Name"
+        android:inputType="text"
+        android:layout_below="@id/label_last_name"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/label_email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_last_name"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:layout_below="@id/label_email"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Password -->
+    <TextView
+        android:id="@+id/label_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Password"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_email"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:layout_below="@id/label_password"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Age -->
+    <TextView
+        android:id="@+id/label_age"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Age"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_password"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_age"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Age"
+        android:inputType="number"
+        android:layout_below="@id/label_age"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Gender -->
+    <TextView
+        android:id="@+id/label_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Gender"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_age"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_gender"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Gender"
+        android:inputType="text"
+        android:layout_below="@id/label_gender"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Height -->
+    <TextView
+        android:id="@+id/label_height"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Height"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_gender"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_height"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Height"
+        android:inputType="numberDecimal"
+        android:layout_below="@id/label_height"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Weight -->
+    <TextView
+        android:id="@+id/label_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Weight"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:layout_below="@id/editText_height"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <EditText
+        android:id="@+id/editText_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        android:textColorHint="@color/hint_text_color"
+        android:textColor="@color/title_text_color"
+        android:hint="Weight"
+        android:inputType="numberDecimal"
+        android:layout_below="@id/label_weight"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Save"
+        android:layout_below="@id/editText_weight"
+        android:background="@color/black" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:text="Cancel"
+        android:layout_below="@id/button_save"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>
+    </ScrollView>

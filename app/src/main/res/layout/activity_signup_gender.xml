@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/other_background"
+    android:padding="30dp">
+
+    <!-- Logo -->
+
+    <!-- Question -->
+
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="100dp"
+        android:src="@drawable/boxlogo" />
+
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoImageView"
+        android:layout_centerHorizontal="true"
+        android:text="What's your Gender?"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Diet Options -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/questionTextView"
+        >
+
+        <!-- Sedentary -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/malecard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCardClicked"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/malepicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="8dp"
+                    android:src="@drawable/male"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="149dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:padding="16dp"
+                    android:text="Male"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+
+                    <!-- Check Image -->
+                    <ImageView
+                        android:id="@+id/malecheck"
+                        android:layout_width="48dp"
+                        android:layout_height="85dp"
+                        android:padding="8dp"
+                        android:src="@drawable/check"
+                        android:visibility="invisible"
+
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Sedentary -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/femalecard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="onCardClicked"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/femalemalepicture"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:padding="8dp"
+                    android:src="@drawable/female"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:layout_width="149dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:padding="16dp"
+                    android:text="Female"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="8dp">
+
+
+                    <!-- Check Image -->
+                    <ImageView
+                        android:id="@+id/femalecheck"
+                        android:layout_width="48dp"
+                        android:layout_height="85dp"
+                        android:padding="8dp"
+                        android:src="@drawable/check"
+                        android:visibility="invisible"
+
+                        />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+
+
+    </LinearLayout>
+
+    <!-- Back Button -->
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@color/white"
+        android:backgroundTint="#070706"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp"/>
+
+    <!-- Continue Button -->
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:backgroundTint="#FF5722"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp"/>
+
+</RelativeLayout>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/other_background"
+    tools:context=".Subscription">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        >
+
+        <!-- Horizontal LinearLayout to hold back button, header title, and details button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical">
+
+            <!-- Back Button -->
+            <ImageView
+                android:id="@+id/subscription_backbtn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/back"
+                android:layout_marginLeft="20dp"/>
+
+            <!-- Header Title with layout weight to center it -->
+            <TextView
+                android:id="@+id/textViewPageTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="Subscription"
+                android:textSize="24sp"
+                android:layout_gravity="center_vertical"
+                />
+
+            <!-- Details Button -->
+            <ImageView
+                android:id="@+id/details"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="20dp"
+                app:srcCompat="@drawable/dots" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+
+    <!-- User's Current Membership Card -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewCurrentMembership"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/white"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/textViewCurrentMembershipTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Current Membership"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/textViewCurrentMembershipDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:text="Membership information not available.
+
+"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Separator -->
+    <View
+        android:id="@+id/viewSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Header for Available Subscriptions -->
+    <TextView
+        android:id="@+id/textViewAvailablePlansHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Available Subscriptions"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center_horizontal"/>
+
+
+    <!-- RecyclerView for Available Subscriptions -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewSubscriptions"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
+
+</LinearLayout>

@@ -1,0 +1,81 @@
+<!-- popup_welcome.xml -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="16dp">
+
+    <!-- Card Background -->
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+
+     >
+
+        <!-- Modal Content -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <!-- Gmail Logo -->
+            <ImageView
+                android:id="@+id/logoImageView"
+                android:layout_width="wrap_content"
+                android:layout_height="206dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/logo" />
+
+            <!-- Title -->
+            <TextView
+                android:id="@+id/titleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome!"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/logoImageView"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/subtitleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Get started by setting up your profile."
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/titleTextView"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Action Button -->
+            <Button
+                android:id="@+id/setupButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Setup Profile"
+                android:backgroundTint="@color/black"
+                android:textColor="@android:color/white"
+                android:layout_below="@id/subtitleTextView"
+               />
+
+            <!-- Dismiss Button -->
+            <Button
+                android:id="@+id/dismissButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="Dismiss"
+                android:backgroundTint="#7A7A7A"
+                android:layout_below="@id/setupButton"/>
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

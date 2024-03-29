@@ -1,0 +1,8 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Color when the item is pressed -->
+    <item android:color="@color/icon_pressed" android:state_pressed="true"/>
+    <!-- Color when the item is focused -->
+    <item android:color="@color/icon_focused" android:state_focused="true"/>
+    <!-- Default color -->
+    <item android:color="@color/icon_normal"/>
+</selector>

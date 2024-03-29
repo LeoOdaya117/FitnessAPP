@@ -1,0 +1,20 @@
+<!-- dialog_qr_code.xml -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView_qrCode"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/qr"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"/>
+
+    <!-- You can add more views here if needed -->
+
+</LinearLayout>

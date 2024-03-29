@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_report"
+        android:title="Report"
+        android:icon="@drawable/bar" />
+
+    <item
+        android:id="@+id/navigation_Discover"
+        android:title="Discover"
+        android:icon="@drawable/compass" />
+    <item
+        android:id="@+id/navigation_Plans"
+        android:title="Plans"
+        android:icon="@drawable/plans" />
+
+    <item
+        android:id="@+id/navigation_settings"
+        android:title="Settings"
+        android:icon="@drawable/user" />
+
+    <!-- Add more items as needed -->
+</menu>
