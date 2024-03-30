@@ -92,9 +92,11 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             webView.setVisibility(View.VISIBLE);
             loadInitialUrl();
         }
+        webView.setVisibility(View.INVISIBLE);
+        loadFragment(new Report());
 //        loadInitialUrl();
-//        String loadURLa = websiteurl + "/gym_website/user/";
-//        webView.loadUrl(loadURLa + "index.php");
+        String loadURLa = websiteurl + "/gym_website/user/";
+        webView.loadUrl(loadURLa + "loadingpage.php");
 
         // Enable JavaScript
         WebSettings webSettings = webView.getSettings();
@@ -198,15 +200,15 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
                     }
                     return true;
                 case "Report":
-                    webView.setVisibility(View.VISIBLE);
+                    webView.setVisibility(View.INVISIBLE);
 
-
+                    loadFragment(new Report());
                     headerTextView.setText("Report");
-                    if (!currentUrl.endsWith("index.php")) {
-                        webView.loadUrl(loadURL + "loadingpage.php");
-
-                        webView.loadUrl(loadURL + "index.php");
-                    }
+//                    if (!currentUrl.endsWith("index.php")) {
+//                        webView.loadUrl(loadURL + "loadingpage.php");
+//
+//                        webView.loadUrl(loadURL + "index.php");
+//                    }
                     return true;
                 case "Settings":
 

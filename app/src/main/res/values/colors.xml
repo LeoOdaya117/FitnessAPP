@@ -2,6 +2,7 @@
     <color name="background_color">#000000</color>
     <color name="other_background">#f6f9ff</color>
     <color name="black">#000000</color>
+    <color name="text_color">#494949</color>
     <color name="title_text_color">#000000</color>
     <color name="hint_text_color">#808080</color>
     <color name="hint_text_color2">#676767</color>
@@ -18,4 +19,11 @@
     <!-- Add more colors if needed -->
     <color name="primary_color">#070707</color> <!-- You can change the color value to any color you prefer -->
 
+
+    <color name="colorUnderweight">#036bfc</color>
+    <color name="colorNormal">#007bff</color>
+    <color name="colorOverweight">#03b5fc</color>
+    <color name="colorObesity1">#fcce03</color>
+    <color name="colorObesity2">#fc7703</color>
+    <color name="colorExtremeObesity">#fc1c03</color>
 </resources>
