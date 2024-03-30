@@ -88,7 +88,7 @@ public class Signup extends AppCompatActivity {
                     public void run() {
                         textViewLogin.setTextColor(Color.BLACK); // Revert back to black
                     }
-                }, 2000); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
+                }, 500); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
 
                 onBackPressed();
             }

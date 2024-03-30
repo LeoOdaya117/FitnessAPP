@@ -72,7 +72,7 @@ public class ForgotPassword extends AppCompatActivity {
                     public void run() {
                         logintext.setTextColor(Color.BLACK); // Revert back to black
                     }
-                }, 1000); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
+                }, 500); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
 
                 onBackPressed();
             }

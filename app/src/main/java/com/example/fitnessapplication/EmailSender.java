@@ -3,6 +3,7 @@ package com.example.fitnessapplication;
 import android.content.Context;
 import android.util.Log;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -40,13 +41,16 @@ public class EmailSender {
                 return new PasswordAuthentication(SMTP_USERNAME, SMTP_PASSWORD);
             }
         });
+        String senderName = "Fitness App Support";
 
         Message message = new MimeMessage(session);
         try {
             // Create a MimeMessage object
 
             // Set the sender's email address
-            message.setFrom(new InternetAddress(SMTP_USERNAME));
+            message.setFrom(new InternetAddress(SMTP_USERNAME, senderName));
+
+
             // Set the recipient's email address
             message.addRecipient(Message.RecipientType.TO,new InternetAddress(recipientEmail));
             // Set the email subject
@@ -80,6 +84,8 @@ public class EmailSender {
             if (e.getNextException() != null) {
                 Log.e("EmailSender", "Next Exception: " + e.getNextException().getMessage(), e.getNextException());
             }
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
         }
     }
 

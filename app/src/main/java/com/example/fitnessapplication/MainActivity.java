@@ -93,10 +93,10 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         textViewRegister.setTextColor(Color.BLACK); // Revert back to black
                     }
-                }, 2000); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
+                }, 500); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
 
                 // Start the Signup activity
-                Intent intent = new Intent(MainActivity.this, Signup.class);
+                Intent intent = new Intent(MainActivity.this, WEB.class);
                 startActivity(intent);
             }
         });
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         forgotpass.setTextColor(Color.BLACK); // Revert back to black
                     }
-                }, 2000); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
+                }, 500); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
 
                 // Start the Signup activity
                 Intent intent = new Intent(MainActivity.this, ForgotPassword.class);
