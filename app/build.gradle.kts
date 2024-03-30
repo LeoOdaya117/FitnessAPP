@@ -6,6 +6,8 @@ android {
     namespace = "com.example.fitnessapplication"
     compileSdk = 34
 
+
+
     defaultConfig {
         applicationId = "com.example.fitnessapplication"
         minSdk = 26
@@ -26,6 +28,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        exclude("META-INF/NOTICE.md")
+        exclude("META-INF/LICENSE.md")
+    }
+
 }
 
 dependencies {
@@ -39,5 +47,6 @@ dependencies {
 
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
-    implementation("com.sun.mail:javax.mail:1.6.2") // Add this line for JavaMail API
+    implementation ("com.sun.mail:android-mail:1.6.7")
+    implementation ("com.sun.mail:android-activation:1.6.7")
 }

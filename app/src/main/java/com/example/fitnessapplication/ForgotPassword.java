@@ -6,15 +6,30 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.net.ParseException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -25,61 +40,109 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class ForgotPassword extends AppCompatActivity {
-    private   String SMTP_HOST = "smtp.gmail.com";
-    private   String SMTP_PORT = "587"; // SMTP server port
-    private   String SMTP_USERNAME = "odayaleo117@gmail.com";
-    private   String SMTP_PASSWORD = "usfk chni dizw upfx";
 
-
+    private String Url = URLManager.MY_URL;
+    private boolean existing =false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
         Button sendEmailButton = findViewById(R.id.buttonResetPassword);
+        TextView logintext = findViewById(R.id.textViewLogin);
         EditText email = findViewById(R.id.editTextEmail);
+
+
+        logintext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                logintext.setTextColor(Color.BLUE);
+
+// After some time or under certain conditions, revert back to black
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        logintext.setTextColor(Color.BLACK); // Revert back to black
+                    }
+                }, 1000); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
+
+                onBackPressed();
+            }
+        });
         sendEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String recipientEmail = email.getText().toString().trim();
-                String subject = "Password Reset";
-                String message = "Click the following link to reset your password: www.example.com/reset-password";
 
-                Log.d("ForgotPassword", "Sending email...");
-                try {
-                    sendEmail(recipientEmail, subject, message);
-                    showAlertDialog("Email sent successfully");
-                } catch (MessagingException e) {
-                    showAlertDialog("Failed to send email: " + e.getMessage());
-                }
-                Log.d("ForgotPassword", "Email sending finished");
+                String recipientEmail = email.getText().toString().trim();
+                String forgotPassUrl = Url + "/Gym_Website/forgotpassword.php?email=" + recipientEmail;
+
+                String subject = "Password Reset";
+                String message = "<html lang=\"en\">\n" +
+                        "<head>\n" +
+                        "    <meta charset=\"UTF-8\">\n" +
+                        "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                        "    <title>Reset Password</title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "    <div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\">\n" +
+                        "        <p>Dear User,</p>\n" +
+                        "        <p>To reset your password, please click on the following button:</p>\n" +
+                        "        <p>\n" +
+                        "            <a href=\"" + forgotPassUrl + "\" style=\"display: inline-block; padding: 10px 20px; background-color: #ff8000; color: white; text-decoration: none;\">Reset Password</a>\n" +
+                        "        </p>\n" +
+                        "        <p>If you did not request a password reset, please ignore this email.</p>\n" +
+                        "        <p>Thank you,</p>\n" +
+                        "        <p>Fitness Application Team</p>\n" +
+                        "    </div>\n" +
+                        "</body>\n" +
+                        "</html>";
+
+                checkEmail(recipientEmail, subject, message);
+
+                showConfirmationDialog(recipientEmail, subject, message);
+
+
+
+
+
+
+
             }
         });
     }
 
 
-
-//    private void sendEmail(String recipientEmail) {
-//        String subject = "Password Reset";
-//        String message = "Click the following link to reset your password: www.example.com/reset-password";
-//        try {
-//            EmailSender.sendEmail(recipientEmail, subject, message);
-//            // Show success dialog
-//            showAlertDialog("Email sent successfully");
-//        } catch (MessagingException e) {
-//            // Show failure dialog with error message
-//            showAlertDialog("Failed to send email: " + e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
-
-    private void showAlertDialog(String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPassword.this);
-        builder.setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+    private void showConfirmationDialog(String recipientEmail, String subject, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to send the email?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Dismiss the dialog
+
+                        checkEmail(recipientEmail, subject, message);
+
+                        if(existing){
+                            sendEmail(recipientEmail, subject, message);
+
+
+                            existing = false;
+                        }else{
+                            showAlertDialog("No account found for this email address.", "Not Found");
+                        }
+
+
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked No button, dismiss the dialog
                         dialog.dismiss();
                     }
                 });
@@ -88,39 +151,100 @@ public class ForgotPassword extends AppCompatActivity {
     }
 
 
-    public void sendEmail(String recipientEmail, String subject, String messageBody) throws MessagingException {
-        Log.d("EmailSender", "Sending email to: " + recipientEmail);
-        try {
-            // Existing code to send email
-            Properties props = new Properties();
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
-            props.put("mail.smtp.host", SMTP_HOST);
-            props.put("mail.smtp.port", SMTP_PORT);
 
-            Session session = Session.getInstance(props, new Authenticator() {
-                @Override
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(SMTP_USERNAME, SMTP_PASSWORD);
-                }
-            });
+    private void showAlertDialog(String message, String title) {
 
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(SMTP_USERNAME));
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject(subject);
-            message.setText(messageBody);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ForgotPassword.this);
 
-            Transport.send(message);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog_layout, null);
 
-            System.out.println("Email sent successfully");
-            Log.d("EmailSender", "Email sent successfully");
-        } catch (MessagingException e) {
-            Log.e("EmailSender", "Failed to send email: " + e.getMessage(), e);
-        }
+        builder.setView(dialogView);
+
+        TextView titleTextView = dialogView.findViewById(R.id.dialog_title);
+        TextView messageTextView = dialogView.findViewById(R.id.bmr_message);
+        Button okButton = dialogView.findViewById(R.id.ok_button);
 
 
+        titleTextView.setText(title);
+        messageTextView.setText(message);
+
+        AlertDialog dialog = builder.create();
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss(); // Dismiss the dialog when the OK button is clicked
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
+
+
+    // Replace the existing sendEmail method in ForgotPassword activity with this one
+    private void sendEmail(String recipientEmail, String subject, String messageBody) {
+        Log.d("ForgotPassword", "Sending email to: " + recipientEmail);
+        try {
+            String message = "An email with instructions on how to reset your password has been sent to "+ recipientEmail +". Please check your spam or junk folder if you don’t see the email in your inbox.";
+            EmailSender.sendEmail(this, recipientEmail, subject, messageBody);
+            showAlertDialog(message, "Email Sent");
+        } catch (Exception e) {
+            String errorMessage = "Failed to send email:";
+            if (e.getMessage() != null) {
+                errorMessage += ": " + e.getMessage();
+            }
+            showAlertDialog(errorMessage, "System Error");
+        }
+    }
+
+
+    private void checkEmail(String username, String subject, String message) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Construct the URL with the username
+        String url = URLManager.MY_URL + "/Gym_Website/user/api/check_email.php?email=" + username;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // Handle failure appropriately
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String result = response.body().string();
+
+                    if(result.equals("Found")){
+                        existing = true;
+//                        showConfirmationDialog(username, subject, message);
+
+                    }
+                    else{
+//                        showAlertDialog("No account found for this email address.", "Not Found");
+
+                        existing = false;
+                    }
+
+
+
+
+                } else {
+                    // Handle unsuccessful response
+                    System.out.println("Error: " + response.code());
+                }
+            }
+        });
+    }
+
+
 
 
 
