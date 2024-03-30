@@ -93,10 +93,11 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             loadInitialUrl();
         }
         webView.setVisibility(View.INVISIBLE);
+        loadInitialUrl();
         loadFragment(new Report());
-//        loadInitialUrl();
-        String loadURLa = websiteurl + "/gym_website/user/";
-        webView.loadUrl(loadURLa + "loadingpage.php");
+
+
+//        webView.loadUrl(websiteurl + "/gym_website/user/index.php");
 
         // Enable JavaScript
         WebSettings webSettings = webView.getSettings();
@@ -182,7 +183,6 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             switch (tab) {
                 case "Plans":
                     headerTextView.setText("Plans");
-
                     webView.loadUrl(loadURL + "loadingpage.php");
                     loadFragment(new Plans());
 
@@ -190,25 +190,27 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
                     return true;
                 case "Discover":
-                    webView.setVisibility(View.VISIBLE);
+                    loadFragment(new Discover());
+                    webView.setVisibility(View.GONE);
                     headerTextView.setText("Discover");
 
                     if (!currentUrl.endsWith("discover.php")) {
+                        loadInitialUrl();
                         webView.loadUrl(loadURL + "loadingpage.php");
 
                         webView.loadUrl(loadURL + "discover.php");
                     }
                     return true;
                 case "Report":
-                    webView.setVisibility(View.INVISIBLE);
+                    webView.setVisibility(View.GONE);
 
                     loadFragment(new Report());
                     headerTextView.setText("Report");
-//                    if (!currentUrl.endsWith("index.php")) {
-//                        webView.loadUrl(loadURL + "loadingpage.php");
-//
-//                        webView.loadUrl(loadURL + "index.php");
-//                    }
+                    if (!currentUrl.endsWith("index.php")) {
+                        webView.loadUrl(loadURL + "loadingpage.php");
+
+                        webView.loadUrl(loadURL + "index.php");
+                    }
                     return true;
                 case "Settings":
 
@@ -407,10 +409,10 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
         UserDataManager userDataManager = UserDataManager.getInstance(getApplicationContext());
 
-        String username = "?login-username=" +userDataManager.getEmail();
-        String password = "&login-password=" + userDataManager.getPassword();
-//        String username = "?login-username=" + getIntent().getStringExtra("username");
-//        String password = "&login-password=" + getIntent().getStringExtra("password");
+//        String username = "?login-username=" +userDataManager.getEmail();
+//        String password = "&login-password=" + userDataManager.getPassword();
+        String username = "?login-username=" + getIntent().getStringExtra("username");
+        String password = "&login-password=" + getIntent().getStringExtra("password");
         String url = websiteurl+ "/gym_website/user/login.php";
 
         url = url + username + password;

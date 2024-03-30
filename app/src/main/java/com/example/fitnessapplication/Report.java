@@ -392,67 +392,89 @@ public class Report extends Fragment {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String jsonData = response.body().string();
 
+
+                    String jsonData = response.body().string();
+                    if(jsonData.equals("Not found") || jsonData.isEmpty()){
+                        getActivity().runOnUiThread(() -> {
+                            showAlert("Info", "No user data found.");
+                        });
+                        return; // Exit early if data is not found
+                    }
                     try {
                         JSONObject jsonObject = new JSONObject(jsonData);
 
-                        final String current_Height = jsonObject.getString("Height") + " cm";
-                        final String BMI = jsonObject.getString("BMI");
-                        final String current_weight = jsonObject.getString("Weight") + " kg";
-                        final String goalweight = jsonObject.getString("goalweight")+ " kg";
+                        final String currentHeight = jsonObject.getString("Height") ;
+                        final String currentWeight = jsonObject.getString("Weight");
+
+
+    // Convert height from cm to meters
+                        double heightInMeters = Double.parseDouble(currentHeight) / 100.0;
+
+    // Convert weight from kg to double
+                        double weightInKg = Double.parseDouble(currentWeight);
+
+    // Calculate BMI
+                        double BMI = weightInKg / (heightInMeters * heightInMeters);
+
+    // Format BMI to display with two decimal places
+                        String formattedBMI = String.format("%.2f", BMI);
+
+                        final String goalweight = jsonObject.getString("goalweight") + " kg";
 
                         getActivity().runOnUiThread(() -> {
                             View colorIndicator = getActivity().findViewById(R.id.color_indicator);
+                            TextView currentWeightTextView = getActivity().findViewById(R.id.currentWeight);
+                            TextView goalText = getActivity().findViewById(R.id.goalText);
+                            TextView BMIText = getActivity().findViewById(R.id.BMIText);
+                            TextView currentHeightTextView = getActivity().findViewById(R.id.currentHeight);
+                            TextView fitnessCategory = getActivity().findViewById(R.id.fitnessCategory);
                             View pointer1 = getActivity().findViewById(R.id.pointer1);
                             View pointer2 = getActivity().findViewById(R.id.pointer2);
                             View pointer3 = getActivity().findViewById(R.id.pointer3);
                             View pointer4 = getActivity().findViewById(R.id.pointer4);
                             View pointer5 = getActivity().findViewById(R.id.pointer5);
                             View pointer6 = getActivity().findViewById(R.id.pointer6);
-                            String fitnesscategory = null  ;
-                            float bmival = Float.parseFloat(BMI); // Changed Integer.parseInt to Float.parseFloat
 
-                            if (bmival < 18.5) {
+                            String fitnesscategory = null;
+
+                            if (BMI <=  15 ) {
                                 fitnesscategory = "Underweight";
                                 colorIndicator.setBackgroundResource(R.color.colorUnderweight);
                                 pointer1.setVisibility(View.VISIBLE);
-                            } else if (bmival > 18.5 && bmival <= 24.9) {
+                            } else if (BMI >  15.9 && BMI <= 18.4) {
+                                fitnesscategory = "Underweight";
+                                colorIndicator.setBackgroundResource(R.color.colorUnderweight);
+                                pointer2.setVisibility(View.VISIBLE);
+                            } else if (BMI > 18.5 && BMI <= 24.9) {
                                 fitnesscategory = "Normal";
                                 colorIndicator.setBackgroundResource(R.color.colorNormal);
                                 pointer3.setVisibility(View.VISIBLE);
-
-                            } else if (bmival > 25 && bmival <= 29.9) {
+                            } else if (BMI > 25 && BMI <= 29.9) {
                                 fitnesscategory = "Overweight";
-                                colorIndicator.setBackgroundResource(R.color.colorOverweight);
+                                colorIndicator.setBackgroundResource(R.color.colorObesity1);
                                 pointer4.setVisibility(View.VISIBLE);
-
-                            } else if (bmival >= 30 && bmival <= 34.9) {
+                            } else if (BMI >= 30 && BMI <= 34.9) {
                                 fitnesscategory = "Obesity Class I";
                                 colorIndicator.setBackgroundResource(R.color.colorObesity2);
                                 pointer5.setVisibility(View.VISIBLE);
-
-                            } else if (bmival >= 35 && bmival <= 39.9) {
+                            } else if (BMI >= 35 && BMI <= 39.9) {
                                 fitnesscategory = "Obesity Class II";
                                 colorIndicator.setBackgroundResource(R.color.colorExtremeObesity);
                                 pointer6.setVisibility(View.VISIBLE);
-
                             } else {
                                 fitnesscategory = "Extreme Obesity";
                                 colorIndicator.setBackgroundResource(R.color.colorExtremeObesity);
                                 pointer6.setVisibility(View.VISIBLE);
-
                             }
 
-                            currentWeight.setText(current_weight);
-                            goalText.setText(goalweight);
-                            BMIText.setText(BMI);
-                            currentHeight.setText(current_Height);
+                            currentWeightTextView.setText(currentWeight+ " kg");
+                            goalText.setText(goalweight );
+                            BMIText.setText(formattedBMI); // Set the formatted BMI
+                            currentHeightTextView.setText(currentHeight + " cm");
                             fitnessCategory.setText(fitnesscategory);
-
-
-
                         });
+
                     } catch (JSONException e) {
                         throw new RuntimeException(e);
                     }

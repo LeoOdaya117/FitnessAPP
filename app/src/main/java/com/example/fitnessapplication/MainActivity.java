@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 }, 500); // Change back to black after 2000 milliseconds (2 seconds), adjust as needed
 
                 // Start the Signup activity
-                Intent intent = new Intent(MainActivity.this, WEB.class);
+                Intent intent = new Intent(MainActivity.this, Signup.class);
                 startActivity(intent);
             }
         });
