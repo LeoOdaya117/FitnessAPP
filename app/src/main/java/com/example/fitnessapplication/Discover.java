@@ -1,10 +1,12 @@
 package com.example.fitnessapplication;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,11 +44,12 @@ public class Discover extends Fragment {
     private List<Exercise> exerciseList;
 
     private EditText search_text;
-    private ImageView searchbutton;
+    private ImageView searchbutton, info_icon;
 
     private ScrollView workouts_container;
+    private ImageView scrollUpButton;
 
-    private String category;
+    private static String category;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,7 +97,6 @@ public class Discover extends Fragment {
         View view = inflater.inflate(R.layout.fragment_discover, container, false);
         search_text = view.findViewById(R.id.search_input); // Initialize EditText for search
         searchbutton = view.findViewById(R.id.searchbtn); // Initialize EditText for search
-
         workouts_container = view.findViewById(R.id.workouts_container);
         workouts_container.setVisibility(View.VISIBLE); // Add this line to make it visible
 
@@ -106,10 +108,38 @@ public class Discover extends Fragment {
         exerciseAdapter = new ExerciseAdapter(exerciseList);
         recyclerView.setAdapter(exerciseAdapter);
 
-        recyclerView.setVisibility(View.INVISIBLE);
+        workouts_container.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
         // Fetch data from the server
 
+        scrollUpButton = view.findViewById(R.id.scroll_up_button);
 
+        // Set an OnClickListener to the scroll up button
+        scrollUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Scroll the RecyclerView to the top position
+                if (recyclerView != null) {
+                    recyclerView.smoothScrollToPosition(0);
+                }
+            }
+        });
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // Check if the user has scrolled past a certain threshold
+                if (dy > 0 && scrollUpButton.getVisibility() == View.GONE) {
+                    // Scrolling down, show the scroll up button
+                    scrollUpButton.setVisibility(View.VISIBLE);
+                } else if (dy < 0 && scrollUpButton.getVisibility() == View.VISIBLE) {
+                    // Scrolling up, hide the scroll up button
+                    scrollUpButton.setVisibility(View.GONE);
+                }
+            }
+        });
 
         searchbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,13 +181,14 @@ public class Discover extends Fragment {
             @Override
             public void onClick(View v) {
                 // Reset appearance of all TextViews
+                workouts_container.setVisibility(View.VISIBLE); // Ensure workouts container is visible
                 resetTextViewsAppearance();
-
+                category = "workouts";
                 // Update appearance of clicked TextView
                 navWorkouts.setTypeface(null, Typeface.BOLD);
                 navWorkouts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                workouts_container.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.INVISIBLE);
+
+                recyclerView.setVisibility(View.GONE);
                 // Handle click action for Workouts
             }
         });
@@ -167,13 +198,14 @@ public class Discover extends Fragment {
             public void onClick(View v) {
                 // Reset appearance of all TextViews
                 resetTextViewsAppearance();
+                category = "exercise";
 
                 // Update appearance of clicked TextView
                 navExercise.setTypeface(null, Typeface.BOLD);
                 navExercise.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
 
                 fetchData(search_text.getText().toString());
-                workouts_container.setVisibility(View.INVISIBLE);
+                workouts_container.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
                 // Handle click action for Workouts
             }
@@ -184,7 +216,10 @@ public class Discover extends Fragment {
             public void onClick(View v) {
                 // Reset appearance of all TextViews
                 resetTextViewsAppearance();
-
+                category = "food";
+                fetchData(search_text.getText().toString());
+                workouts_container.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 // Update appearance of clicked TextView
                 navFood.setTypeface(null, Typeface.BOLD);
                 navFood.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -198,7 +233,10 @@ public class Discover extends Fragment {
             public void onClick(View v) {
                 // Reset appearance of all TextViews
                 resetTextViewsAppearance();
-
+                category = "equipment";
+                fetchData(search_text.getText().toString());
+                workouts_container.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 // Update appearance of clicked TextView
                 navEquipment.setTypeface(null, Typeface.BOLD);
                 navEquipment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
@@ -209,8 +247,22 @@ public class Discover extends Fragment {
 
 
 
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void showAlert(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustomStyle);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", null); // You can add an OnClickListener if needed
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public static String getCategory() {
+        return category;
     }
 
     // Method to fetch data from the server
@@ -223,10 +275,14 @@ public class Discover extends Fragment {
                 exerciseList.addAll(fetchedExerciseList);
                 // Notify the adapter that the data set has changed
                 exerciseAdapter.notifyDataSetChanged();
+
+                // Display an alert showing the number of exercises fetched
+//                showAlert("Data Fetched", "Fetched " + fetchedExerciseList.size() + " exercises.");
             }
         });
         task.execute(search);
     }
+
 
     private void resetTextViewsAppearance() {
         navWorkouts.setTypeface(null, Typeface.NORMAL);

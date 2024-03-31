@@ -5,7 +5,7 @@
     android:background="@color/other_background"
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
-    android:paddingBottom="16dp">
+    android:paddingBottom="8dp">
 
     <!-- Search Container -->
     <LinearLayout
@@ -95,15 +95,30 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:visibility="visible"/>
+
+    <!-- Scroll up button -->
+    <ImageView
+        android:id="@+id/scroll_up_button"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="8dp"
+        android:layout_gravity="end"
+        android:src="@drawable/scrollup"
+        android:visibility="gone"
+        android:background="?android:attr/selectableItemBackground"
+        /> <!-- Accessibility description -->
+
 
     <ScrollView
         android:id="@+id/workouts_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:paddingTop="0dp"
         android:padding="16dp"
         >
 

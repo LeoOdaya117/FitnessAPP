@@ -29,7 +29,19 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
         List<Exercise> exerciseList = new ArrayList<>();
 
         try {
-            URL url = new URL(URLManager.MY_URL + "/Gym_Website/user/api/fetch_exercise.php?search=" + search);
+            String category = Discover.getCategory(); // Get the category from Discover class
+
+            String apiLink = ""; // Initialize API link based on category
+            if (category.equals("exercise")) {
+                apiLink = "/Gym_Website/user/api/fetch_exercise.php?search=";
+            } else if (category.equals("food")) {
+                apiLink = "/Gym_Website/user/api/fetch_food.php?search=";
+            } else if (category.equals("equipment")) {
+                apiLink = "/Gym_Website/user/api/fetch_equipment.php?search=";
+            }
+
+            // Construct the URL
+            URL url = new URL(URLManager.MY_URL + apiLink + search);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.connect();
@@ -44,18 +56,34 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
             }
             String response = stringBuilder.toString();
 
-            // Parse JSON response
+            // Parse JSON response based on category
             JSONArray jsonArray = new JSONArray(response);
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Exercise exercise = new Exercise(
-                        jsonObject.getString("ExerciseID"),
-                        jsonObject.getString("ExerciseName"),
-                        jsonObject.getString("Description"),
-                        jsonObject.getString("EquipmentID"),
-                        jsonObject.getString("Difficulty"),
-                        jsonObject.getString("ImageURL")
-                );
+                Exercise exercise;
+                if (category.equals("exercise")) {
+                    exercise = new Exercise(
+                            jsonObject.getString("ExerciseID"),
+                            jsonObject.getString("ExerciseName"),
+                            jsonObject.getString("Description"),
+                            jsonObject.getString("EquipmentID"),
+                            jsonObject.getString("Difficulty"),
+                            jsonObject.getString("ImageURL")
+                    );
+                } else if (category.equals("food")) {
+                    exercise = new Exercise(
+                            jsonObject.getString("id"),
+                            jsonObject.getString("name"),
+                            jsonObject.getString("serving"),
+                            jsonObject.getString("photo")
+                    );
+                } else { // equipment
+                    exercise = new Exercise(
+                            jsonObject.getString("equipmentID"),
+                            jsonObject.getString("equipmentName"),
+                            jsonObject.getString("image")
+                    );
+                }
                 exerciseList.add(exercise);
             }
 
@@ -65,6 +93,7 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
 
         return exerciseList;
     }
+
 
     @Override
     protected void onPostExecute(List<Exercise> exerciseList) {

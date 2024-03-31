@@ -183,6 +183,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             switch (tab) {
                 case "Plans":
                     headerTextView.setText("Plans");
+                    loadInitialUrl();
                     webView.loadUrl(loadURL + "loadingpage.php");
                     loadFragment(new Plans());
 
