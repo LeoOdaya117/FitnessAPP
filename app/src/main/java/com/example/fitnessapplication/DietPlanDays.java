@@ -202,7 +202,7 @@ public class DietPlanDays extends Fragment {
                 UserDataManager.getInstance(getContext()).saveDietPlanDay("6");
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.fragment_container, new DietToday());
+                transaction.replace(R.id.fragment_container, new DietPlans());
                 transaction.addToBackStack(null); // Optional: Add transaction to back stack
                 transaction.commit();
 

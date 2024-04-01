@@ -185,5 +185,15 @@ public class UserDataManager {
         return sharedPreferences.getString("dietPlanDay", "");
     }
 
+    public void saveWorkoutType(String name) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("name", name);
+        editor.apply();
+    }
+
+    public String getWorkoutType() {
+        return sharedPreferences.getString("name", "");
+    }
+
 }
 

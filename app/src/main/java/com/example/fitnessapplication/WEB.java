@@ -358,15 +358,13 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         FragmentManager fm = getSupportFragmentManager();
         Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
 
-        // Check if the current fragment is Report
         if (currentFragment instanceof Report) {
-            // If it is, let the system handle the back button press
-            super.onBackPressed();
-        } else {
-            // If it's not, navigate to the Report fragment
-            // You can replace this with any other desired navigation logic
-            navigateToReportFragment();
+            // If the current fragment is Report, do nothing (prevent navigating back)
+            return;
         }
+        super.onBackPressed();
+
+
     }
 
     private void navigateToReportFragment() {

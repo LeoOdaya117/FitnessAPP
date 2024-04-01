@@ -76,6 +76,8 @@ public class DietPlanAdapter extends RecyclerView.Adapter<DietPlanAdapter.DietPl
             });
         }
 
+
+
         private void showDietDetailsDialog(String ID) {
             AlertDialog.Builder builder = new AlertDialog.Builder(itemView.getContext());
             builder.setTitle("Card Details")

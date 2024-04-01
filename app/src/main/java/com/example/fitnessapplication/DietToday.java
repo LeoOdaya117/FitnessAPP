@@ -2,11 +2,15 @@ package com.example.fitnessapplication;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +18,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.squareup.picasso.Picasso;
 
@@ -34,11 +42,17 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class DietToday extends Fragment {
+public class DietToday extends Fragment implements View.OnClickListener {
 
     private TextView breakfastTitle, lunchTitle, dinnerTitle,dayplan;
     private LinearLayout breakfastLayout, lunchLayout, dinnerLayout;
     private ProgressDialog progressDialog;
+
+    private TextView navPlansTextView;
+    private TextView navWorkoutPlansTextView;
+    private TextView navWeekPlanTextView;
+    private TextView navExerciseListTextView;
+    private static final OkHttpClient client = new OkHttpClient();
 
     public DietToday() {
         // Required empty public constructor
@@ -61,6 +75,18 @@ public class DietToday extends Fragment {
         lunchLayout = view.findViewById(R.id.lunchLayout);
         dinnerLayout = view.findViewById(R.id.dinnerLayout);
         dayplan = view.findViewById(R.id.day);
+
+        navPlansTextView = view.findViewById(R.id.navplans);
+        navWorkoutPlansTextView = view.findViewById(R.id.navWorkoutplans);
+        navWeekPlanTextView = view.findViewById(R.id.navWeekplan);
+        navExerciseListTextView = view.findViewById(R.id.navexerciselist);
+
+
+        // Set onClick listeners
+        navPlansTextView.setOnClickListener(this);
+        navWorkoutPlansTextView.setOnClickListener(this);
+        navWeekPlanTextView.setOnClickListener(this);
+        navExerciseListTextView.setOnClickListener(this);
         String day = UserDataManager.getInstance(getContext()).getDietPlanDay();
 
         if(day.equals("1")){
@@ -93,6 +119,99 @@ public class DietToday extends Fragment {
         fetchDataFromApi();
 
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        // Handle onClick events for TextViews
+        int viewId = v.getId();
+        FragmentManager fragmentManager = getParentFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (viewId == R.id.navplans) {
+            // Handle click for nav plans
+            transaction.replace(R.id.fragment_container, new Plans());
+            transaction.addToBackStack(null); // Optional: Add transaction to back stack
+            transaction.commit();
+        } else if (viewId == R.id.navWorkoutplans) {
+            // Handle click for nav workout plans
+            transaction.replace(R.id.fragment_container, new DietPlans());
+            transaction.addToBackStack(null); // Optional: Add transaction to back stack
+            transaction.commit();
+        } else if (viewId == R.id.navWeekplan) {
+            // Handle click for nav week plan
+            transaction.replace(R.id.fragment_container, new DietPlanDays());
+            transaction.addToBackStack(null); // Optional: Add transaction to back stack
+            transaction.commit();
+        } else if (viewId == R.id.navexerciselist) {
+            // Handle click for nav exercise list
+        }
+    }
+
+    private void showFoodModal(Context context, String exerciseId, String name) {
+        fetchDataFromAPI(exerciseId, "food", new ExerciseAdapter.ExerciseViewHolder.DataFetchCallback() {
+            @Override
+            public void onSuccess(JSONObject result) {
+                try {
+                    // Process the fetched data
+                    String description = result.getString("description");
+                    String calorie = result.getString("calories");
+                    String carb = result.getString("carbohydrates");
+                    String protein = result.getString("protein");
+                    String fat = result.getString("fat");
+
+                    // Create a handler with the main looper
+                    Handler handler = new Handler(Looper.getMainLooper());
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Inflate the custom alert dialog layout
+                            View dialogView = LayoutInflater.from(context).inflate(R.layout.alert_for_food, null);
+                            Animation animation = AnimationUtils.loadAnimation(getContext(), R.xml.button_animation);
+
+                            // Initialize views from the custom layout
+                            TextView modalTitle = dialogView.findViewById(R.id.modal_title);
+                            TextView modalDescription = dialogView.findViewById(R.id.modal_description);
+                            TextView modalCalorie = dialogView.findViewById(R.id.modal_calorie);
+                            TextView modalCarb = dialogView.findViewById(R.id.modal_carb);
+                            TextView modalProtein = dialogView.findViewById(R.id.modal_protein);
+                            TextView modalFat = dialogView.findViewById(R.id.modal_fat);
+                            ImageView closeButton = dialogView.findViewById(R.id.close_button);
+
+                            // Set exercise details to the views
+                            modalTitle.setText(name.toUpperCase() + " INFORMATION");
+                            modalDescription.setText(description);
+                            modalCalorie.setText(calorie + " kcal");
+                            modalCarb.setText( carb + " g");
+                            modalProtein.setText( protein + " g");
+                            modalFat.setText( fat + " g");
+
+                            // Create and show the dialog
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setView(dialogView);
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+
+                            // Set click listener for the close button
+                            closeButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    closeButton.startAnimation(animation);
+                                    alertDialog.dismiss(); // Dismiss the dialog
+                                }
+                            });
+                        }
+                    });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Log.e("ExerciseAdapter", "API request failed: " + errorMessage);
+                // Handle failure
+            }
+        });
     }
 
     private void fetchDataFromApi() {
@@ -204,7 +323,55 @@ public class DietToday extends Fragment {
                     .into(foodimage);
             // Add the inflated layout to the appropriate meal section's LinearLayout
             layout.addView(foodItemView);
+
+            // Set OnClickListener for the info ImageView
+            info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Animation animation = AnimationUtils.loadAnimation(getContext(), R.xml.button_animation);
+
+                    info.startAnimation(animation);
+                    // Get the exercise ID associated with the info ImageView
+                    String exerciseId = (String) v.getTag();
+                    // Get the food name associated with the TextView
+                    String foodName = foodNameTextView.getText().toString();
+                    // Call showFoodModal method
+                    showFoodModal(getContext(), exerciseId, foodName);
+                }
+            });
+
         }
+    }
+
+    private void fetchDataFromAPI(String id, String category, ExerciseAdapter.ExerciseViewHolder.DataFetchCallback callback) {
+        String url = URLManager.MY_URL + "/Gym_Website/user/api/fetch_details.php?itemId=" + id + "&category=" + category;
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                callback.onFailure(e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful()) {
+                    callback.onFailure("Unexpected code " + response);
+                    return;
+                }
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().string());
+                    callback.onSuccess(jsonObject);
+                } catch (JSONException e) {
+                    callback.onFailure("Error parsing JSON: " + e.getMessage());
+                } finally {
+                    response.body().close(); // Close the response body
+                }
+            }
+        });
     }
 
     private void showErrorDialog(String message) {

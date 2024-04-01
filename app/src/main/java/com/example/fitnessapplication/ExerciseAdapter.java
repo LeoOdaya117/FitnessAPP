@@ -88,6 +88,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             secondtext = "";
             image = exercise.getEquipmentImage();
             tag = exercise.getEquipmentID();
+            holder.text_view_equipment.setVisibility(View.GONE);
         }
 
         holder.textViewExerciseName.setText(name);
@@ -396,28 +397,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     // Handle failure
                 }
             });
-        }
-
-
-
-
-        // Method to set up "see more" and "see less" functionality
-        private void setupSeeMoreLess(Button button, TextView textView) {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (button.getText().equals("See more")) {
-                        button.setText("See less");
-                        textView.setMaxLines(Integer.MAX_VALUE); // Show all lines
-                    } else {
-                        button.setText("See more");
-                        textView.setMaxLines(2); // Set the number of lines to show when collapsed
-                    }
-                }
-            });
-
-            // Always make the button visible
-            button.setVisibility(View.VISIBLE);
         }
 
 

@@ -7,6 +7,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +49,7 @@ public class Discover extends Fragment {
 
     private ScrollView workouts_container;
     private ImageView scrollUpButton;
+    private CardView warmupcard,absBeginner,chestBeginner,armBeginner,legBeginner,backBeginner,absIntermediate,chestIntermediate,armIntermediate,legIntermediate,backIntermediate,absAdvanced,chestADVANCED,armADVANCED,legADVANCED,backADVANCED;
 
     private static String category;
 
@@ -113,6 +115,42 @@ public class Discover extends Fragment {
         // Fetch data from the server
 
         scrollUpButton = view.findViewById(R.id.scroll_up_button);
+
+         warmupcard = view.findViewById(R.id.warmupcard);
+         absBeginner = view.findViewById(R.id.absBeginner);
+         chestBeginner = view.findViewById(R.id.chestBeginner);
+         armBeginner = view.findViewById(R.id.armBeginner);
+         legBeginner = view.findViewById(R.id.legBeginner);
+         backBeginner = view.findViewById(R.id.backBeginner);
+         absIntermediate = view.findViewById(R.id.absIntermediate);
+         chestIntermediate = view.findViewById(R.id.chestIntermediate);
+         armIntermediate = view.findViewById(R.id.armIntermediate);
+         legIntermediate = view.findViewById(R.id.legIntermediate);
+         backIntermediate = view.findViewById(R.id.backIntermediate);
+         absAdvanced = view.findViewById(R.id.absAdvanced);
+         chestADVANCED = view.findViewById(R.id.chestADVANCED);
+         armADVANCED = view.findViewById(R.id.armADVANCED);
+         legADVANCED = view.findViewById(R.id.legADVANCED);
+         backADVANCED = view.findViewById(R.id.backADVANCED);
+
+        // Set click listener for all CardViews
+        setCardClickListener(warmupcard, "Warm Up");
+        setCardClickListener(absBeginner, "Abs Beginner");
+        setCardClickListener(chestBeginner, "Chest Beginner");
+        setCardClickListener(armBeginner, "Arm Beginner");
+        setCardClickListener(legBeginner, "Leg Beginner");
+        setCardClickListener(backBeginner, "Back Beginner");
+        setCardClickListener(absIntermediate, "Abs Intermediate");
+        setCardClickListener(chestIntermediate, "Chest Intermediate");
+        setCardClickListener(armIntermediate, "Arm Intermediate");
+        setCardClickListener(legIntermediate, "Leg Intermediate");
+        setCardClickListener(backIntermediate, "Back Intermediate");
+        setCardClickListener(absAdvanced, "Abs Advanced");
+        setCardClickListener(chestADVANCED, "Chest Advanced");
+        setCardClickListener(armADVANCED, "Arm Advanced");
+        setCardClickListener(legADVANCED, "Leg Advanced");
+        setCardClickListener(backADVANCED, "Back Advanced");
+
 
         // Set an OnClickListener to the scroll up button
         scrollUpButton.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +291,17 @@ public class Discover extends Fragment {
         return view;
     }
 
+    private void setCardClickListener(CardView cardView, final String category) {
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start WorkoutActivity and pass the category name as an extra
+                Intent intent = new Intent(getContext(), Workout.class);
+                intent.putExtra("category", category);
+                startActivity(intent);
+            }
+        });
+    }
     private void showAlert(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustomStyle);
         builder.setTitle(title)
