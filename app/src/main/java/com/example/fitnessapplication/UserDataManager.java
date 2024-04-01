@@ -145,5 +145,45 @@ public class UserDataManager {
         return workoutPlan;
     }
 
+    public void saveWorkoutPlanId(String workoutPlanId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("workoutPlanId", workoutPlanId);
+        editor.apply();
+    }
+
+    public String getWorkoutPlanId() {
+        return sharedPreferences.getString("workoutPlanId", "");
+    }
+
+    public void saveWorkoutPlanDay(String workoutPlanDay) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("workoutPlanDay", workoutPlanDay);
+        editor.apply();
+    }
+
+    public String getWorkoutPlanDay() {
+        return sharedPreferences.getString("workoutPlanDay", "");
+    }
+
+    public void saveDietPlanId(String dietPlanId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("dietPlanId", dietPlanId);
+        editor.apply();
+    }
+
+    public String getDietPlanId() {
+        return sharedPreferences.getString("dietPlanId", "");
+    }
+
+    public void saveDietPlanDay(String dietPlanDay) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("dietPlanDay", dietPlanDay);
+        editor.apply();
+    }
+
+    public String getDietPlanDay() {
+        return sharedPreferences.getString("dietPlanDay", "");
+    }
+
 }
 

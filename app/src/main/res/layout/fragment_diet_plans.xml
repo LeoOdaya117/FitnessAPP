@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:text="Workout Plans"
+        android:text="Diet Plans"
         android:textColor="#012970"
         android:textSize="25sp"
         android:textStyle="bold" />
@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="0dp"
-            android:text="Workout Plans"
+            android:text="Diet Plans"
             android:textColor="#445677"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -64,14 +64,14 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:text=" Current Workout Plan :"
+        android:text=" Current Diet Plan :"
         android:textColor="#007bff"
         android:textSize="15sp"
         android:textStyle="bold" />
 
     <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/CurrentWorkPlan"
+        android:id="@+id/currentDietplan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
@@ -133,7 +133,6 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
     <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nocurrentrecord"
@@ -159,10 +158,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Current Workout plan Records"
+                android:text="No Current Diet plan Records"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-            />
+                />
 
 
             <!-- You can add more breadcrumb items here if needed -->
@@ -181,11 +180,10 @@
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:layout_marginLeft="10dp"
-        android:text="Previous Work Plans :"
+        android:text="Previous Diet Plans:"
         android:textColor="@color/black"
         android:textStyle="bold"
         android:textSize="15sp" />
-
     <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/nopreviousrecord"
@@ -211,7 +209,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="No Current Workout plan Records"
+                android:text="No Current Diet plan Records"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 />
@@ -221,8 +219,9 @@
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/workoutCon"
+        android:id="@+id/dietplancon"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"

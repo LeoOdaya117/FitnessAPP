@@ -1,12 +1,33 @@
 package com.example.fitnessapplication;
 
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +35,16 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class WorkoutPlans extends Fragment {
+
+    private View rootView; // Define rootView as a class-level variable
+
+    private RecyclerView recyclerView;
+    private WorkoutPlanAdapter adapter;
+    private List<WorkoutPlan> workoutPlanList;
+    private TextView currentweekTextView;
+    private TextView currentdetailsTextView, navplans;
+
+    private CardView CurrentWorkPlan, nocurrentrecord,nopreviousrecord;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,6 +90,173 @@ public class WorkoutPlans extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_workout_plans, container, false);
+        rootView = inflater.inflate(R.layout.fragment_workout_plans, container, false); // Assign rootView here
+
+        // Find the RecyclerView from the layout
+        recyclerView = rootView.findViewById(R.id.workoutCon);
+        currentweekTextView = rootView.findViewById(R.id.currentWeek);
+        currentdetailsTextView =rootView.findViewById(R.id.currentWeektext);
+        CurrentWorkPlan=rootView.findViewById(R.id.CurrentWorkPlan);
+        navplans = rootView.findViewById(R.id.navplans);
+        // Create a layout manager for the RecyclerView (optional)
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Initialize the adapter with an empty list
+        workoutPlanList = new ArrayList<>();
+        adapter = new WorkoutPlanAdapter(workoutPlanList);
+        recyclerView.setAdapter(adapter);
+
+        // Fetch workout plans from the server
+        fetchWorkoutPlans();
+
+
+
+        CurrentWorkPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                UserDataManager.getInstance(getContext()).saveWorkoutPlanId(currentweekTextView.getText().toString());
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, new WorkoutPlanDays());
+                transaction.addToBackStack(null); // Optional: Add transaction to back stack
+                transaction.commit();
+            }
+        });
+
+        navplans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fragmentManager = getParentFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.fragment_container, new Plans());
+                transaction.addToBackStack(null); // Optional: Add transaction to back stack
+                transaction.commit();
+            }
+        });
+
+
+        return rootView;
     }
+
+
+
+    private void fetchWorkoutPlans() {
+        UserDataManager userDataManager = UserDataManager.getInstance(requireContext());
+        String username = userDataManager.getEmail();
+        // Assuming your PHP server URL is stored in a constant named SERVER_URL
+        String url = URLManager.MY_URL + "/gym_website/user/api/get_workout_plans.php?IdNum=" + username;
+
+        OkHttpClient client = new OkHttpClient();
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // Handle failure
+                e.printStackTrace();
+                requireActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Show an error message to the user
+                        Toast.makeText(getContext(), "Failed to fetch workout plans. Please try again later.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    // Process the response JSON
+                    try {
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        JSONArray currentPlans = jsonObject.getJSONArray("currentWorkoutPlan");
+                        JSONArray previousPlans = jsonObject.getJSONArray("previousWorkoutPlans");
+                        // Process the JSON data and update UI
+                        requireActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Clear the existing workout plan list
+                                workoutPlanList.clear();
+
+                                // Process the current workout plan
+                                if (currentPlans.length() == 0) {
+                                    // If current plan is empty, show the "No Current Workout Plan Records" card
+                                    CurrentWorkPlan.setVisibility(View.GONE);
+                                    rootView.findViewById(R.id.nocurrentrecord).setVisibility(View.VISIBLE);
+                                } else {
+                                    // If current plan exists, hide the "No Current Workout Plan Records" card
+                                    CurrentWorkPlan.setVisibility(View.VISIBLE);
+                                    rootView.findViewById(R.id.nocurrentrecord).setVisibility(View.GONE);
+
+                                    // Assuming there's only one current plan
+                                    JSONObject currentPlan = null;
+                                    try {
+                                        currentPlan = currentPlans.getJSONObject(0);
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    String currentTitle = null;
+                                    try {
+                                        currentTitle = currentPlan.getString("WorkoutPlanID");
+                                    } catch (JSONException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                    String currentDetails = "Workout Plan details for Week " + currentTitle;
+                                    currentweekTextView.setText(currentTitle);
+                                    currentdetailsTextView.setText(currentDetails);
+                                }
+
+                                // Process the previous workout plans
+                                if (previousPlans.length() == 0) {
+                                    // If no previous plans, show the "No Previous Workout Plan Records" card
+                                    rootView.findViewById(R.id.nopreviousrecord).setVisibility(View.VISIBLE);
+                                } else {
+                                    // If previous plans exist, hide the "No Previous Workout Plan Records" card
+                                    rootView.findViewById(R.id.nopreviousrecord).setVisibility(View.GONE);
+
+                                    // Add previous workout plans
+                                    for (int i = 0; i < previousPlans.length(); i++) {
+                                        try {
+                                            JSONObject previousPlan = previousPlans.getJSONObject(i);
+                                            String title = previousPlan.getString("WorkoutPlanID");
+                                            String details = "Workout Plan details for Week " + title;
+                                            workoutPlanList.add(new WorkoutPlan(title, details));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                                // Notify the adapter that the data set has changed
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Handle unsuccessful response
+                    requireActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Show an error message to the user
+                            Toast.makeText(getContext(), "Failed to fetch workout plans. Please try again later.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
 }

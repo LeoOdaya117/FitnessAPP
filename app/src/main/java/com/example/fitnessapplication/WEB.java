@@ -178,40 +178,50 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
             tab = (String) item.getTitle();
             String currentUrl = webView.getUrl();
             String loadURL = websiteurl + "/gym_website/user/";
-
+            FragmentManager fragmentManager = getSupportFragmentManager();
             TextView headerTextView = findViewById(R.id.header_text);
             switch (tab) {
                 case "Plans":
                     headerTextView.setText("Plans");
                     loadInitialUrl();
-                    webView.loadUrl(loadURL + "loadingpage.php");
-                    loadFragment(new Plans());
+//                    webView.loadUrl(loadURL + "loadingpage.php");
+
+
+                    Fragment newFragment = new Plans();
+                    replaceFragment(fragmentManager, newFragment); // Call your existing function to replace the fragment
+
+//                    loadFragment(new Plans());
 
                     webView.setVisibility(View.GONE);
 
                     return true;
                 case "Discover":
-                    loadFragment(new Discover());
+//                    loadFragment(new Discover());
                     webView.setVisibility(View.GONE);
                     headerTextView.setText("Discover");
 
-                    if (!currentUrl.endsWith("discover.php")) {
-                        loadInitialUrl();
-                        webView.loadUrl(loadURL + "loadingpage.php");
 
-                        webView.loadUrl(loadURL + "discover.php");
-                    }
+                    Fragment Discover = new Discover();
+                    replaceFragment(fragmentManager, Discover);
+//                    if (!currentUrl.endsWith("discover.php")) {
+//                        loadInitialUrl();
+//                        webView.loadUrl(loadURL + "loadingpage.php");
+//
+//                        webView.loadUrl(loadURL + "discover.php");
+//                    }
                     return true;
                 case "Report":
                     webView.setVisibility(View.GONE);
 
-                    loadFragment(new Report());
+//                    loadFragment(new Report());
+                    Fragment Report = new Report();
+                    replaceFragment(fragmentManager, Report);
                     headerTextView.setText("Report");
-                    if (!currentUrl.endsWith("index.php")) {
-                        webView.loadUrl(loadURL + "loadingpage.php");
-
-                        webView.loadUrl(loadURL + "index.php");
-                    }
+//                    if (!currentUrl.endsWith("index.php")) {
+//                        webView.loadUrl(loadURL + "loadingpage.php");
+//
+//                        webView.loadUrl(loadURL + "index.php");
+//                    }
                     return true;
                 case "Settings":
 
@@ -338,48 +348,93 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     public void onPlanSelected(String url) {
         String loadURL = websiteurl + "/gym_website/user/";
         webView.loadUrl(loadURL + "loadingpage.php");
-        webView.setVisibility(View.GONE);
-        webView.loadUrl(url);
-        webView.setVisibility(View.VISIBLE);
+//        webView.setVisibility(View.GONE);
+//        webView.loadUrl(url);
+//        webView.setVisibility(View.VISIBLE);
 
+    }
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment currentFragment = fm.findFragmentById(R.id.fragment_container);
+
+        // Check if the current fragment is Report
+        if (currentFragment instanceof Report) {
+            // If it is, let the system handle the back button press
+            super.onBackPressed();
+        } else {
+            // If it's not, navigate to the Report fragment
+            // You can replace this with any other desired navigation logic
+            navigateToReportFragment();
+        }
+    }
+
+    private void navigateToReportFragment() {
+        // Replace the current fragment with the Report fragment
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.fragment_container, new Report());
+        ft.commit();
     }
 
 
-    @Override
-    public void onBackPressed() {
-        String currentUrl = webView.getUrl();
+//    @Override
+//    public void onBackPressed() {
+//
+//        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+//
+//        // Check if the current fragment is the Report fragment
+//        if (currentFragment instanceof Report) {
+//            // If the current fragment is Report, do nothing (prevent navigating back)
+//            return;
+//        }
+//
+//
+//        String currentUrl = webView.getUrl();
+//
+////        // Check if the current URL ends with pages-login.html
+////        if (currentUrl != null && currentUrl.endsWith("pages-login.html")) {
+////            // Navigate back to MainActivity
+////            Intent intent = new Intent(this, MainActivity.class);
+////            startActivity(intent);
+////            finish(); // Finish the current activity to prevent going back to it
+////            return;
+////        }
+////
+////        // Check if the current URL ends with index.php
+////        if (currentUrl != null && currentUrl.endsWith("index.php")) {
+////            // Disable the back button
+////            return;
+////        }
+////
+////        if (currentUrl.endsWith("workoutplan_noheader.php")) {
+////            webView.setVisibility(View.GONE);
+////
+////        }
+////        if (currentUrl.endsWith("dietplans_noheader.php")) {
+////            webView.setVisibility(View.GONE);
+////
+////        }
+//
+////        // If WebView can go back, navigate back in its history
+////        if (webView.canGoBack()) {
+////            webView.goBack();
+////        } else {
+////            // If WebView cannot go back, handle the back button press normally
+////            super.onBackPressed();
+////        }
+//
+//        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+//            getSupportFragmentManager().popBackStack();
+//        } else {
+//            super.onBackPressed();
+//        }
+//
+//    }
 
-        // Check if the current URL ends with pages-login.html
-        if (currentUrl != null && currentUrl.endsWith("pages-login.html")) {
-            // Navigate back to MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish(); // Finish the current activity to prevent going back to it
-            return;
-        }
-
-        // Check if the current URL ends with index.php
-        if (currentUrl != null && currentUrl.endsWith("index.php")) {
-            // Disable the back button
-            return;
-        }
-
-        if (currentUrl.endsWith("workoutplan_noheader.php")) {
-            webView.setVisibility(View.GONE);
-
-        }
-        if (currentUrl.endsWith("dietplans_noheader.php")) {
-            webView.setVisibility(View.GONE);
-
-        }
-
-        // If WebView can go back, navigate back in its history
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            // If WebView cannot go back, handle the back button press normally
-            super.onBackPressed();
-        }
+    public Fragment getCurrentFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        return fragmentManager.findFragmentById(R.id.fragment_container);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -410,10 +465,10 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
         UserDataManager userDataManager = UserDataManager.getInstance(getApplicationContext());
 
-//        String username = "?login-username=" +userDataManager.getEmail();
-//        String password = "&login-password=" + userDataManager.getPassword();
-        String username = "?login-username=" + getIntent().getStringExtra("username");
-        String password = "&login-password=" + getIntent().getStringExtra("password");
+        String username = "?login-username=" +userDataManager.getEmail();
+        String password = "&login-password=" + userDataManager.getPassword();
+//        String username = "?login-username=" + getIntent().getStringExtra("username");
+//        String password = "&login-password=" + getIntent().getStringExtra("password");
         String url = websiteurl+ "/gym_website/user/login.php";
 
         url = url + username + password;
@@ -592,5 +647,12 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         });
 
         dialog.show();
+    }
+
+    public static void replaceFragment(FragmentManager fragmentManager, Fragment fragment) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }

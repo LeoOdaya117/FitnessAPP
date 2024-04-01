@@ -187,6 +187,7 @@ public class Discover extends Fragment {
                 // Update appearance of clicked TextView
                 navWorkouts.setTypeface(null, Typeface.BOLD);
                 navWorkouts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                scrollUpButton.setVisibility(View.GONE);
 
                 recyclerView.setVisibility(View.GONE);
                 // Handle click action for Workouts

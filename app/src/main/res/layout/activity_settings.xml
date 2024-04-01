@@ -119,7 +119,7 @@
 
                 <TextView
                     android:id="@+id/text_history"
-                    android:text="Transactions History"
+                    android:text="Weight Logs"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:layout_width="match_parent"

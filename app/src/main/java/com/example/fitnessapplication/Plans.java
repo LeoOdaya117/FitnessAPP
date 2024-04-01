@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -91,11 +92,15 @@ public class Plans extends Fragment {
 
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.xml.button_animation);
 
+
+
         workoutImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 workoutImageView.startAnimation(animation);
-
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Fragment newFragment = new WorkoutPlans();
+                WEB.replaceFragment(fragmentManager, newFragment);
                 // Notify the hosting activity with the workout plan URL
                 if (listener != null) {
                     listener.onPlanSelected(websiteurl + "/Gym_Website/user/workoutplan_noheader.php");
@@ -108,6 +113,9 @@ public class Plans extends Fragment {
             public void onClick(View v) {
                 dietImageView.startAnimation(animation);
                 // Notify the hosting activity with the diet plan URL
+                FragmentManager fragmentManager = getParentFragmentManager();
+                Fragment newFragment = new DietPlans();
+                WEB.replaceFragment(fragmentManager, newFragment);
                 if (listener != null) {
                     listener.onPlanSelected(websiteurl + "/Gym_Website/user/dietplans_noheader.php");
                 }
