@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/other_background"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/other_background">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -27,9 +26,8 @@
                 android:id="@+id/backButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="20dp"
-                app:srcCompat="@drawable/back" />
-
+                app:srcCompat="@drawable/back"
+                android:layout_marginLeft="20dp"/>
 
             <!-- Header Title with layout weight to center it -->
             <TextView
@@ -38,9 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="@color/black"
-                android:text="Pending"
                 android:textStyle="bold"
+                android:textColor="@color/black"
+                android:text="Weight Logs"
                 android:textSize="24sp"
                 android:layout_gravity="center_vertical"
                 />
@@ -56,41 +54,49 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/NoPendingTransaction"
+    <!-- Title -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:padding="20dp"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/white"
-        app:cardCornerRadius="8dp"
-        android:visibility="invisible">
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
+        <!-- Title -->
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="No Pending Transaction"
+            android:text="History"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:textColor="@color/black"
+            android:layout_gravity="start"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
 
-            android:textSize="18sp"
-            android:padding="20dp"
-            android:visibility="visible" />
+        <!-- Dummy Data Design -->
+        <ScrollView
+            android:id="@+id/weightrecord"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/weightContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"/>
 
 
-    <!-- Pending Transactions Container -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewPendingTransactions"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="16dp" />
+        </ScrollView>
+
+    </LinearLayout>
+
+
+
 
 
 
 </LinearLayout>
+

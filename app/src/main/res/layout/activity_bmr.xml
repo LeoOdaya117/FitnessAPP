@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="BMR Calculator"
                 android:textSize="24sp"
                 android:textColor="@android:color/black" />
@@ -49,7 +50,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="20dp"
-                app:srcCompat="@drawable/dots" />
+                app:srcCompat="@drawable/dots"
+                android:visibility="invisible"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

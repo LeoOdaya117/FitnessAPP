@@ -224,10 +224,12 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 //                    }
                     return true;
                 case "Settings":
-
-                    Intent intent = new Intent(WEB.this, Settings.class);
-                    intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
-                    startActivity(intent);
+                    Fragment Settings = new SettingsFragment();
+                    replaceFragment(fragmentManager, Settings);
+                    headerTextView.setText("Settings");
+//                    Intent intent = new Intent(WEB.this, Settings.class);
+//                    intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
+//                    startActivity(intent);
 
 //                    if (!currentUrl.endsWith("user_profile.php")) {
 //                        webView.loadUrl(loadURL + "user_profile.php");

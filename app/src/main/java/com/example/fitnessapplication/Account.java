@@ -326,8 +326,10 @@ public class Account extends AppCompatActivity {
                                 editProfileButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        showEditProfileModal(firstName, lastName, email, password, age, gender, height, weight);
-
+//                                        showEditProfileModal(firstName, lastName, email, password, age, gender, height, weight);
+                                        Intent intent = new Intent(Account.this, EditProfile.class);
+                                        intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
+                                        startActivity(intent);
                                     }
                                 });
 

@@ -19,6 +19,12 @@
         android:theme="@style/Theme.FitnessApplication"
         tools:targetApi="31">
         <activity
+            android:name=".EditProfile"
+            android:exported="false" />
+        <activity
+            android:name=".WeightLogs"
+            android:exported="false" />
+        <activity
             android:name=".Workout"
             android:exported="false" />
         <activity

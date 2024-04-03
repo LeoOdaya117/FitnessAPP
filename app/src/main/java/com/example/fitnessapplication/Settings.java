@@ -65,7 +65,7 @@ public class Settings extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle click for History container
                 //Toast.makeText(Settings.this, "Transaction History clicked", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(Settings.this, TransactionHistory.class);
+                Intent intent = new Intent(Settings.this, WeightLogs.class);
                 intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
                 startActivity(intent);
             }

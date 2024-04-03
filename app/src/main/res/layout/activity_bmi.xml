@@ -21,7 +21,7 @@
             android:orientation="horizontal"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:gravity="center_vertical">
+            >
 
             <!-- Back Button -->
             <ImageView
@@ -40,6 +40,7 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:text="BMI"
+                android:textStyle="bold"
                 android:textSize="24sp"
                 android:layout_gravity="center_vertical" />
 
@@ -49,7 +50,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="20dp"
-                app:srcCompat="@drawable/dots" />
+                app:srcCompat="@drawable/dots"
+                android:visibility="invisible"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
