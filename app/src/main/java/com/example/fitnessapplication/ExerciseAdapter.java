@@ -89,6 +89,12 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             image = exercise.getEquipmentImage();
             tag = exercise.getEquipmentID();
             holder.text_view_equipment.setVisibility(View.GONE);
+        } else if(Discover.getCategory().equals("warmup")){
+            name = exercise.getExerciseName();
+            secondtext = "Equipment: " + exercise.getEquipmentId();
+            image = exercise.getImageUrl();
+            tag = exercise.getExerciseId();
+
         }
 
         holder.textViewExerciseName.setText(name);
@@ -147,6 +153,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                             showEquipmentModal(itemView.getContext(), exerciseId, textViewExerciseName.getText().toString());
 
                         } else {
+                            showExerciseModal(itemView.getContext(), exerciseId, textViewExerciseName.getText().toString());
 
                         }
                     }
@@ -422,6 +429,8 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         private void fetchDataFromAPI(String id, String category, DataFetchCallback callback) {
             String url = URLManager.MY_URL + "/Gym_Website/user/api/fetch_details.php?itemId=" + id + "&category=" + category;
+            Log.d( "API LINK: ",url );
+
             Request request = new Request.Builder()
                     .url(url)
                     .build();
@@ -429,12 +438,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    Log.d( "FAILURE: ",e.getMessage() );
                     callback.onFailure(e.getMessage());
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful()) {
+                        Log.d( "API RESPONSE: ",response.body().toString() );
                         callback.onFailure("Unexpected code " + response);
                         return;
                     }

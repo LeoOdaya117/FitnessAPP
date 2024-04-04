@@ -76,6 +76,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
+        String username = UserDataManager.getInstance(WEB.this).getEmail();
 
         // Initialize NoInternetFragment
         noInternetFragment = NoInternetFragment.newInstance("param1", "param2");
@@ -85,16 +86,18 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         webView = findViewById(R.id.myWeb);
 
 
-        if (!isNetworkAvailable()) {
-            loadFragment(noInternetFragment);
-        } else {
-            // Show the WebView
-            webView.setVisibility(View.VISIBLE);
-            loadInitialUrl();
-        }
+//        if (!isNetworkAvailable()) {
+//            loadFragment(noInternetFragment);
+//        } else {
+//            // Show the WebView
+//            webView.setVisibility(View.VISIBLE);
+//            loadInitialUrl();
+//        }
         webView.setVisibility(View.INVISIBLE);
-        loadInitialUrl();
         loadFragment(new Report());
+//        loadInitialUrl();
+        checkDietPlanRecord();
+        checkUsersSubscription(username);
 
 
 //        webView.loadUrl(websiteurl + "/gym_website/user/index.php");
@@ -142,12 +145,14 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
                     finish(); // Finish the current activity to prevent going back to it
                 }
                 if (url != null && url.endsWith("index.php")) {
-                    String username = getIntent().getStringExtra("username");
 
-                    checkDietPlanRecord();
-                    checkUsersSubscription(username);
+
+
 
                 }
+                String username = getIntent().getStringExtra("username");
+                checkDietPlanRecord();
+                checkUsersSubscription(username);
 
             }
 

@@ -39,7 +39,7 @@ public class Discover extends Fragment {
     private TextView navWorkouts;
     private TextView navExercise;
     private TextView navFood;
-    private TextView navEquipment;
+    private TextView navEquipment,navWarmup;
     private RecyclerView recyclerView;
     private ExerciseAdapter exerciseAdapter;
     private List<Exercise> exerciseList;
@@ -139,17 +139,17 @@ public class Discover extends Fragment {
         setCardClickListener(chestBeginner, "Chest Beginner");
         setCardClickListener(armBeginner, "Arm Beginner");
         setCardClickListener(legBeginner, "Leg Beginner");
-        setCardClickListener(backBeginner, "Back Beginner");
+        setCardClickListener(backBeginner, "Shoulder & Back Beginner");
         setCardClickListener(absIntermediate, "Abs Intermediate");
         setCardClickListener(chestIntermediate, "Chest Intermediate");
         setCardClickListener(armIntermediate, "Arm Intermediate");
         setCardClickListener(legIntermediate, "Leg Intermediate");
-        setCardClickListener(backIntermediate, "Back Intermediate");
+        setCardClickListener(backIntermediate, "Shoulder & Back Intermediate");
         setCardClickListener(absAdvanced, "Abs Advanced");
         setCardClickListener(chestADVANCED, "Chest Advanced");
         setCardClickListener(armADVANCED, "Arm Advanced");
         setCardClickListener(legADVANCED, "Leg Advanced");
-        setCardClickListener(backADVANCED, "Back Advanced");
+        setCardClickListener(backADVANCED, "Shoulder & Back Advanced");
 
 
         // Set an OnClickListener to the scroll up button
@@ -210,6 +210,7 @@ public class Discover extends Fragment {
 
         // Initialize TextViews
         navWorkouts = view.findViewById(R.id.nav_workouts);
+        navWarmup = view.findViewById(R.id.nav_warmup);
         navExercise = view.findViewById(R.id.nav_exercise);
         navFood = view.findViewById(R.id.nav_food);
         navEquipment = view.findViewById(R.id.nav_equipment);
@@ -232,6 +233,23 @@ public class Discover extends Fragment {
             }
         });
 
+        navWarmup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Reset appearance of all TextViews
+                resetTextViewsAppearance();
+                category = "warmup";
+
+                // Update appearance of clicked TextView
+                navWarmup.setTypeface(null, Typeface.BOLD);
+                navWarmup.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+                fetchData(search_text.getText().toString());
+                workouts_container.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+                // Handle click action for Workouts
+            }
+        });
         navExercise.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -337,6 +355,9 @@ public class Discover extends Fragment {
     private void resetTextViewsAppearance() {
         navWorkouts.setTypeface(null, Typeface.NORMAL);
         navWorkouts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+        navWarmup.setTypeface(null, Typeface.NORMAL);
+        navWarmup.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
         navExercise.setTypeface(null, Typeface.NORMAL);
         navExercise.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);

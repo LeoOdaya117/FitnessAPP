@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -52,7 +54,10 @@ import android.content.DialogInterface;
 
 
 import android.Manifest;
-
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.PopupMenu;
 
 public class Account extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -81,6 +86,8 @@ public class Account extends AppCompatActivity {
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(Account.this, R.xml.button_animation);
+                btnback.startAnimation(animation);
                 onBackPressed(); // Simulate back button press to return to the previous activity (Settings)
             }
         });
@@ -108,14 +115,41 @@ public class Account extends AppCompatActivity {
         details.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Account.this, About.class);
-                intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
-                startActivity(intent);
+//                Intent intent = new Intent(Account.this, About.class);
+//                intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
+//                startActivity(intent);
+                showPopupMenu(v);
             }
         });
 
 
 
+    }
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view);
+        MenuInflater inflater = popupMenu.getMenuInflater();
+        inflater.inflate(R.menu.menu_layout, popupMenu.getMenu());
+
+
+        // Set item click listener
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getTitle().toString()) {
+                    case "Change Password":
+                        Intent intent = new Intent(Account.this, ChangePassword.class);
+                        intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
+                        startActivity(intent);
+                        return true;
+                    default:
+                        return true;
+                }
+
+            }
+        });
+
+        // Show the popup menu
+        popupMenu.show();
     }
 
     private void showQRCodeDialog(String qrCodeImageUrl) {
@@ -255,7 +289,7 @@ public class Account extends AppCompatActivity {
         });
     }
 
-    private void fetchData(String username) {
+    private  void fetchData(String username) {
         OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username parameter
@@ -298,6 +332,9 @@ public class Account extends AppCompatActivity {
                         final String height = jsonObject.getString("Height");
                         final String age = jsonObject.getString("Age");
                         final String gender = jsonObject.getString("Gender");
+                        final String bmrval = jsonObject.getString("BMR");
+                        final String heightval = jsonObject.getString("Height");
+                        final String weightval = jsonObject.getString("Weight");
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -305,7 +342,13 @@ public class Account extends AppCompatActivity {
                                 TextView textViewFullName = findViewById(R.id.textView_fullname);
                                 TextView textViewPosition = findViewById(R.id.textView_position);
                                 ImageView imageViewProfile = findViewById(R.id.imageView_profile);
+                                TextView bmrvaltv = findViewById(R.id.bmrval);
+                                TextView heightvaltv = findViewById(R.id.heightval);
+                                TextView weightvaltv = findViewById(R.id.weightval);
 
+                                bmrvaltv.setText(bmrval + " kcal");
+                                heightvaltv.setText(heightval + " cm");
+                                weightvaltv.setText(weightval + " kg");
 
                                 // Set the retrieved data to UI components
                                 textViewFullName.setText(fullName);
@@ -458,6 +501,14 @@ public class Account extends AppCompatActivity {
         dialog.show();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String username = UserDataManager.getInstance(Account.this).getEmail();
+
+        fetchData(username);
+    }
 
 
 

@@ -43,53 +43,70 @@
     </LinearLayout>
 
     <!-- Navigation Container -->
-    <LinearLayout
-        android:id="@+id/nav_container"
-        android:layout_width="match_parent"
+    <HorizontalScrollView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white"
         android:paddingTop="0dp"
-        android:gravity="center_horizontal"
+        android:background="@color/white"
         android:padding="10dp">
 
-        <!-- Navigation Items -->
-        <TextView
-            android:id="@+id/nav_workouts"
+        <LinearLayout
+            android:id="@+id/nav_container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Workouts"
-            android:paddingEnd="16dp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"/>
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="@color/white"
+            android:paddingBottom="5dp"
+            android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/nav_exercise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Exercise"
-            android:paddingEnd="16dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"/>
+            <!-- Navigation Items -->
+            <TextView
+                android:id="@+id/nav_workouts"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Workouts"
+                android:paddingEnd="16dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"/>
 
-        <TextView
-            android:id="@+id/nav_food"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Food"
-            android:paddingEnd="16dp"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"/>
+            <TextView
+                android:id="@+id/nav_warmup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warm up"
+                android:paddingEnd="16dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
 
-        <TextView
-            android:id="@+id/nav_equipment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Equipment"
-            android:textSize="16sp"
-            android:textColor="@android:color/black"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/nav_exercise"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Exercise"
+                android:paddingEnd="16dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/nav_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Food"
+                android:paddingEnd="16dp"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:id="@+id/nav_equipment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Equipment"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"/>
+        </LinearLayout>
+    </HorizontalScrollView>
+
 
     <!-- Content RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -140,6 +157,7 @@
                 android:paddingEnd="16dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 android:textColor="@android:color/black"/>
 
             <androidx.cardview.widget.CardView
@@ -151,7 +169,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="10dp"
-                app:cardCornerRadius="16dp">
+                app:cardCornerRadius="16dp"
+                android:visibility="gone"
+                >
 
                 <FrameLayout
                     android:layout_width="match_parent"

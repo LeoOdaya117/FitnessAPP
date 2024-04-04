@@ -38,6 +38,8 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
                 apiLink = "/Gym_Website/user/api/fetch_food.php?search=";
             } else if (category.equals("equipment")) {
                 apiLink = "/Gym_Website/user/api/fetch_equipment.php?search=";
+            }else if (category.equals("warmup")) {
+                apiLink = "/Gym_Website/user/api/fetch_warmup.php?search=";
             }
 
             // Construct the URL
@@ -55,7 +57,7 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
                 stringBuilder.append(line);
             }
             String response = stringBuilder.toString();
-
+            Log.d("SERVER RESPONSE",response);
             // Parse JSON response based on category
             JSONArray jsonArray = new JSONArray(response);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -77,6 +79,15 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
                             jsonObject.getString("serving"),
                             jsonObject.getString("photo")
                     );
+                }else if (category.equals("warmup")) {
+                    exercise = new Exercise(
+                            jsonObject.getString("ExerciseID"),
+                            jsonObject.getString("ExerciseName"),
+                            jsonObject.getString("Description"),
+                            jsonObject.getString("EquipmentID"),
+                            jsonObject.getString("Difficulty"),
+                            jsonObject.getString("ImageURL")
+                    );
                 } else { // equipment
                     exercise = new Exercise(
                             jsonObject.getString("equipmentID"),
@@ -84,6 +95,7 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
                             jsonObject.getString("image")
                     );
                 }
+
                 exerciseList.add(exercise);
             }
 

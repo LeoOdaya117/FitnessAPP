@@ -137,7 +137,7 @@ public class Signup extends AppCompatActivity {
                             //edittextviewResponse.setText("LOGIN SUCCESS");
                             Toast.makeText(Signup.this, "SIGNUP SUCCESS", Toast.LENGTH_LONG).show();
                             // After successful SIGNUP
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Signup.this);
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Signup.this, R.style.AlertDialogCustomStyle);
                             builder.setMessage("Signup Success")
                                     .setTitle("Success")
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {

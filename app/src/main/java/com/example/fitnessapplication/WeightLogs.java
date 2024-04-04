@@ -10,6 +10,8 @@ import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -52,6 +54,9 @@ public class WeightLogs extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Animation animation = AnimationUtils.loadAnimation(WeightLogs.this, R.xml.button_animation);
+                back.startAnimation(animation);
                 onBackPressed(); // Simulate back button press to return to the previous activity (Settings)
             }
         });

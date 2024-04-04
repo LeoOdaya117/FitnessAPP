@@ -67,6 +67,31 @@
                     tools:ignore="MissingClass">
 
                     <!-- Your existing layout content -->
+                    <LinearLayout
+                        android:id="@+id/eqlinear"
+                        android:layout_width="match_parent"
+                        android:layout_marginBottom="5dp"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="EQUIPMENT:"
+                            android:textColor="@color/black"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp"/>
+
+                        <TextView
+                            android:id="@+id/modal_equipment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textAlignment="textStart"
+                            android:maxLines="2"
+                            android:text="None"/>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/label_description"

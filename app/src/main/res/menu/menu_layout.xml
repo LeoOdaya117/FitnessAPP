@@ -1,0 +1,7 @@
+<!-- menu_layout.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/changepass"
+        android:title="Change Password"/>
+
+</menu>

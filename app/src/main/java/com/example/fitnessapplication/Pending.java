@@ -24,6 +24,8 @@ import okhttp3.Response;
 
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,6 +85,8 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
         btnback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(Pending.this, R.xml.button_animation);
+                btnback.startAnimation(animation);
                 onBackPressed(); // Simulate back button press to return to the previous activity (Settings)
             }
         });

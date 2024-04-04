@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -86,6 +88,8 @@ public class Report extends Fragment {
         view.findViewById(R.id.height_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Animation animation = AnimationUtils.loadAnimation(getActivity(), R.xml.button_animation);
+                view.findViewById(R.id.height_button).startAnimation(animation);
                 showAlertInputDialog("Height", "Update Your Height");
             }
         });
@@ -426,6 +430,10 @@ public class Report extends Fragment {
             @Override
             public void onClick(View view) {
                 String input = user_input.getText().toString();
+                if(input.isEmpty()){
+                    showAlert("Warning", "All fields must be filled!");
+                    return;
+                }
                 if (category.equals("Weight")) {
                     saveWeight(email, input);
                 } else {

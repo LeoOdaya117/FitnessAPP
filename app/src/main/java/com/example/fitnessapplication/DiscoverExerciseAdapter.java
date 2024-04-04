@@ -15,7 +15,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -35,40 +34,63 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlanExerciseAdapter.WorkoutPlanExerciseViewHolder> {
-
-    private List<WorkoutPlanExercise> exerciseList;
+public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerciseAdapter.ExerciseViewHolder> {
+    private List<ExerciseItem> itemList;
     private static final OkHttpClient client = new OkHttpClient();
-    public WorkoutPlanExerciseAdapter(List<WorkoutPlanExercise> exerciseList) {
-        this.exerciseList = exerciseList;
+
+    public DiscoverExerciseAdapter(List<ExerciseItem> itemList) {
+        this.itemList = itemList;
     }
 
     @NonNull
     @Override
-    public WorkoutPlanExerciseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ExerciseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_workoutplan_exercise, parent, false);
-        return new WorkoutPlanExerciseViewHolder(view);
+        return new ExerciseViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull WorkoutPlanExerciseViewHolder holder, int position) {
-        WorkoutPlanExercise exercise = exerciseList.get(position);
-        holder.bind(exercise);
+    public void onBindViewHolder(@NonNull ExerciseViewHolder holder, int position) {
+        ExerciseItem item = itemList.get(position);
+        String image = item.getImage();
+        String set = item.getSet();
+        String reps = item.getReps();
+        String duration = item.getDuration();
+
+        // If sets and reps are empty, display duration only
+        if (set.isEmpty() && reps.isEmpty()) {
+            holder.setRepsTextView.setText("Duration: " + duration);
+            holder.durationTextView.setVisibility(View.GONE); // Hide duration TextView
+        } else {
+            // Display sets and reps
+            holder.setRepsTextView.setText("Sets: " + set);
+            holder.durationTextView.setText("Reps: " + reps);
+            holder.durationTextView.setVisibility(View.VISIBLE); // Show duration TextView
+        }
+        holder.infoImageView.setTag(item.getExerciseId());
+        holder.exerciseNameTextView.setText(item.getName());
+
+        Picasso.get()
+                .load(image)
+                .placeholder(R.drawable.loading) // Optional: Placeholder image while loading
+                .error(R.drawable.notfound) // Optional: Error image if the image fails to load
+                .into(holder.exerciseImageView);
+
     }
 
     @Override
     public int getItemCount() {
-        return exerciseList.size();
+        return itemList.size();
     }
 
-    public static class WorkoutPlanExerciseViewHolder extends RecyclerView.ViewHolder {
-
+    static class ExerciseViewHolder extends RecyclerView.ViewHolder {
         private TextView exerciseNameTextView, setRepsTextView, durationTextView;
         private ImageView exerciseImageView, infoImageView;
+        private Animation animation;
 
-        public WorkoutPlanExerciseViewHolder(@NonNull View itemView) {
+        public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            Animation animation = AnimationUtils.loadAnimation(itemView.getContext(), R.xml.button_animation);
+            animation = AnimationUtils.loadAnimation(itemView.getContext(), R.xml.button_animation);
 
             exerciseImageView = itemView.findViewById(R.id.exercisephoto);
             infoImageView = itemView.findViewById(R.id.info);
@@ -76,39 +98,28 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
             setRepsTextView = itemView.findViewById(R.id.setreps);
             durationTextView = itemView.findViewById(R.id.duration);
 
-
             // Set OnClickListener for the info_icon
             infoImageView.setOnClickListener(new View.OnClickListener() {
-
-
-
                 @Override
                 public void onClick(View v) {
-
-                    infoImageView.startAnimation(animation);
+                    v.startAnimation(animation);
                     // Get the tag associated with the info_icon
                     Object tag = infoImageView.getTag();
-
                     if (tag != null && tag instanceof String) {
                         String exerciseId = (String) tag;
                         showExerciseModal(itemView.getContext(), exerciseId, exerciseNameTextView.getText().toString());
-
                     }
-
-
                 }
             });
-
         }
 
         private void showExerciseModal(Context context, String exerciseId, String name) {
-            fetchDataFromAPI(exerciseId, "exercise", new ExerciseAdapter.ExerciseViewHolder.DataFetchCallback() {
+            fetchDataFromAPI(exerciseId, "exercise", new DataFetchCallback() {
                 @Override
                 public void onSuccess(JSONObject result) {
                     try {
                         // Process the fetched data
                         String description = result.getString("Description");
-                        String Equipment = result.getString("EquipmentID");
                         String instructions = result.getString("Instructions");
                         String videoUrl = result.getString("VideoURL");
 
@@ -122,73 +133,34 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
 
                                 // Initialize views from the custom layout
                                 TextView modalTitle = dialogView.findViewById(R.id.modal_title);
-                                TextView modalEquipment = dialogView.findViewById(R.id.modal_equipment);
                                 TextView modalDescription = dialogView.findViewById(R.id.modal_description);
                                 TextView modalInstructions = dialogView.findViewById(R.id.modal_instruction);
                                 TextView seeMoreDescriptionButton = dialogView.findViewById(R.id.see_more_description_button);
                                 TextView seeMoreInstructionButton = dialogView.findViewById(R.id.see_more_instruction_button);
                                 ImageView closeButton = dialogView.findViewById(R.id.close_button);
                                 WebView webView = dialogView.findViewById(R.id.youtubeplayer);
-                                LinearLayout eqlinear = dialogView.findViewById(R.id.eqlinear);
 
-                                eqlinear.setVisibility(View.VISIBLE);
                                 // Set exercise details to the views
                                 modalTitle.setText(name.toUpperCase() + " INFORMATION");
                                 modalDescription.setText(description);
                                 modalInstructions.setText(instructions);
                                 setupWebView(webView, videoUrl);
-                                modalEquipment.setText("");
-                                modalEquipment.setText(Equipment);
 
-                                // Set up "See more" button for description
                                 // Set up "See more" button for description
                                 seeMoreDescriptionButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (modalDescription.getMaxLines() == Integer.MAX_VALUE) {
-                                            // Description is expanded, collapse it and set instruction to 2 lines
-                                            modalDescription.setMaxLines(2);
-                                            seeMoreDescriptionButton.setText("See more");
-                                            modalInstructions.setMaxLines(2);
-                                            seeMoreInstructionButton.setText("See more");
-                                        } else {
-                                            // Description is collapsed, expand it and collapse instruction
-                                            modalDescription.setMaxLines(Integer.MAX_VALUE);
-                                            seeMoreDescriptionButton.setText("See less");
-                                            modalInstructions.setMaxLines(2);
-                                            seeMoreInstructionButton.setText("See more");
-                                        }
+                                        toggleTextViewExpansion(modalDescription, seeMoreDescriptionButton);
                                     }
                                 });
 
-// Set up "See more" button for instructions
+                                // Set up "See more" button for instructions
                                 seeMoreInstructionButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
-                                        if (modalInstructions.getMaxLines() == Integer.MAX_VALUE) {
-                                            // Instruction is expanded, collapse it and set description to 2 lines
-                                            modalInstructions.setMaxLines(2);
-                                            seeMoreInstructionButton.setText("See more");
-                                            modalDescription.setMaxLines(2);
-                                            seeMoreDescriptionButton.setText("See more");
-                                        } else {
-                                            // Instruction is collapsed, expand it and collapse description
-                                            modalInstructions.setMaxLines(Integer.MAX_VALUE);
-                                            seeMoreInstructionButton.setText("See less");
-                                            modalDescription.setMaxLines(2);
-                                            seeMoreDescriptionButton.setText("See more");
-                                        }
+                                        toggleTextViewExpansion(modalInstructions, seeMoreInstructionButton);
                                     }
                                 });
-                                // Set text justification for description
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                    modalDescription.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
-                                }
-
-// Set text justification for instructions
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                                    modalInstructions.setJustificationMode(LineBreaker.JUSTIFICATION_MODE_INTER_WORD);
-                                }
 
                                 // Create and show the dialog
                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -212,16 +184,12 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
 
                 @Override
                 public void onFailure(String errorMessage) {
-                    Log.e("ExerciseAdapter", "API request failed: " + errorMessage);
+                    Log.e("DiscoverExerciseAdapter", "API request failed: " + errorMessage);
                     // Handle failure
                 }
             });
         }
 
-
-
-
-        // Method to set up the WebView and restrict navigation
         private void setupWebView(WebView webView, String videoUrl) {
             webView.getSettings().setJavaScriptEnabled(true);
             webView.setWebViewClient(new WebViewClient() {
@@ -229,17 +197,13 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     // Restrict navigation to only the intended video URL
                     String url = request.getUrl().toString();
-                    if (url.startsWith("https://www.youtube.com/embed/")) {
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return !url.startsWith("https://www.youtube.com/embed/");
                 }
             });
             webView.loadUrl(videoUrl);
         }
 
-        private void fetchDataFromAPI(String id, String category, ExerciseAdapter.ExerciseViewHolder.DataFetchCallback callback) {
+        private void fetchDataFromAPI(String id, String category, DataFetchCallback callback) {
             String url = URLManager.MY_URL + "/Gym_Website/user/api/fetch_details.php?itemId=" + id + "&category=" + category;
             Request request = new Request.Builder()
                     .url(url)
@@ -270,39 +234,22 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
             });
         }
 
-        interface DataFetchCallback {
-            void onSuccess(JSONObject result);
-
-            void onFailure(String errorMessage);
-        }
-
-        public void bind(WorkoutPlanExercise exercise) {
-            String image = exercise.getImageUrl();
-            String set = exercise.getSet();
-            String reps = exercise.getReps();
-            String duration = exercise.getDuration();
-
-            // If sets and reps are empty, display duration only
-            if (set.isEmpty() && reps.isEmpty()) {
-                setRepsTextView.setText("Duration: " + duration);
-                durationTextView.setVisibility(View.GONE); // Hide duration TextView
+        private void toggleTextViewExpansion(TextView textView, TextView toggleButton) {
+            if (textView.getMaxLines() == Integer.MAX_VALUE) {
+                // Text is expanded, collapse it
+                textView.setMaxLines(2);
+                toggleButton.setText("See more");
             } else {
-                // Display sets and reps
-                setRepsTextView.setText("Sets: " + set);
-                durationTextView.setText("Reps: " + reps);
-                durationTextView.setVisibility(View.VISIBLE); // Show duration TextView
+                // Text is collapsed, expand it
+                textView.setMaxLines(Integer.MAX_VALUE);
+                toggleButton.setText("See less");
             }
-            infoImageView.setTag(exercise.getExerciseID());
-            exerciseNameTextView.setText(exercise.getName());
-
-            Picasso.get()
-                    .load(image)
-                    .placeholder(R.drawable.loading) // Optional: Placeholder image while loading
-                    .error(R.drawable.notfound) // Optional: Error image if the image fails to load
-                    .into(exerciseImageView);
-
-
         }
+    }
 
+    interface DataFetchCallback {
+        void onSuccess(JSONObject result);
+
+        void onFailure(String errorMessage);
     }
 }
