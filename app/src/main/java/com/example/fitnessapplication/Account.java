@@ -346,9 +346,26 @@ public class Account extends AppCompatActivity {
                                 TextView heightvaltv = findViewById(R.id.heightval);
                                 TextView weightvaltv = findViewById(R.id.weightval);
 
-                                bmrvaltv.setText(bmrval + " kcal");
-                                heightvaltv.setText(heightval + " cm");
-                                weightvaltv.setText(weightval + " kg");
+                                if(bmrval.equals("null")){
+                                    bmrvaltv.setText( "0 kcal");
+
+                                }else{
+                                    bmrvaltv.setText(bmrval + " kcal");
+                                }
+                                if(heightval.equals("null")){
+                                    heightvaltv.setText( "0 cm");
+
+                                }else{
+                                    heightvaltv.setText(heightval + " cm");
+                                }
+                                if(heightval.equals("null")){
+                                    weightvaltv.setText( "0 kg");
+
+                                }else{
+                                    weightvaltv.setText(weightval + " kg");
+                                }
+
+
 
                                 // Set the retrieved data to UI components
                                 textViewFullName.setText(fullName);

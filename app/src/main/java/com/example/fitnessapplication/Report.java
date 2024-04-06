@@ -26,7 +26,9 @@ import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -34,9 +36,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -75,6 +79,7 @@ public class Report extends Fragment {
 
         email = UserDataManager.getInstance(getContext()).getEmail();
         fetchWeightLog(email);
+        fetchPredictedWeight(email);
         fetchUseData(email);
 
         Button log_button = view.findViewById(R.id.log_button);
@@ -305,6 +310,10 @@ public class Report extends Fragment {
 
     }
 
+    private ArrayList<Float> weightLogs = new ArrayList<>();
+    private ArrayList<String> dates = new ArrayList<>();
+    private float predictedWeight = Float.NaN;
+    private String predictedDate = "";
 
 
     private void fetchWeightLog(String userId) {
@@ -316,6 +325,7 @@ public class Report extends Fragment {
                 .url(BASE_URL + "/Gym_Website/user/api/fetch_user_weight_logs.php")
                 .post(requestBody)
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -328,14 +338,40 @@ public class Report extends Fragment {
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String jsonData = response.body().string();
-                    if (jsonData != null && !jsonData.isEmpty()) {
+                    try {
+                        String jsonData = response.body().string();
+                        if (jsonData != null && !jsonData.isEmpty()) {
+                            // Handle the weight log data response
+                            getActivity().runOnUiThread(() -> {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(jsonData);
+                                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
+                                    JSONArray datesArray = jsonObject.getJSONArray("dates");
+
+                                    ArrayList<Float> weights = new ArrayList<>();
+                                    ArrayList<String> dates = new ArrayList<>();
+
+                                    // Extract weights and dates
+                                    for (int i = 0; i < weightsArray.length(); i++) {
+                                        weights.add((float) weightsArray.getDouble(i));
+                                        dates.add(datesArray.getString(i));
+                                    }
+
+                                    handleWeightLogsResponse(weights, dates);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    showAlert("Error", "Failed to process weight log data.");
+                                }
+                            });
+                        } else {
+                            getActivity().runOnUiThread(() -> {
+                                showAlert("Info", "No weight log found.");
+                            });
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                         getActivity().runOnUiThread(() -> {
-                            updateChartWithData(jsonData);
-                        });
-                    } else {
-                        getActivity().runOnUiThread(() -> {
-                            showAlert("Info", "No weight log found.");
+                            showAlert("Error", "Failed to process weight log data.");
                         });
                     }
                 } else {
@@ -347,56 +383,162 @@ public class Report extends Fragment {
         });
     }
 
-    private void updateChartWithData(String jsonData) {
-        try {
-            JSONObject jsonObject = new JSONObject(jsonData);
-            JSONArray weightsArray = jsonObject.getJSONArray("weights");
-            JSONArray datesArray = jsonObject.getJSONArray("dates");
+    private void fetchPredictedWeight(String username) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("username", username)
+                .build();
+        Request request = new Request.Builder()
+                .url(BASE_URL + "/Gym_Website/linear_regression.php/predict_weight.php")
+                .post(requestBody)
+                .build();
 
-            ArrayList<Entry> entries = new ArrayList<>();
-            for (int i = 0; i < weightsArray.length(); i++) {
-                float weight = (float) weightsArray.getDouble(i);
-                entries.add(new Entry(i, weight));
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                getActivity().runOnUiThread(() -> {
+                    showAlert("Error", "Failed to fetch predicted weight. Please check your internet connection.");
+                });
             }
 
-            LineDataSet dataSet = new LineDataSet(entries, "Weight Data");
-            dataSet.setColor(Color.BLUE);
-            dataSet.setValueTextColor(Color.BLACK);
-            dataSet.setCircleColor(Color.BLACK);
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    try {
+                        String jsonData = response.body().string();
+                        if (jsonData != null && !jsonData.isEmpty()) {
+                            // Handle the predicted weight response
+                            getActivity().runOnUiThread(() -> {
+                                try {
+                                    JSONObject jsonResponse = new JSONObject(jsonData);
+                                    if (jsonResponse.has("predicted_date") && jsonResponse.has("predicted_weight")) {
+                                        String predictedDate = jsonResponse.getString("predicted_date");
+                                        float predictedWeight = (float) jsonResponse.getDouble("predicted_weight");
 
-            XAxis xAxis = chart.getXAxis();
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            xAxis.setValueFormatter(new ValueFormatter() {
-                @Override
-                public String getAxisLabel(float value, AxisBase axis) {
-                    int index = (int) value;
-                    if (index >= 0 && index < datesArray.length()) {
-                        try {
-                            String dateString = datesArray.getString(index);
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                            Date date = sdf.parse(dateString);
-                            SimpleDateFormat sdfOutput = new SimpleDateFormat("MMM d");
-                            return sdfOutput.format(date);
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                                        goalText.setText(jsonResponse.getString("predicted_weight") + " kg");
+                                        handlePredictedWeightResponse(predictedWeight, predictedDate);
+                                    } else {
+                                        showAlert("Error", "Invalid response format. Missing predicted_date or predicted_weight.");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    showAlert("Error", "Failed to process predicted weight data.");
+                                }
+                            });
+                        } else {
+                            getActivity().runOnUiThread(() -> {
+                                showAlert("Info", "No predicted weight found.");
+                            });
                         }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        getActivity().runOnUiThread(() -> {
+                            showAlert("Error", "Failed to process predicted weight data.");
+                        });
                     }
-                    return "";
+                } else {
+                    getActivity().runOnUiThread(() -> {
+                        showAlert("Error", "Failed to fetch predicted weight. Status code: " + response.code());
+                    });
                 }
-            });
+            }
+        });
+    }
 
-            YAxis yAxisRight = chart.getAxisRight();
-            yAxisRight.setEnabled(false);
+    private void handleWeightLogsResponse(ArrayList<Float> weights, ArrayList<String> dates) {
+        updateWeightLogs(weights, dates);
+        updateChartWithData();
+    }
 
-            LineData lineData = new LineData(dataSet);
-            chart.setData(lineData);
-            chart.invalidate();
+    private void handlePredictedWeightResponse(float predictedWeight, String predictedDate) {
+        updatePredictedWeight(predictedWeight, predictedDate);
+        updateChartWithData();
+    }
 
-        } catch (JSONException e) {
+    private void updateChartWithData() {
+        ArrayList<Entry> actualEntries = new ArrayList<>();
+        ArrayList<String> formattedDates = new ArrayList<>();
+        ArrayList<Entry> predictedEntries = new ArrayList<>();
+
+        // Process weight logs data
+        for (int i = 0; i < weightLogs.size(); i++) {
+            actualEntries.add(new Entry(i, weightLogs.get(i)));
+            formattedDates.add(formatDate(dates.get(i)));
+        }
+
+        LineDataSet actualDataSet = new LineDataSet(actualEntries, "Weight Logs");
+        actualDataSet.setColor(Color.BLUE);
+        actualDataSet.setValueTextColor(Color.BLACK);
+
+        LineDataSet predictedDataSet = null;
+
+        if (!Float.isNaN(predictedWeight) && !predictedDate.isEmpty()) {
+            // Process predicted weight data
+            predictedEntries.add(new Entry(weightLogs.size(), predictedWeight));
+            formattedDates.add(formatDate(predictedDate)); // Add predicted date to the formatted dates list
+
+            predictedDataSet = new LineDataSet(predictedEntries, "Predicted Weight");
+            predictedDataSet.setColor(Color.RED);
+            predictedDataSet.setValueTextColor(Color.BLACK);
+        }
+
+        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(actualDataSet);
+
+        if (predictedDataSet != null) {
+            dataSets.add(predictedDataSet);
+        }
+
+        LineData lineData = new LineData(dataSets);
+
+        // Configure X-axis formatting with dates
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(formattedDates));
+
+        // Set data to the chart
+        chart.setData(lineData);
+        chart.invalidate();
+    }
+
+    private void updateWeightLogs(ArrayList<Float> weights, ArrayList<String> dateList) {
+        weightLogs.clear();
+        dates.clear();
+        weightLogs.addAll(weights);
+        dates.addAll(dateList);
+    }
+
+    private void updatePredictedWeight(float weight, String date) {
+        predictedWeight = weight;
+        predictedDate = date;
+    }
+
+    private String formatDate(String dateStr) {
+        // Assuming dateStr is in "yyyy-MM-dd" format
+        try {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date date = inputFormat.parse(dateStr);
+
+            // Format date for display (e.g., "Apr 06")
+            SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd", Locale.getDefault());
+            return outputFormat.format(date);
+        } catch (ParseException e) {
             e.printStackTrace();
-            showAlert("Error", "Failed to parse weight log data.");
+            return dateStr; // Return original date if parsing fails
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     private void showAlert(String title, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustomStyle);

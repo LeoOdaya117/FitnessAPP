@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -64,6 +65,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         holder.text_view_equipment.setText("");
         holder.exercise_image_view.setImageResource(R.drawable.notfound);
         holder.info_icon.setTag(null); // Clear tag
+        holder.discoverExerciseID.setTag(null); // Clear tag
         String category = Discover.getCategory();
 
         String name = "";
@@ -107,6 +109,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
                     .into(holder.exercise_image_view);
         }
 
+        holder.discoverExerciseID.setTag(tag);
         holder.info_icon.setTag(tag); // Assuming you want to set the Exercise object as the tag
     }
 
@@ -119,6 +122,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         TextView textViewExerciseName;
         TextView text_view_equipment;
         ImageView exercise_image_view, info_icon;
+        CardView discoverExerciseID;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -128,8 +132,39 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             text_view_equipment = itemView.findViewById(R.id.text_view_equipment);
             exercise_image_view = itemView.findViewById(R.id.exercise_image_view);
             info_icon = itemView.findViewById(R.id.info_icon);
-
+            discoverExerciseID = itemView.findViewById(R.id.discoverExerciseID);
             // Set OnClickListener for the info_icon
+
+            discoverExerciseID.setOnClickListener(new View.OnClickListener() {
+
+
+
+                @Override
+                public void onClick(View v) {
+
+//                    discoverExerciseID.startAnimation(animation);
+                    // Get the tag associated with the info_icon
+                    Object tag = discoverExerciseID.getTag();
+                    if (tag != null && tag instanceof String) {
+                        String exerciseId = (String) tag;
+                        // Handle the click event for the info_icon
+                        // For example, you can display a dialog with exercise details
+                        if(Discover.getCategory().equals("exercise")){
+                            showExerciseModal(itemView.getContext(), exerciseId, textViewExerciseName.getText().toString());
+                        } else if (Discover.getCategory().equals("food")) {
+                            showFoodModal(itemView.getContext(), exerciseId, textViewExerciseName.getText().toString());
+
+                        } else if (Discover.getCategory().equals("equipment")) {
+                            showEquipmentModal(itemView.getContext(), exerciseId, textViewExerciseName.getText().toString());
+
+                        } else {
+                            showExerciseModal(itemView.getContext(), exerciseId, textViewExerciseName.getText().toString());
+
+                        }
+                    }
+
+                }
+            });
             info_icon.setOnClickListener(new View.OnClickListener() {
 
 

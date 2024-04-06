@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -67,6 +68,7 @@ public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerci
             holder.durationTextView.setText("Reps: " + reps);
             holder.durationTextView.setVisibility(View.VISIBLE); // Show duration TextView
         }
+        holder.todayExerciseCard.setTag(item.getExerciseId());
         holder.infoImageView.setTag(item.getExerciseId());
         holder.exerciseNameTextView.setText(item.getName());
 
@@ -87,6 +89,7 @@ public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerci
         private TextView exerciseNameTextView, setRepsTextView, durationTextView;
         private ImageView exerciseImageView, infoImageView;
         private Animation animation;
+        private CardView todayExerciseCard;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -97,6 +100,30 @@ public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerci
             exerciseNameTextView = itemView.findViewById(R.id.exercisename);
             setRepsTextView = itemView.findViewById(R.id.setreps);
             durationTextView = itemView.findViewById(R.id.duration);
+
+            todayExerciseCard = itemView.findViewById(R.id.todayExerciseCard);
+
+            // Set OnClickListener for the info_icon
+            todayExerciseCard.setOnClickListener(new View.OnClickListener() {
+
+
+
+                @Override
+                public void onClick(View v) {
+
+                    todayExerciseCard.startAnimation(animation);
+                    // Get the tag associated with the info_icon
+                    Object tag = todayExerciseCard.getTag();
+
+                    if (tag != null && tag instanceof String) {
+                        String exerciseId = (String) tag;
+                        showExerciseModal(itemView.getContext(), exerciseId, exerciseNameTextView.getText().toString());
+
+                    }
+
+
+                }
+            });
 
             // Set OnClickListener for the info_icon
             infoImageView.setOnClickListener(new View.OnClickListener() {

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -65,19 +66,41 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
 
         private TextView exerciseNameTextView, setRepsTextView, durationTextView;
         private ImageView exerciseImageView, infoImageView;
+        private CardView todayExerciseCard;
 
+        private Animation animation;
         public WorkoutPlanExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
-            Animation animation = AnimationUtils.loadAnimation(itemView.getContext(), R.xml.button_animation);
+             animation = AnimationUtils.loadAnimation(itemView.getContext(), R.xml.button_animation);
 
             exerciseImageView = itemView.findViewById(R.id.exercisephoto);
             infoImageView = itemView.findViewById(R.id.info);
             exerciseNameTextView = itemView.findViewById(R.id.exercisename);
             setRepsTextView = itemView.findViewById(R.id.setreps);
             durationTextView = itemView.findViewById(R.id.duration);
-
+            todayExerciseCard = itemView.findViewById(R.id.todayExerciseCard);
 
             // Set OnClickListener for the info_icon
+            todayExerciseCard.setOnClickListener(new View.OnClickListener() {
+
+
+
+                @Override
+                public void onClick(View v) {
+
+//                    todayExerciseCard.startAnimation(animation);
+                    // Get the tag associated with the info_icon
+                    Object tag = todayExerciseCard.getTag();
+
+                    if (tag != null && tag instanceof String) {
+                        String exerciseId = (String) tag;
+                        showExerciseModal(itemView.getContext(), exerciseId, exerciseNameTextView.getText().toString());
+
+                    }
+
+
+                }
+            });
             infoImageView.setOnClickListener(new View.OnClickListener() {
 
 
@@ -145,6 +168,7 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
                                 seeMoreDescriptionButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+
                                         if (modalDescription.getMaxLines() == Integer.MAX_VALUE) {
                                             // Description is expanded, collapse it and set instruction to 2 lines
                                             modalDescription.setMaxLines(2);
@@ -200,6 +224,8 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
                                 closeButton.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
+                                        closeButton.startAnimation(animation);
+
                                         alertDialog.dismiss(); // Dismiss the dialog
                                     }
                                 });
@@ -292,6 +318,7 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
                 durationTextView.setText("Reps: " + reps);
                 durationTextView.setVisibility(View.VISIBLE); // Show duration TextView
             }
+            todayExerciseCard.setTag(exercise.getExerciseID());
             infoImageView.setTag(exercise.getExerciseID());
             exerciseNameTextView.setText(exercise.getName());
 

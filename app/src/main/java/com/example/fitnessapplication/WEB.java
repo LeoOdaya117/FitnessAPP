@@ -151,8 +151,8 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
                 }
                 String username = getIntent().getStringExtra("username");
-                checkDietPlanRecord();
-                checkUsersSubscription(username);
+//                checkDietPlanRecord();
+//                checkUsersSubscription(username);
 
             }
 
@@ -286,6 +286,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 //                            Toast.makeText(WEB.this, responseBody, Toast.LENGTH_SHORT).show();
                             if(responseBody.equals("No") && dismiss == false){
                                 showPopupWindow();
+                                dismiss = true;
                             }
 
                         }
@@ -328,6 +329,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dismiss = true;
                 dialog.dismiss(); // Dismiss the dialog when the close button is clicked
             }
         });

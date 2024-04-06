@@ -25,7 +25,7 @@
             <ImageView
                 android:id="@+id/close_button"
                 android:layout_width="20dp"
-                android:layout_height="15dp"
+                android:layout_height="25dp"
                 android:layout_gravity="end"
                 android:src="@drawable/x"
                 android:layout_marginBottom="10dp"
