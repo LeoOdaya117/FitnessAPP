@@ -45,7 +45,7 @@ import okhttp3.Response;
 public class DietToday extends Fragment implements View.OnClickListener {
 
     private TextView breakfastTitle, lunchTitle, dinnerTitle,dayplan;
-    private LinearLayout breakfastLayout, lunchLayout, dinnerLayout;
+    private LinearLayout breakfastLayout, lunchLayout, dinnerLayout,snacksLayout;
     private ProgressDialog progressDialog;
 
     private TextView navPlansTextView;
@@ -74,6 +74,8 @@ public class DietToday extends Fragment implements View.OnClickListener {
         breakfastLayout = view.findViewById(R.id.breakfastLayout);
         lunchLayout = view.findViewById(R.id.lunchLayout);
         dinnerLayout = view.findViewById(R.id.dinnerLayout);
+        snacksLayout = view.findViewById(R.id.snacksLayout);
+
         dayplan = view.findViewById(R.id.day);
 
         navPlansTextView = view.findViewById(R.id.navplans);
@@ -147,7 +149,7 @@ public class DietToday extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void showFoodModal(Context context, String exerciseId, String name) {
+    private void showFoodModal(Context context, String exerciseId, String name, Integer servingSize) {
         fetchDataFromAPI(exerciseId, "food", new ExerciseAdapter.ExerciseViewHolder.DataFetchCallback() {
             @Override
             public void onSuccess(JSONObject result) {
@@ -159,6 +161,10 @@ public class DietToday extends Fragment implements View.OnClickListener {
                     String protein = result.getString("protein");
                     String fat = result.getString("fat");
 
+                    int calorieInt = Integer.parseInt(calorie);
+                    int carbInt = Integer.parseInt(carb);
+                    int proteinInt = Integer.parseInt(protein);
+                    int fatInt = Integer.parseInt(fat);
                     // Create a handler with the main looper
                     Handler handler = new Handler(Looper.getMainLooper());
                     handler.post(new Runnable() {
@@ -180,10 +186,21 @@ public class DietToday extends Fragment implements View.OnClickListener {
                             // Set exercise details to the views
                             modalTitle.setText(name.toUpperCase() + " INFORMATION");
                             modalDescription.setText(description);
-                            modalCalorie.setText(calorie + " kcal");
-                            modalCarb.setText( carb + " g");
-                            modalProtein.setText( protein + " g");
-                            modalFat.setText( fat + " g");
+
+                            if(servingSize < 4){
+
+                                modalCalorie.setText(String.valueOf(servingSize * calorieInt) + " kcal");
+                                modalCarb.setText( String.valueOf(servingSize * carbInt) + " g");
+                                modalProtein.setText( String.valueOf(servingSize * proteinInt) + " g");
+                                modalFat.setText( String.valueOf(servingSize * fatInt) + " g");
+                            }else{
+                                modalCalorie.setText(calorie + " kcal");
+                                modalCarb.setText( carb + " g");
+                                modalProtein.setText( protein + " g");
+                                modalFat.setText( fat + " g");
+                            }
+
+
 
                             // Create and show the dialog
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -221,7 +238,7 @@ public class DietToday extends Fragment implements View.OnClickListener {
         String username = UserDataManager.getInstance(getContext()).getEmail();
         String workoutPlanId = UserDataManager.getInstance(getContext()).getDietPlanId();
         String day = UserDataManager.getInstance(getContext()).getDietPlanDay();
-        String url = baseUrl + "/Gym_Website/user/api/fetch_dietplan_data.php?";
+        String url = baseUrl + "/User/api/fetch_dietplan_data.php?";
         url += "IdNum=" + username + "&";  // Separate parameters with "&"
         url += "dietplanid=" + workoutPlanId + "&";
         url += "day=" + day;
@@ -284,7 +301,8 @@ public class DietToday extends Fragment implements View.OnClickListener {
             String mealType = foodObject.getString("mealtype");
             String foodid = foodObject.getString("id");
             String foodName = foodObject.getString("name");
-            String servingSize = String.valueOf(foodObject.getInt("Serving"));
+            int perServing = foodObject.getInt("PerServing");
+            int servingSize = foodObject.getInt("Serving");
             String image = foodObject.getString("image");
 
 
@@ -299,6 +317,9 @@ public class DietToday extends Fragment implements View.OnClickListener {
                     break;
                 case "dinner":
                     layout = dinnerLayout;
+                    break;
+                case "snack":
+                    layout = snacksLayout;
                     break;
                 default:
                     // Skip if meal type is not recognized
@@ -315,7 +336,15 @@ public class DietToday extends Fragment implements View.OnClickListener {
             TextView foodServingTextView = foodItemView.findViewById(R.id.foodserving);
             info.setTag(foodid);
             foodNameTextView.setText(foodName);
-            foodServingTextView.setText("Serving: " + servingSize);
+
+            if(servingSize < 4){
+                foodServingTextView.setText("Serving: " + String.valueOf(servingSize * perServing) + " g");
+
+            }
+            else{
+                foodServingTextView.setText("Serving: " + String.valueOf(servingSize )+ " g");
+
+            }
             Picasso.get()
                     .load(image)
                     .placeholder(R.drawable.loading) // Optional: Placeholder image while loading
@@ -336,7 +365,7 @@ public class DietToday extends Fragment implements View.OnClickListener {
                     // Get the food name associated with the TextView
                     String foodName = foodNameTextView.getText().toString();
                     // Call showFoodModal method
-                    showFoodModal(getContext(), exerciseId, foodName);
+                    showFoodModal(getContext(), exerciseId, foodName, servingSize);
                 }
             });
 
@@ -344,7 +373,7 @@ public class DietToday extends Fragment implements View.OnClickListener {
     }
 
     private void fetchDataFromAPI(String id, String category, ExerciseAdapter.ExerciseViewHolder.DataFetchCallback callback) {
-        String url = URLManager.MY_URL + "/Gym_Website/user/api/fetch_details.php?itemId=" + id + "&category=" + category;
+        String url = URLManager.MY_URL + "/User/api/fetch_details.php?itemId=" + id + "&category=" + category;
         Request request = new Request.Builder()
                 .url(url)
                 .build();

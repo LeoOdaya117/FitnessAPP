@@ -15,7 +15,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="130dp"
-        android:src="@drawable/boxlogo" />
+        android:src="@drawable/systemlogobox" />
 
     <TextView
         android:id="@+id/questionTextView"
@@ -45,6 +45,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -83,6 +84,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -118,6 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">

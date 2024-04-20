@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/other_background"
+    android:padding="30dp">
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="70dp"
+        android:src="@drawable/systemlogobox" />
+
+    <!-- Question -->
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/logoImageView"
+        android:layout_centerHorizontal="true"
+        android:text="Select your Allergies"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_marginBottom="10dp" />
+
+    <!-- Allergy Options -->
+
+    <!-- Back Button -->
+    <LinearLayout
+        android:id="@+id/allergyOptionsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/questionTextView"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"
+        android:orientation="vertical">
+
+        <!-- Sample Allergy Options -->
+        <CheckBox
+            android:id="@+id/peanutCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Peanut"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/milkCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Milk"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/shellfishCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Shellfish"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+        <CheckBox
+            android:id="@+id/fishCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Fish"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+        <CheckBox
+            android:id="@+id/glutenCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Gluten"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+        <CheckBox
+            android:id="@+id/noneCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="None"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <!-- "Others" CheckBox -->
+        <CheckBox
+            android:id="@+id/othersCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Others"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <!-- EditText for Other Allergies (Initially Hidden) -->
+        <EditText
+            android:id="@+id/otherAllergiesEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Specify other allergies"
+            android:textColorHint="@color/hint_text_color"
+            android:visibility="gone"
+            android:textColor="@color/black"
+            android:inputType="text"
+            android:padding="10dp" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:textColor="@color/white"
+        android:backgroundTint="#070706"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="8dp" />
+
+    <!-- Continue Button -->
+    <Button
+        android:id="@+id/continueButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Continue"
+        android:backgroundTint="#FF5722"
+        android:textColor="@color/white"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="8dp" />
+
+</RelativeLayout>

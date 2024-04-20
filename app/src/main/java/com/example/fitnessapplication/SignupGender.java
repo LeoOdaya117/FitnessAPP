@@ -3,8 +3,12 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,21 +35,41 @@ public class SignupGender extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                Toast.makeText(SignupGender.this, "Gender: " + gender, Toast.LENGTH_SHORT).show();
-                UserDataManager.getInstance(SignupGender.this).saveGender(gender);
+                if(gender == null || TextUtils.isEmpty(gender)){
+                    showalert();
+                }else{
+                    //                Toast.makeText(SignupGender.this, "Gender: " + gender, Toast.LENGTH_SHORT).show();
+                    UserDataManager.getInstance(SignupGender.this).saveGender(gender);
 
-                Intent intent = new Intent(SignupGender.this, SignupAge.class);
-                // Put the selected card ID as an extra to the intent
-                intent.putExtra("gender", gender);
+                    Intent intent = new Intent(SignupGender.this, SignupAge.class);
+                    // Put the selected card ID as an extra to the intent
+                    intent.putExtra("gender", gender);
 
-                // Start the activity
-                startActivity(intent);
+                    // Start the activity
+                    startActivity(intent);
+                }
+
 
 
 
             }
         });
     }
+
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupGender.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please choose Gender first.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
+    }
+
 
     public void onCardClicked(View view) {
         int viewId = view.getId();

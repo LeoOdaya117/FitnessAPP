@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="0dp"
-            android:text="Day List"
+            android:text="Week Plans"
             android:textColor="#899bbd"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -167,6 +167,28 @@
             <!-- Dinner Section -->
             <LinearLayout
                 android:id="@+id/dinnerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Add Dinner CardViews and their contents dynamically here -->
+
+            </LinearLayout>
+
+            <!-- Dinner Title -->
+            <TextView
+                android:id="@+id/snacksTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Snacks"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+
+            <!-- Dinner Section -->
+            <LinearLayout
+                android:id="@+id/snacksLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">

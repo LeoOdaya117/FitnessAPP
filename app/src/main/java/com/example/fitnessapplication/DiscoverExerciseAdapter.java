@@ -231,7 +231,7 @@ public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerci
         }
 
         private void fetchDataFromAPI(String id, String category, DataFetchCallback callback) {
-            String url = URLManager.MY_URL + "/Gym_Website/user/api/fetch_details.php?itemId=" + id + "&category=" + category;
+            String url = URLManager.MY_URL + "/User/api/fetch_details.php?itemId=" + id + "&category=" + category;
             Request request = new Request.Builder()
                     .url(url)
                     .build();

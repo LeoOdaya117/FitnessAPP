@@ -15,7 +15,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="150dp"
-        android:src="@drawable/boxlogo" />
+        android:src="@drawable/systemlogobox" />
 
     <TextView
         android:id="@+id/questionTextView"

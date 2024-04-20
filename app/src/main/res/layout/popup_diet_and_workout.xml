@@ -24,10 +24,10 @@
             <ImageView
                 android:id="@+id/logoImageView"
                 android:layout_width="wrap_content"
-                android:layout_height="206dp"
+                android:layout_height="210dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="16dp"
-                android:src="@drawable/logo" />
+                android:src="@drawable/systemlogobox" />
 
             <!-- Title -->
             <TextView

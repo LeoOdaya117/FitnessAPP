@@ -2,8 +2,11 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -55,15 +58,34 @@ public class SignupWeight extends AppCompatActivity {
                 }
 //                Toast.makeText(SignupWeight.this, "Current Weight: " + currentWeight + " kg\nTarget Weight: " + targetWeight + " kg", Toast.LENGTH_SHORT).show();
 
-                UserDataManager.getInstance(SignupWeight.this).saveTargetWeight(targetWeight);
-                UserDataManager.getInstance(SignupWeight.this).saveWeight(currentWeight);
+                if(currentWeightText == null || TextUtils.isEmpty(currentWeightText) || targetWeightText == null || TextUtils.isEmpty(targetWeightText)){
+                    showalert();
+                }else{
+                    UserDataManager.getInstance(SignupWeight.this).saveTargetWeight(targetWeight);
+                    UserDataManager.getInstance(SignupWeight.this).saveWeight(currentWeight);
 
-                // Create an Intent to start the next activity
-                Intent intent = new Intent(SignupWeight.this, SignupHeight.class);
+                    // Create an Intent to start the next activity
+                    Intent intent = new Intent(SignupWeight.this, SignupHeight.class);
 
-                // Start the activity
-                startActivity(intent);
+                    // Start the activity
+                    startActivity(intent);
+                }
+
             }
         });
+    }
+
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupWeight.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please fill out all the fields.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 }

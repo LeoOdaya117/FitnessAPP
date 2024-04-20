@@ -3,8 +3,11 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,13 +46,32 @@ public class SignupAge extends AppCompatActivity {
                 }
 
 
-//                Toast.makeText(SignupAge.this, "Current Age: " + currentAgeText +" years old", Toast.LENGTH_SHORT).show();
-                UserDataManager.getInstance(SignupAge.this).saveAge(currentAge);
+                if(currentAgeText == null || TextUtils.isEmpty(currentAgeText)){
+                    showalert();
+                }else{
+                    UserDataManager.getInstance(SignupAge.this).saveAge(currentAge);
 
-                // Create an Intent to start the next activity
-                Intent intent = new Intent(SignupAge.this, SignupWeight.class);
-                startActivity(intent);
+                    // Create an Intent to start the next activity
+                    Intent intent = new Intent(SignupAge.this, SignupWeight.class);
+                    startActivity(intent);
+                }
+
+//
             }
         });
+    }
+
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupAge.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please fill out the Age first.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 }

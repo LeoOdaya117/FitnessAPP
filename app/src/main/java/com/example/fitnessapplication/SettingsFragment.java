@@ -1,5 +1,7 @@
 package com.example.fitnessapplication;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -64,7 +66,27 @@ public class SettingsFragment extends Fragment {
         logoutContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Confirmation");
+                builder.setMessage("Are you sure you want to Logout?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        logout();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User clicked No, do nothing or handle as needed
+                        dialog.dismiss(); // Dismiss the dialog
+
+                    }
+                });
+                builder.setCancelable(false); // Prevent dismissing dialog by tapping outside
+                builder.show();
+
             }
         });
 

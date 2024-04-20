@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -21,7 +22,7 @@ public class SignupUserAvailability extends AppCompatActivity {
         setContentView(R.layout.activity_signup_user_availability);
 
         // Define your options
-        String[] options = {"Core", "Legs", "Upper Body", "Cardio", "Lower Body", "Full Body", "Rest Day"};
+        String[] options = {"Rest Day","Core", "Legs", "Upper Body", "Cardio", "Lower Body", "Full Body"};
 
 // Find your spinners
         Spinner mondaySpinner = findViewById(R.id.mondaySpinner);

@@ -99,8 +99,8 @@ public class Workout extends AppCompatActivity {
 
     private void fetchData(String workoutset) {
         OkHttpClient client = new OkHttpClient();
-        String apiurl = URLManager.MY_URL +"/Gym_Website/user/api/fetch_workoutset.php?workoutset=" + workoutset;
-        HttpUrl.Builder urlBuilder = HttpUrl.parse(URLManager.MY_URL + "/Gym_Website/user/api/fetch_workoutset.php").newBuilder();
+        String apiurl = URLManager.MY_URL +"/User/api/fetch_workoutset.php?workoutset=" + workoutset;
+        HttpUrl.Builder urlBuilder = HttpUrl.parse(URLManager.MY_URL + "/User/api/fetch_workoutset.php").newBuilder();
         urlBuilder.addQueryParameter("workoutset", workoutset);
         String url = urlBuilder.build().toString();
 

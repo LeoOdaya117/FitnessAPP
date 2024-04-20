@@ -15,7 +15,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="20dp"
-        android:src="@drawable/boxlogo" />
+        android:src="@drawable/systemlogobox" />
 
     <TextView
         android:id="@+id/questionTextView"
@@ -44,12 +44,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 android:orientation="horizontal">
 
                 <TextView
@@ -64,9 +66,13 @@
 
                 <Spinner
                     android:id="@+id/mondaySpinner"
+
+                    android:layout_marginEnd="10dp"
+                    android:spinnerStyle="@style/SpinnerTextStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"/>
+                    android:padding="8dp"
+                    />
 
             </LinearLayout>
 
@@ -81,6 +87,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -116,6 +123,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -147,6 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -180,6 +189,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -214,6 +224,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:foreground="?android:attr/selectableItemBackground">
 
             <LinearLayout
@@ -245,6 +256,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground">
 

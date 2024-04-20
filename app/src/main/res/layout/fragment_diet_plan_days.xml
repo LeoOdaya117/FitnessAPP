@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:text="Diet Plans"
+        android:text="This Week Plans"
         android:textColor="#012970"
         android:textSize="25sp"
         android:textStyle="bold" />
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="0dp"
-            android:text="Day List  "
+            android:text="Week Plans  "
             android:textColor="#445677"
             android:textSize="16sp"
             android:textStyle="bold" />

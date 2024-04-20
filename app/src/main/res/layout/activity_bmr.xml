@@ -143,9 +143,10 @@
 
                     <RadioButton
                         android:id="@+id/radioButtonFemale"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:text="Female"
+                        android:textAlignment="textStart"
                         android:textColor="@android:color/black"
                         android:textSize="18sp" />
                 </RadioGroup>

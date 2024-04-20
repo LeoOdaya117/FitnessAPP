@@ -1,5 +1,6 @@
 package com.example.fitnessapplication;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.Boolean.getBoolean;
 
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.ParseException;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,9 +55,11 @@ import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class WEB extends AppCompatActivity implements NoInternetFragment.RetryListener, Plans.OnPlanSelectedListener  {
     String tab;
@@ -71,6 +75,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     private boolean dismiss = false;
     private boolean subscriptionAlertdismiss = false;
 
+    private boolean member = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +101,6 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         webView.setVisibility(View.INVISIBLE);
         loadFragment(new Report());
 //        loadInitialUrl();
-        checkDietPlanRecord();
-        checkUsersSubscription(username);
 
 
 //        webView.loadUrl(websiteurl + "/gym_website/user/index.php");
@@ -179,67 +182,47 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            // Handle item selection by updating the TextView with the item title
-            tab = (String) item.getTitle();
-            String currentUrl = webView.getUrl();
-            String loadURL = websiteurl + "/gym_website/user/";
             FragmentManager fragmentManager = getSupportFragmentManager();
             TextView headerTextView = findViewById(R.id.header_text);
+            tab = (String) item.getTitle();
+
+            // Get the current fragment
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.fragment_container);
+
             switch (tab) {
                 case "Plans":
-                    headerTextView.setText("Plans");
-                    loadInitialUrl();
-//                    webView.loadUrl(loadURL + "loadingpage.php");
-
-
-                    Fragment newFragment = new Plans();
-                    replaceFragment(fragmentManager, newFragment); // Call your existing function to replace the fragment
-
-//                    loadFragment(new Plans());
-
-                    webView.setVisibility(View.GONE);
-
+                    if (!(currentFragment instanceof Plans)) {
+                        headerTextView.setText("Plans");
+                        checkUserPlan(username);
+                        if (member) {
+                            replaceFragment(fragmentManager, new Plans());
+                        } else {
+                            showCustomDialog("Alert!", "Please activate your subscription to access Plans.");
+                        }
+                    }
                     return true;
+
                 case "Discover":
-//                    loadFragment(new Discover());
-                    webView.setVisibility(View.GONE);
-                    headerTextView.setText("Discover");
-
-
-                    Fragment Discover = new Discover();
-                    replaceFragment(fragmentManager, Discover);
-//                    if (!currentUrl.endsWith("discover.php")) {
-//                        loadInitialUrl();
-//                        webView.loadUrl(loadURL + "loadingpage.php");
-//
-//                        webView.loadUrl(loadURL + "discover.php");
-//                    }
+                    if (!(currentFragment instanceof Discover)) {
+                        headerTextView.setText("Discover");
+                        replaceFragment(fragmentManager, new Discover());
+                    }
                     return true;
+
                 case "Report":
-                    webView.setVisibility(View.GONE);
-
-//                    loadFragment(new Report());
-                    Fragment Report = new Report();
-                    replaceFragment(fragmentManager, Report);
-                    headerTextView.setText("Report");
-//                    if (!currentUrl.endsWith("index.php")) {
-//                        webView.loadUrl(loadURL + "loadingpage.php");
-//
-//                        webView.loadUrl(loadURL + "index.php");
-//                    }
+                    if (!(currentFragment instanceof Report)) {
+                        headerTextView.setText("Report");
+                        replaceFragment(fragmentManager, new Report());
+                    }
                     return true;
+
                 case "Settings":
-                    Fragment Settings = new SettingsFragment();
-                    replaceFragment(fragmentManager, Settings);
-                    headerTextView.setText("Settings");
-//                    Intent intent = new Intent(WEB.this, Settings.class);
-//                    intent.putExtra("username", getIntent().getStringExtra("username")); // Pass the username value
-//                    startActivity(intent);
-
-//                    if (!currentUrl.endsWith("user_profile.php")) {
-//                        webView.loadUrl(loadURL + "user_profile.php");
-//                    }
+                    if (!(currentFragment instanceof SettingsFragment)) {
+                        headerTextView.setText("Settings");
+                        replaceFragment(fragmentManager, new SettingsFragment());
+                    }
                     return true;
+
                 default:
                     return false;
             }
@@ -249,10 +232,43 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
     }
 
-    private void checkDietPlanRecord() {
-        String username = getIntent().getStringExtra("username");
+    private AlertDialog dialog;
+
+    private void showCustomDialog(String title,String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WEB.this);
+
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.custom_dialog_layout, null);
+
+        TextView titleTextView = dialogView.findViewById(R.id.dialog_title);
+        TextView messageTextView = dialogView.findViewById(R.id.bmr_message);
+        Button okButton = dialogView.findViewById(R.id.ok_button);
+
+        titleTextView.setText(title);
+        messageTextView.setText(message);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dismissCustomDialog(); // Dismiss the dialog when the OK button is clicked
+            }
+        });
+
+        builder.setView(dialogView);
+
+        dialog = builder.create();
+        dialog.show();
+    }
+
+    private void dismissCustomDialog() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+    private void checkDietPlanRecord(String username) {
         String mainUrl = URLManager.MY_URL;
-        String url = mainUrl+ "/Gym_Website/user/API/check_user_plans.php?email=" + username;
+        String url = mainUrl+ "/User/api/check_user_plans.php?email=" + username;
 
         OkHttpClient client = new OkHttpClient();
 
@@ -283,9 +299,13 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
                         @Override
                         public void run() {
                             // Show the response in a Toast or perform any UI update
-//                            Toast.makeText(WEB.this, responseBody, Toast.LENGTH_SHORT).show();
-                            if(responseBody.equals("No") && dismiss == false){
+//                            Toast.makeText(WEB.this, responseBody + "\n USERNAME: " + username, Toast.LENGTH_SHORT).show();
+
+                            if(responseBody.equals("No")){
                                 showPopupWindow();
+                                dismiss = true;
+                            }
+                            else{
                                 dismiss = true;
                             }
 
@@ -355,7 +375,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     // Method to show the PlansFragment
     @Override
     public void onPlanSelected(String url) {
-        String loadURL = websiteurl + "/gym_website/user/";
+        String loadURL = websiteurl + "/User/";
         webView.loadUrl(loadURL + "loadingpage.php");
 //        webView.setVisibility(View.GONE);
 //        webView.loadUrl(url);
@@ -476,7 +496,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         String password = "&login-password=" + userDataManager.getPassword();
 //        String username = "?login-username=" + getIntent().getStringExtra("username");
 //        String password = "&login-password=" + getIntent().getStringExtra("password");
-        String url = websiteurl+ "/gym_website/user/login.php";
+        String url = websiteurl+ "/User/login.php";
 
         url = url + username + password;
         webView.loadUrl(url);
@@ -485,7 +505,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     public static void logout() {
         // Load your initial URL in the WebView
         String websiteurl = URLManager.MY_URL;
-        String url = websiteurl+ "/gym_website/user/logout.php";
+        String url = websiteurl+ "/User/logout.php";
         webView.loadUrl(url);
     }
 
@@ -516,11 +536,63 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
                 .show();
     }
 
+    private interface SubscriptionCallback {
+        void onSubscriptionChecked(String subscriptionStatus);
+    }
+
+    private void checkUserPlan(String username) {
+        OkHttpClient client = new OkHttpClient();
+
+        // Construct the URL using HttpUrl.Builder for safety
+        String url = websiteurl + "/User/api/check_users_subscription_date.php?email=" + username;
+        Log.d("ServerResponselink", "LINK: " + url);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // Handle failure appropriately
+                e.printStackTrace();
+                // Notify callback with error status
+
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (response.isSuccessful()) {
+                        String serverResponse = responseBody.string();
+                        // Log the server response
+                        Log.d("ServerResponse", "Response: " + serverResponse);
+                        // Pass the subscription status to the callback
+
+                        if(serverResponse.equals("Active")){
+                            member = true;
+
+                        }
+                        else{
+                            member = false;
+                        }
+                    } else {
+                        // Handle unsuccessful response
+                        Log.e("ServerResponse", "Error: " + response.code());
+                        // Notify callback with error status
+
+                    }
+                }
+            }
+        });
+    }
+
+
     private void checkUsersSubscription(String username) {
         OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username
-        String url = websiteurl + "/Gym_Website/user/fetch_membership_user.php?Username=" + username;
+        String url = websiteurl + "/User/fetch_membership_user.php?Username=" + username;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -659,7 +731,19 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     public static void replaceFragment(FragmentManager fragmentManager, Fragment fragment) {
         fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
+                .addToBackStack(null)  // Add fragment to back stack for navigation
                 .commit();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String username = UserDataManager.getInstance(WEB.this).getEmail();
+
+        checkDietPlanRecord(username);
+        checkUsersSubscription(username);
+        checkUserPlan(username);
+    }
+
 }

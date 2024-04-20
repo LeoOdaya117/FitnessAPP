@@ -115,7 +115,7 @@ public class Report extends Fragment {
                 .add("Username", userId)
                 .build();
         Request request = new Request.Builder()
-                .url(BASE_URL + "/Gym_Website/user/api/fetch_user_details.php")
+                .url(BASE_URL + "/User/api/fetch_user_details.php")
                 .post(requestBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -301,7 +301,7 @@ public class Report extends Fragment {
 
         // Set values to UI elements
         currentWeightTextView.setText(currentWeight + " kg");
-        goalText.setText(goalWeight);
+//        goalText.setText(goalWeight);
         BMIText.setText(BMI);
         currentHeightTextView.setText(currentHeight + " cm");
         fitnessCategory.setText(fitnesscategory);
@@ -322,7 +322,7 @@ public class Report extends Fragment {
                 .add("email", userId)
                 .build();
         Request request = new Request.Builder()
-                .url(BASE_URL + "/Gym_Website/user/api/fetch_user_weight_logs.php")
+                .url(BASE_URL + "/User/api/fetch_user_weight_logs.php")
                 .post(requestBody)
                 .build();
 
@@ -331,55 +331,61 @@ public class Report extends Fragment {
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
                 getActivity().runOnUiThread(() -> {
+                    Log.d("WEIGHT LOGS: ", e.getMessage());
+
                     showAlert("Error", "Failed to fetch weight log. Please check your internet connection.");
                 });
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    try {
-                        String jsonData = response.body().string();
-                        if (jsonData != null && !jsonData.isEmpty()) {
-                            // Handle the weight log data response
-                            getActivity().runOnUiThread(() -> {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(jsonData);
-                                    JSONArray weightsArray = jsonObject.getJSONArray("weights");
-                                    JSONArray datesArray = jsonObject.getJSONArray("dates");
+                try {
+                    if (response.isSuccessful()) {
+                        String responseBody = response.body().string(); // Read the response body once
+                        Log.d("WEIGHT LOGS: ", responseBody);
 
-                                    ArrayList<Float> weights = new ArrayList<>();
-                                    ArrayList<String> dates = new ArrayList<>();
+                        JSONObject jsonObject = new JSONObject(responseBody);
+                        JSONArray weightsArray = jsonObject.getJSONArray("weights");
+                        JSONArray datesArray = jsonObject.getJSONArray("dates");
 
-                                    // Extract weights and dates
-                                    for (int i = 0; i < weightsArray.length(); i++) {
-                                        weights.add((float) weightsArray.getDouble(i));
-                                        dates.add(datesArray.getString(i));
-                                    }
+                        ArrayList<Float> weights = new ArrayList<>();
+                        ArrayList<String> dates = new ArrayList<>();
 
-                                    handleWeightLogsResponse(weights, dates);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    showAlert("Error", "Failed to process weight log data.");
-                                }
-                            });
-                        } else {
-                            getActivity().runOnUiThread(() -> {
-                                showAlert("Info", "No weight log found.");
-                            });
+                        // Extract weights and dates
+                        for (int i = 0; i < weightsArray.length(); i++) {
+                            weights.add((float) weightsArray.getDouble(i));
+                            dates.add(datesArray.getString(i));
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+
+                        // Process the extracted weights and dates
                         getActivity().runOnUiThread(() -> {
-                            showAlert("Error", "Failed to process weight log data.");
+                            handleWeightLogsResponse(weights, dates);
+                        });
+                    } else {
+                        // Handle non-successful response
+                        getActivity().runOnUiThread(() -> {
+                            try {
+                                String errorBody = response.body().string(); // Read error response body
+                                Log.d("WEIGHT LOGS: ", errorBody);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            showAlert("Error", "Failed to fetch weight log. Status code: " + response.code());
                         });
                     }
-                } else {
+                } catch (IOException | JSONException e) {
+                    e.printStackTrace();
                     getActivity().runOnUiThread(() -> {
-                        showAlert("Error", "Failed to fetch weight log. Status code: " + response.code());
+                        showAlert("Error", "Failed to process weight log data.");
                     });
+                } finally {
+                    if (response.body() != null) {
+                        response.body().close(); // Close the response body to release resources
+                    }
                 }
             }
+
         });
     }
 
@@ -389,7 +395,7 @@ public class Report extends Fragment {
                 .add("username", username)
                 .build();
         Request request = new Request.Builder()
-                .url(BASE_URL + "/Gym_Website/linear_regression.php/predict_weight.php")
+                .url(BASE_URL + "/linear_regression.php")
                 .post(requestBody)
                 .build();
 
@@ -398,7 +404,7 @@ public class Report extends Fragment {
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
                 getActivity().runOnUiThread(() -> {
-                    showAlert("Error", "Failed to fetch predicted weight. Please check your internet connection.");
+//                    showAlert("Error", "Failed to fetch predicted weight. Please check your internet connection.");
                 });
             }
 
@@ -419,27 +425,27 @@ public class Report extends Fragment {
                                         goalText.setText(jsonResponse.getString("predicted_weight") + " kg");
                                         handlePredictedWeightResponse(predictedWeight, predictedDate);
                                     } else {
-                                        showAlert("Error", "Invalid response format. Missing predicted_date or predicted_weight.");
+//                                        showAlert("Error", "Invalid response format. Missing predicted_date or predicted_weight.");
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
-                                    showAlert("Error", "Failed to process predicted weight data.");
+//                                    showAlert("Error", "Failed to process predicted weight data.");
                                 }
                             });
                         } else {
                             getActivity().runOnUiThread(() -> {
-                                showAlert("Info", "No predicted weight found.");
+//                                showAlert("Info", "No predicted weight found.");
                             });
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                         getActivity().runOnUiThread(() -> {
-                            showAlert("Error", "Failed to process predicted weight data.");
+//                            showAlert("Error", "Failed to process predicted weight data.");
                         });
                     }
                 } else {
                     getActivity().runOnUiThread(() -> {
-                        showAlert("Error", "Failed to fetch predicted weight. Status code: " + response.code());
+//                        showAlert("Error", "Failed to fetch predicted weight. Status code: " + response.code());
                     });
                 }
             }
@@ -541,7 +547,7 @@ public class Report extends Fragment {
 
 
     private void showAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustomStyle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("OK", null);
@@ -571,14 +577,27 @@ public class Report extends Fragment {
         save_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String input = user_input.getText().toString();
-                if(input.isEmpty()){
+                String input = user_input.getText().toString().trim();
+                if (input.isEmpty()) {
                     showAlert("Warning", "All fields must be filled!");
                     return;
                 }
+
                 if (category.equals("Weight")) {
+                    // Check if weight input exceeds maximum allowed weight (e.g., 300 kg)
+                    double weight = Double.parseDouble(input);
+                    if (weight > 300.0) { // Example maximum weight constraint
+                        showAlert("Warning", "Maximum weight allowed is 300 kg.");
+                        return;
+                    }
                     saveWeight(email, input);
-                } else {
+                } else { // Assuming category is "Height"
+                    // Check if height input exceeds maximum allowed height (e.g., 250 cm)
+                    double height = Double.parseDouble(input);
+                    if (height > 250.0) { // Example maximum height constraint
+                        showAlert("Warning", "Maximum height allowed is 250 cm.");
+                        return;
+                    }
                     saveHeight(email, input);
                 }
                 dialog.dismiss();
@@ -600,7 +619,7 @@ public class Report extends Fragment {
                 .add("weight", weight)
                 .build();
         Request request = new Request.Builder()
-                .url(BASE_URL + "/Gym_Website/user/api/save_weight.php")
+                .url(BASE_URL + "/User/api/save_weight.php")
                 .post(requestBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {
@@ -637,7 +656,7 @@ public class Report extends Fragment {
                 .add("height", height)
                 .build();
         Request request = new Request.Builder()
-                .url(BASE_URL + "/Gym_Website/user/api/save_height.php")
+                .url(BASE_URL + "/User/api/save_height.php")
                 .post(requestBody)
                 .build();
         client.newCall(request).enqueue(new Callback() {

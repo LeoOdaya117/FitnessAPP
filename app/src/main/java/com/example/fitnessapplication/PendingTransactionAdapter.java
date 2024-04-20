@@ -114,6 +114,8 @@ public class PendingTransactionAdapter extends RecyclerView.Adapter<PendingTrans
 
                     }
                 });
+
+                Toast.makeText(builder.getContext(), "Cancellation Success", Toast.LENGTH_SHORT).show();
             }
 
         });
@@ -137,7 +139,7 @@ public class PendingTransactionAdapter extends RecyclerView.Adapter<PendingTrans
                 .build();
 
         Request request = new Request.Builder()
-                .url(websiteurl + "/Gym_Website/user/cancel_transaction_mobile.php")
+                .url(websiteurl + "/User/cancel_transaction_mobile.php")
                 .post(formBody)
                 .build();
 

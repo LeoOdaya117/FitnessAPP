@@ -14,7 +14,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="100dp"
-        android:src="@drawable/boxlogo" />
+        android:src="@drawable/systemlogobox" />
 
     <TextView
         android:id="@+id/questionTextView"
@@ -44,6 +44,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -62,9 +63,10 @@
 
                 <!-- Vegetarian Text and Description -->
                 <LinearLayout
-                    android:layout_width="220dp"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_gravity="center_vertical"
                     android:padding="8dp">
 
                     <TextView
@@ -80,6 +82,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Excludes meat"
+                        android:visibility="gone"
                         android:textColor="@color/white" />
                     <!-- Check Image -->
 
@@ -89,6 +92,8 @@
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:gravity="end"
+                    android:layout_gravity=""
                     android:padding="8dp">
 
 
@@ -98,6 +103,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:padding="8dp"
+                        android:gravity="end"
                         android:layout_marginRight="5dp"
                         android:src="@drawable/check"
                         android:visibility="invisible"
@@ -117,6 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
@@ -136,9 +143,11 @@
 
                 <!-- Vegetarian Text and Description -->
                 <LinearLayout
-                    android:layout_width="220dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:layout_gravity="center_vertical"
+
                     android:padding="8dp">
 
                     <TextView
@@ -154,6 +163,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Excludes Vegetables"
+                        android:visibility="gone"
                         android:textColor="@color/white" />
                     <!-- Check Image -->
 
@@ -163,6 +173,7 @@
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:gravity="end"
                     android:padding="8dp">
 
 
@@ -172,6 +183,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:padding="8dp"
+                        android:gravity="end"
                         android:src="@drawable/check"
                         android:visibility="invisible"
 
@@ -191,6 +203,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:clickable="true"
+            android:backgroundTint="@color/black"
             android:focusable="true"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
@@ -209,7 +222,7 @@
                     android:src="@drawable/x" />
 
                 <TextView
-                    android:layout_width="220dp"
+                    android:layout_width="180dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:textColor="@color/white"
@@ -221,6 +234,7 @@
                     android:layout_width="65dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:gravity="end"
                     android:padding="8dp">
 
 
@@ -230,6 +244,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:padding="8dp"
+                        android:gravity="end"
                         android:src="@drawable/check"
                         android:visibility="invisible"
 

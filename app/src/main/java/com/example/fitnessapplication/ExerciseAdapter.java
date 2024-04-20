@@ -463,7 +463,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         }
 
         private void fetchDataFromAPI(String id, String category, DataFetchCallback callback) {
-            String url = URLManager.MY_URL + "/Gym_Website/user/api/fetch_details.php?itemId=" + id + "&category=" + category;
+            String url = URLManager.MY_URL + "/User/api/fetch_details.php?itemId=" + id + "&category=" + category;
             Log.d( "API LINK: ",url );
 
             Request request = new Request.Builder()

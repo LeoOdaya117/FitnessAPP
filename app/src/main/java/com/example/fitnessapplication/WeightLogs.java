@@ -1,20 +1,16 @@
 package com.example.fitnessapplication;
 
-import static java.security.AccessController.getContext;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +19,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.net.URL;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,6 +27,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -39,7 +36,7 @@ import java.util.Locale;
 
 public class WeightLogs extends AppCompatActivity {
 
-    private ScrollView scrollViewLayout;
+    private LinearLayout weightContainer;
     private ImageView back;
 
     @Override
@@ -47,43 +44,40 @@ public class WeightLogs extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_logs);
 
-        scrollViewLayout = findViewById(R.id.weightrecord);
-        LinearLayout weightContainer = findViewById(R.id.weightContainer); // New LinearLayout container
+        weightContainer = findViewById(R.id.weightContainer);
         back = findViewById(R.id.backButton);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Animation animation = AnimationUtils.loadAnimation(WeightLogs.this, R.xml.button_animation);
                 back.startAnimation(animation);
-                onBackPressed(); // Simulate back button press to return to the previous activity (Settings)
+                onBackPressed();
             }
         });
 
         String email = UserDataManager.getInstance(WeightLogs.this).getEmail();
-        fetchWeightLog(email, weightContainer); // Pass the weightContainer to the fetchWeightLog method
-
+        fetchWeightLog(email);
     }
 
-
-    private void showserverResponse(String response) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getBaseContext());
-        builder.setTitle("Details")
-                .setMessage("Server Response: \n" + response )
+    private void showServerResponse(String response) {
+        new AlertDialog.Builder(this)
+                .setTitle("Server Response")
+                .setMessage(response)
                 .setPositiveButton("OK", null)
                 .show();
     }
 
-    private void addWeightRecord(LinearLayout weightContainer, String date, double weight , double diff) {
-        LinearLayout itemLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.item_wieght_logs, null);
+    private void addWeightRecord(String date, double weight, double diff) {
+        View itemLayout = getLayoutInflater().inflate(R.layout.item_wieght_logs, weightContainer, false);
 
         TextView dateTextView = itemLayout.findViewById(R.id.logdate);
         TextView weightTextView = itemLayout.findViewById(R.id.weight);
         TextView differenceTextView = itemLayout.findViewById(R.id.weightdifference);
-        ImageView indicatorImageView = itemLayout.findViewById(R.id.imagaindicator); // Get reference to the ImageView
+        ImageView indicatorImageView = itemLayout.findViewById(R.id.imagaindicator);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
             Date parsedDate = sdf.parse(date);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(parsedDate);
@@ -93,79 +87,83 @@ public class WeightLogs extends AppCompatActivity {
                     new SimpleDateFormat("E", Locale.getDefault()).format(calendar.getTime()));
 
             dateTextView.setText(formattedDate);
-        } catch (Exception e) {
+        } catch (ParseException e) {
             e.printStackTrace();
             dateTextView.setText(date);
         }
-        weightTextView.setText(String.valueOf(weight));
-        differenceTextView.setText(String.format("%.2f", diff));
 
-        if(diff > 0){
+        weightTextView.setText(String.valueOf(weight));
+        differenceTextView.setText(String.format(Locale.getDefault(), "%.2f", diff));
+
+        if (diff > 0) {
             indicatorImageView.setVisibility(View.VISIBLE);
-            indicatorImageView.setImageDrawable(getResources().getDrawable(R.drawable.arrowup));
+            indicatorImageView.setImageResource(R.drawable.arrowup);
         } else if (diff == 0) {
             differenceTextView.setText("Same Weight");
             differenceTextView.setTextSize(10);
             indicatorImageView.setVisibility(View.GONE);
-        } else{
+        } else {
             indicatorImageView.setVisibility(View.VISIBLE);
-            indicatorImageView.setImageDrawable(getResources().getDrawable(R.drawable.arrowdown));
+            indicatorImageView.setImageResource(R.drawable.arrowdown);
         }
-        weightContainer.addView(itemLayout); // Add the itemLayout to the weightContainer
+
+        weightContainer.addView(itemLayout);
     }
 
-    private void fetchWeightLog(String userId, LinearLayout weightContainer) {
+    private void fetchWeightLog(String userId) {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", userId)
                 .build();
         Request request = new Request.Builder()
-                .url(URLManager.MY_URL + "/Gym_Website/user/api/fetch_user_weight_logs.php")
+                .url(URLManager.MY_URL + "/User/api/weight_logs.php")
                 .post(requestBody)
                 .build();
+
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 e.printStackTrace();
-                showserverResponse("Failed to fetch weight log. Please check your internet connection.");
+                showServerResponse("Failed to fetch weight log. Please check your internet connection.");
             }
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                 final String responseData = response.body().string();
                 Log.d("Server Response", responseData);
+
                 if (response.isSuccessful()) {
-                    if (responseData != null && !responseData.isEmpty()) {
-                        try {
-                            JSONObject json = new JSONObject(responseData);
-                            JSONArray weights = json.getJSONArray("weights");
-                            JSONArray dates = json.getJSONArray("dates");
+                    try {
+                        JSONObject json = new JSONObject(responseData);
+                        JSONArray weights = json.getJSONArray("weights");
+                        JSONArray dates = json.getJSONArray("dates");
 
-                            for (int i = dates.length() - 1; i >= 0; i--) {
+                        if (weights.length() == 0 || dates.length() == 0) {
+                            // No weight logs found, display a message
+                            runOnUiThread(() -> {
+                                TextView noLogsTextView = new TextView(WeightLogs.this);
+                                noLogsTextView.setText("No weight logs found.");
+                                noLogsTextView.setGravity(Gravity.CENTER);
+                                weightContainer.addView(noLogsTextView);
+                            });
+                        } else {
+                            // Weight logs found, process and display them
+                            for (int i = 0; i < dates.length(); i++) {
                                 double weight = weights.getDouble(i);
-                                double previous = weights.getDouble(i-1);
-
+                                double previousWeight = i > 0 ? weights.getDouble(i - 1) : weight;
 
                                 String date = dates.getString(i);
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        addWeightRecord(weightContainer, date, weight, weight-previous); // Pass the weightContainer to the addWeightRecord method
-                                    }
-                                });
+                                runOnUiThread(() -> addWeightRecord(date, weight, weight - previousWeight));
                             }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                    } else {
-                        showserverResponse("No weight log found.");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        showServerResponse("Failed to parse server response.");
                     }
                 } else {
-                    showserverResponse("Failed to fetch weight log. Status code: " + response.code());
+                    showServerResponse("Failed to fetch weight log. Status code: " + response.code());
                 }
             }
         });
     }
-
-
 }

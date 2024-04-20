@@ -41,7 +41,7 @@ public class WorkoutPlanExerciseFetcher {
         String username = UserDataManager.getInstance(context).getEmail();
         String workoutPlanId = UserDataManager.getInstance(context).getWorkoutPlanId();
         String day = UserDataManager.getInstance(context).getWorkoutPlanDay();
-        String url = baseUrl + "/Gym_Website/user/api/fetch_workout_data.php?";
+        String url = baseUrl + "/User/api/fetch_workout_data.php?";
         url += "IdNum=" + username + "&";  // Separate parameters with "&"
         url += "WorkoutPlanID=" + workoutPlanId + "&";
         url += "day=" + day;

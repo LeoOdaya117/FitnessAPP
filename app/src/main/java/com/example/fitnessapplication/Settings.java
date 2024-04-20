@@ -3,6 +3,8 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -75,7 +77,25 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Handle click for Logout container
-                WEB.logout();
+                AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
+                builder.setTitle("Confirmation");
+                builder.setMessage("Are you sure you want to Logout?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+//                        WEB.logout();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // User clicked No, do nothing or handle as needed
+                        dialog.dismiss(); // Dismiss the dialog
+                        finish(); // Finish the current activity
+                    }
+                });
+                builder.setCancelable(false); // Prevent dismissing dialog by tapping outside
+                builder.show();
 //                Toast.makeText(Settings.this, "Logout clicked", Toast.LENGTH_SHORT).show();
 //                Intent intent = new Intent(Settings.this, MainActivity.class);
 //                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -104,4 +124,5 @@ public class Settings extends AppCompatActivity {
             }
         });
     }
+
 }

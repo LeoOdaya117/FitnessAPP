@@ -115,7 +115,7 @@ public class Subscription extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username
-        String url = websiteurl + "/Gym_Website/user/fetch_membership_user.php?Username=" + username;
+        String url = websiteurl + "/User/fetch_membership_user.php?Username=" + username;
 
         Request request = new Request.Builder()
                 .url(url)

@@ -120,7 +120,7 @@ public class DietPlans extends Fragment {
     private void fetchDietPlans() {
         UserDataManager userDataManager = UserDataManager.getInstance(requireContext());
         String username = userDataManager.getEmail();
-        String url = URLManager.MY_URL + "/gym_website/user/api/get_diet_plans.php?IdNum=" + username;
+        String url = URLManager.MY_URL + "/User/api/get_diet_plans.php?IdNum=" + username;
 
         OkHttpClient client = new OkHttpClient();
 

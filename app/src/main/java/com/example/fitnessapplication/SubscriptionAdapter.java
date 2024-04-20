@@ -135,7 +135,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
                     // Subscribe with GCash
 
                     if(paymentMethod =="GCash"){
-                        showToast("Gcash is not Available. Please use Cash payment method.");
+                        showToast("Gcash is not yet Available.");
                     }
                     else{
                         subscribe(username, planName, price, paymentMethod);
@@ -170,7 +170,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
 
             // Request
             Request request = new Request.Builder()
-                    .url(websiteurl + "/Gym_Website/user/subscribePlan.php")
+                    .url(websiteurl + "/User/subscribePlan.php")
                     .post(requestBody)
                     .build();
 
@@ -187,7 +187,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if (response.isSuccessful()) {
                         // Handle subscription success
-                        showToast("Subscription successful!");
+                        showToast("Subscription Request successful!: ");
                     } else {
                         // Handle subscription failure
                         showToast("Subscription failed: " + response.message());

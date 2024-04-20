@@ -79,7 +79,7 @@ public class Account extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_edit_profile, null);
 
-        fetchData(username);
+//        fetchData(username);
         // Find views from the inflated dialog layout
 
         ImageView btnback = findViewById(R.id.backButton);
@@ -293,7 +293,7 @@ public class Account extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username parameter
-        String fetchUrl = url+ "/Gym_Website/user/fetch_user_data.php?Username=" + username;
+        String fetchUrl = url+ "/User/fetch_user_data.php?Username=" + username;
 
         Request request = new Request.Builder()
                 .url(fetchUrl)
@@ -322,8 +322,8 @@ public class Account extends AppCompatActivity {
                         // Extract data from JSON object
                         final String fullName = jsonObject.getString("Firstname") + " " + jsonObject.getString("Lastname");
                         final String position = "Gym Member";
-                        final String profileImageUrl = url +"/Gym_Website/" + jsonObject.getString("photo"); // Assuming "photo" is the URL of the profile image
-                        final String qrCodeImageUrl = url +"/Gym_Website/" + jsonObject.getString("qr").substring(3); // Assuming "qr" is the URL of the QR code image
+                        final String profileImageUrl = url +"/" + jsonObject.getString("photo"); // Assuming "photo" is the URL of the profile image
+                        final String qrCodeImageUrl = url +"/" + jsonObject.getString("qr").substring(3); // Assuming "qr" is the URL of the QR code image
                         final String firstName = jsonObject.getString("Firstname");
                         final String lastName = jsonObject.getString("Lastname");
                         final String email = jsonObject.getString("Username");
@@ -371,8 +371,13 @@ public class Account extends AppCompatActivity {
                                 textViewFullName.setText(fullName);
                                 textViewPosition.setText(position);
                                 // Load profile image using Picasso
-                                Picasso.get().load(profileImageUrl).placeholder(R.drawable.loading).into(imageViewProfile);
+//                                Picasso.get().load(profileImageUrl).placeholder(R.drawable.profile).into(imageViewProfile);
 
+                                Picasso.get()
+                                        .load(profileImageUrl)
+                                        .placeholder(R.drawable.loading) // Optional: Placeholder image while loading
+                                        .error(R.drawable.notfound) // Optional: Error image if the image fails to load
+                                        .into(imageViewProfile);
                                 ImageView showQRCodeTextView = findViewById(R.id.textView_qrCode);
                                 showQRCodeTextView.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -447,7 +452,7 @@ public class Account extends AppCompatActivity {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(url+"/Gym_Website/user/update-profile.php")
+                .url(url+"/User/update-profile.php")
                 .post(requestBody)
                 .build();
 

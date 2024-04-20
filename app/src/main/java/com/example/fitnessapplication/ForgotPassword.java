@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import javax.mail.Authenticator;
@@ -42,8 +43,10 @@ import javax.mail.internet.MimeMessage;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ForgotPassword extends AppCompatActivity {
@@ -80,9 +83,13 @@ public class ForgotPassword extends AppCompatActivity {
         sendEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String token = generateToken();
+
 
                 String recipientEmail = email.getText().toString().trim();
-                String forgotPassUrl = Url + "/Gym_Website/forgotpassword.php?email=" + recipientEmail;
+
+
+                String forgotPassUrl = Url + "/forgotpassword.php?email=" + recipientEmail + "&token=" +token;
 
                 String subject = "Password Reset";
                 String message = "<html lang=\"en\">\n" +
@@ -107,7 +114,7 @@ public class ForgotPassword extends AppCompatActivity {
 
                 checkEmail(recipientEmail, subject, message);
 
-                showConfirmationDialog(recipientEmail, subject, message);
+                showConfirmationDialog(recipientEmail, subject, message, token);
 
 
 
@@ -119,8 +126,55 @@ public class ForgotPassword extends AppCompatActivity {
         });
     }
 
+    private void saveToken(String token, String email) {
+        OkHttpClient client = new OkHttpClient();
 
-    private void showConfirmationDialog(String recipientEmail, String subject, String message) {
+        // Prepare the request body (email and token)
+        RequestBody requestBody = new FormBody.Builder()
+                .add("email", email)
+                .add("token", token)
+                .build();
+
+        // Create the HTTP request to send the email with the token
+        Request request = new Request.Builder()
+                .url(Url + "/User/api/save_token.php")
+                .post(requestBody)
+                .build();
+
+        // Execute the request asynchronously
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                // Handle network failure
+                Log.e("ForgotPassword", "Failed to save token: " + e.getMessage());
+                runOnUiThread(() -> {
+                    Toast.makeText(ForgotPassword.this, "Failed to save token: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    String responseBody = response.body().string();
+                    // Handle the response from the server (e.g., show success message)
+                    runOnUiThread(() -> {
+                        Toast.makeText(ForgotPassword.this, "Token Save!: " + responseBody, Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    // Handle HTTP error
+                    Log.e("ForgotPassword", "Failed to save token, HTTP error: " + response.code());
+                    runOnUiThread(() -> {
+                        Toast.makeText(ForgotPassword.this, "Failed to save token: " + response.code(), Toast.LENGTH_SHORT).show();
+                    });
+                }
+            }
+        });
+    }
+
+
+
+
+    private void showConfirmationDialog(String recipientEmail, String subject, String message, String token) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Are you sure you want to send the email?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -131,7 +185,7 @@ public class ForgotPassword extends AppCompatActivity {
                         if(existing){
                             sendEmail(recipientEmail, subject, message);
 
-
+                            saveToken(token,recipientEmail);
                             existing = false;
                         }else{
                             showAlertDialog("No account found for this email address.", "Not Found");
@@ -204,7 +258,7 @@ public class ForgotPassword extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username
-        String url = URLManager.MY_URL + "/Gym_Website/user/api/check_email.php?email=" + username;
+        String url = URLManager.MY_URL + "/User/api/check_email.php?email=" + username;
 
         Request request = new Request.Builder()
                 .url(url)
@@ -243,6 +297,13 @@ public class ForgotPassword extends AppCompatActivity {
             }
         });
     }
+
+    private String generateToken() {
+        // Implement your token generation logic (e.g., using UUID)
+        return UUID.randomUUID().toString();
+    }
+
+
 
 
 

@@ -2,8 +2,10 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -41,22 +43,30 @@ public class signupFinish extends AppCompatActivity {
         percentageTextView = findViewById(R.id.percentageTextView);
         continueButton = findViewById(R.id.continueButton);
 
-        Button continueButton = findViewById(R.id.continueButton);
+        // Set click listener for continueButton
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Clear user preferences
+                SharedPreferences preferences = getSharedPreferences("user_preferences", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.clear();
+                editor.apply();
 
+                // Navigate to WEB activity and clear task stack
                 Intent intent = new Intent(signupFinish.this, WEB.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
 
-
-
+                // Finish current activity
+                finish();
             }
         });
-        // Start loading animation
 
+        // Start loading animation (assuming startLoading() method is defined elsewhere)
         startLoading();
     }
+
 
     private void startLoading() {
         new Thread(new Runnable() {
@@ -118,7 +128,7 @@ public class signupFinish extends AppCompatActivity {
     // Method to update user data using OkHttp
     private void updateUserData() {
         // Get user data from UserDataManager
-        String websiteurl = URLManager.MY_URL +"/Gym_Website/user/API/update_user_account.php";
+        String websiteurl = URLManager.MY_URL +"/User/api/update_user_account.php";
         UserDataManager userDataManager = UserDataManager.getInstance(getApplicationContext());
         String email = userDataManager.getEmail();
         int age = userDataManager.getAge();
@@ -197,13 +207,14 @@ public class signupFinish extends AppCompatActivity {
 
     private void createDietPlan() {
         // Get user data from UserDataManager
-        String websiteurl = URLManager.MY_URL +"/Gym_Website/user/API/gen-dietplan.php";
+        String websiteurl = URLManager.MY_URL +"/User/api/gen-dietplan.php";
         UserDataManager userDataManager = UserDataManager.getInstance(getApplicationContext());
 
         String email = userDataManager.getEmail();
         float bmr = userDataManager.getSBMR();
         String fitnessGoal = userDataManager.getFL();
         String diettype = userDataManager.getSDiet();
+        String allergies = userDataManager.getAllergy();
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String bmrString = decimalFormat.format(bmr);
@@ -217,6 +228,7 @@ public class signupFinish extends AppCompatActivity {
                 .add("targetCalorie", bmrString)
                 .add("goal", fitnessGoal)
                 .add("diettype", diettype)
+                .add("allergies", allergies)
                 .build();
 
         // Create POST request with URL and request body
@@ -269,13 +281,14 @@ public class signupFinish extends AppCompatActivity {
 
     private void createWorkoutPlan() {
         // Get user data from UserDataManager
-        String websiteurl = URLManager.MY_URL + "/Gym_Website/user/API/gen-workoutplan.php";
+        String websiteurl = URLManager.MY_URL + "/User/api/gen-workoutplan.php";
         UserDataManager userDataManager = UserDataManager.getInstance(getApplicationContext());
 
         String email = userDataManager.getEmail();
-        String fitnessGoal = userDataManager.getFL();
+        String fitnessGoal = userDataManager.getGoal();
         String fitnesslevel = userDataManager.getFL();
         String[] workoutPlan = userDataManager.getWorkoutPlan();
+
 
         // Convert workout plan array to a single string
         StringBuilder workoutPlanString = new StringBuilder();

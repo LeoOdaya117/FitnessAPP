@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.AlertDialog;
@@ -30,7 +32,7 @@ public class Signup extends AppCompatActivity {
 
     public String websiteurl = URLManager.MY_URL;
     private OkHttpClient client;
-    private String posURL = websiteurl+ "/gym_website/user/signup.php";
+    private String posURL = websiteurl+ "/User/signup.php";
 
     private EditText editTextFName;
     private EditText editTextLname;
@@ -39,6 +41,7 @@ public class Signup extends AppCompatActivity {
 
     private Button buttonregister;
     private TextView edittextviewResponse;
+    private ImageView imageViewEye;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +56,29 @@ public class Signup extends AppCompatActivity {
 
         buttonregister = findViewById(R.id.buttonSignup);
 
+        imageViewEye = findViewById(R.id.imageViewEye);
+
+        imageViewEye.setOnClickListener(new View.OnClickListener() {
+            boolean isPasswordVisible = false;
+
+            @Override
+            public void onClick(View v) {
+                if (isPasswordVisible) {
+                    // Hide the password
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    isPasswordVisible = false;
+                    imageViewEye.setImageResource(R.drawable.eyeropen); // Change to closed eye icon
+                } else {
+                    // Show the password
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    isPasswordVisible = true;
+                    imageViewEye.setImageResource(R.drawable.eyeclose); // Change to open eye icon
+                }
+
+                // Move cursor to the end of the input to maintain cursor position
+                editTextPassword.setSelection(editTextPassword.getText().length());
+            }
+        });
         buttonregister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,7 +161,7 @@ public class Signup extends AppCompatActivity {
                         @Override
                         public void run() {
                             //edittextviewResponse.setText("LOGIN SUCCESS");
-                            Toast.makeText(Signup.this, "SIGNUP SUCCESS", Toast.LENGTH_LONG).show();
+//                            Toast.makeText(Signup.this, "SIGNUP SUCCESS", Toast.LENGTH_LONG).show();
                             // After successful SIGNUP
                             AlertDialog.Builder builder = new AlertDialog.Builder(Signup.this, R.style.AlertDialogCustomStyle);
                             builder.setMessage("Signup Success")

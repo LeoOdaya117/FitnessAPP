@@ -89,7 +89,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Thi Week Goal"
+                    android:text="Predicted Weight"
                     android:textColor="@color/text_color"
                     android:textSize="15sp"
                     android:gravity="end" />

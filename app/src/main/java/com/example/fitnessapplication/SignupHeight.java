@@ -3,8 +3,10 @@ package com.example.fitnessapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +49,10 @@ public class SignupHeight extends AppCompatActivity {
                 }
 
 
+                if(currentheightText == null || TextUtils.isEmpty(currentheightText) ){
+                    showalert();
+                    return;
+                }
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(SignupHeight.this);
 
@@ -106,6 +112,20 @@ public class SignupHeight extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupHeight.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please fill out the Height first.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 
     public double bmi(float heightCm) {

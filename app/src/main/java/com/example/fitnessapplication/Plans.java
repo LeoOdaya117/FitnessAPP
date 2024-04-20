@@ -102,9 +102,9 @@ public class Plans extends Fragment {
                 Fragment newFragment = new WorkoutPlans();
                 WEB.replaceFragment(fragmentManager, newFragment);
                 // Notify the hosting activity with the workout plan URL
-                if (listener != null) {
-                    listener.onPlanSelected(websiteurl + "/Gym_Website/user/workoutplan_noheader.php");
-                }
+//                if (listener != null) {
+//                    listener.onPlanSelected(websiteurl + "/User/workoutplan_noheader.php");
+//                }
             }
         });
 
@@ -116,9 +116,9 @@ public class Plans extends Fragment {
                 FragmentManager fragmentManager = getParentFragmentManager();
                 Fragment newFragment = new DietPlans();
                 WEB.replaceFragment(fragmentManager, newFragment);
-                if (listener != null) {
-                    listener.onPlanSelected(websiteurl + "/Gym_Website/user/dietplans_noheader.php");
-                }
+//                if (listener != null) {
+//                    listener.onPlanSelected(websiteurl + "/User/dietplans_noheader.php");
+//                }
             }
         });
 

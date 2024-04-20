@@ -24,7 +24,7 @@ public class DummyData {
         String websiteUrl = URLManager.MY_URL;
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url( websiteUrl + "/Gym_Website/user/fetch_membership.php")
+                .url( websiteUrl + "/User/fetch_membership.php")
                 .build();
 
         client.newCall(request).enqueue(new Callback() {

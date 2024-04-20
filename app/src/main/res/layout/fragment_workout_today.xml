@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="0dp"
-            android:text="Day List"
+            android:text="Week Plans"
             android:textColor="#899bbd"
             android:textSize="15sp"
             android:textStyle="bold" />

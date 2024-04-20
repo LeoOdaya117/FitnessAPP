@@ -7,4 +7,13 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="SpinnerTextStyle" parent="Widget.AppCompat.Spinner.DropDown">
+        <item name="android:textColor">#FFFFFF</item> <!-- Set your desired text color here -->
+        <!-- Add other style attributes here if needed -->
+    </style>
+    <style name="SpinnerDropdownItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">#FF0000</item> <!-- Set text color for dropdown items -->
+        <!-- Add other style attributes for dropdown items here if needed -->
+    </style>
+
 </resources>

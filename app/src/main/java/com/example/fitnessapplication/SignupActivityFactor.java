@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 
 public class SignupActivityFactor extends AppCompatActivity {
 
-    public double targetcal;
+    public double targetcal =0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,10 @@ public class SignupActivityFactor extends AppCompatActivity {
             public void onClick(View v) {
 //                Toast.makeText(SignupActivityFactor.this, "BMR: " + targetcal +" kcal", Toast.LENGTH_SHORT).show();
 
-
+                if(targetcal <= 0){
+                    showalert();
+                    return;
+                }
 
                 float floatValue = (float) targetcal; // Casting double to float
 
@@ -75,6 +79,20 @@ public class SignupActivityFactor extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivityFactor.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please choose your Activity level.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 
     public double bmr(double activityFactor)

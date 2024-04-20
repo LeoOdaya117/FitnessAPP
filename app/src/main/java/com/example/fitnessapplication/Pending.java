@@ -115,7 +115,7 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
                 .build();
 
         Request request = new Request.Builder()
-                .url(websiteurl + "/Gym_Website/user/fetch_pending.php")
+                .url(websiteurl + "/User/fetch_pending.php")
                 .post(formBody)
                 .build();
 

@@ -15,7 +15,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginBottom="15dp"
-        android:src="@drawable/boxlogo" />
+        android:src="@drawable/systemlogobox" />
 
     <TextView
         android:id="@+id/questionTextView"
@@ -47,6 +47,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -65,7 +66,7 @@
                     android:src="@drawable/lossweight" />
 
                 <TextView
-                    android:layout_width="149dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="Loss Weight"
@@ -103,6 +104,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -121,7 +123,7 @@
                     android:src="@drawable/gain" />
 
                 <TextView
-                    android:layout_width="149dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="Gain Weight"
@@ -160,6 +162,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -178,7 +181,7 @@
                     android:src="@drawable/maintain" />
 
                 <TextView
-                    android:layout_width="149dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="Maintain Weight"
@@ -217,6 +220,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:focusable="true"
+            android:backgroundTint="@color/black"
             android:onClick="onCardClicked"
             android:foreground="?android:attr/selectableItemBackground">
 
@@ -235,7 +239,7 @@
                     android:src="@drawable/muscle" />
 
                 <TextView
-                    android:layout_width="149dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:text="Muscle Gain"

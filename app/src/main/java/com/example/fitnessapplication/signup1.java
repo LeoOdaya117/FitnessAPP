@@ -2,15 +2,18 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
 public class signup1 extends AppCompatActivity {
 
-    public String diet;
+    public String diet =null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,16 +32,36 @@ public class signup1 extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                UserDataManager.getInstance(signup1.this).saveDiet(diet);
-                Intent intent = new Intent(signup1.this, SignupFitnessLevel.class);
-                // Put the selected card ID as an extra to the intent
+                if(diet == null || TextUtils.isEmpty(diet)){
+                    showalert();
+                }else{
+                    UserDataManager.getInstance(signup1.this).saveDiet(diet);
+                    Intent intent = new Intent(signup1.this, SignupAllergy.class);
+                    // Put the selected card ID as an extra to the intent
 
-                // Start the activity
-                startActivity(intent);
+                    // Start the activity
+                    startActivity(intent);
+                }
+
+
             }
         });
 
 
+    }
+
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(signup1.this);
+        builder.setTitle("Confirmation");
+        builder.setMessage("Please choose your diet.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 
     public void onCardClicked(View view) {

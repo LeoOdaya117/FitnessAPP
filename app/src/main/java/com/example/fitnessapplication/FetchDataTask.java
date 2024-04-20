@@ -33,13 +33,13 @@ public class FetchDataTask extends AsyncTask<String, Void, List<Exercise>> {
 
             String apiLink = ""; // Initialize API link based on category
             if (category.equals("exercise")) {
-                apiLink = "/Gym_Website/user/api/fetch_exercise.php?search=";
+                apiLink = "/User/api/fetch_exercise.php?search=";
             } else if (category.equals("food")) {
-                apiLink = "/Gym_Website/user/api/fetch_food.php?search=";
+                apiLink = "/User/api/fetch_food.php?search=";
             } else if (category.equals("equipment")) {
-                apiLink = "/Gym_Website/user/api/fetch_equipment.php?search=";
+                apiLink = "/User/api/fetch_equipment.php?search=";
             }else if (category.equals("warmup")) {
-                apiLink = "/Gym_Website/user/api/fetch_warmup.php?search=";
+                apiLink = "/User/api/fetch_warmup.php?search=";
             }
 
             // Construct the URL

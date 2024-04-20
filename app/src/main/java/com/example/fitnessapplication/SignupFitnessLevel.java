@@ -3,8 +3,10 @@ package com.example.fitnessapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +36,10 @@ public class SignupFitnessLevel extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                if(fitnesslevel == null || TextUtils.isEmpty(fitnesslevel)){
+                    showalert();
+                    return;
+                }
                 UserDataManager.getInstance(SignupFitnessLevel.this).saveFL(fitnesslevel);
 
                 Intent intent = new Intent(SignupFitnessLevel.this, SignupUserAvailability.class);
@@ -46,6 +52,19 @@ public class SignupFitnessLevel extends AppCompatActivity {
 
             }
         });
+    }
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupFitnessLevel.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please choose your fitness level.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
     public void onCardClicked(View view) {
         int viewId = view.getId();

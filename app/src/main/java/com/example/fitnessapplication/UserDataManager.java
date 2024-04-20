@@ -195,5 +195,16 @@ public class UserDataManager {
         return sharedPreferences.getString("name", "");
     }
 
+    public void saveAllergy(String name) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("name", name);
+        editor.apply();
+    }
+
+    public String getAllergy() {
+        return sharedPreferences.getString("name", "");
+    }
+
+
 }
 

@@ -27,7 +27,7 @@ import okhttp3.Response;
 public class ChangePassword extends AppCompatActivity {
 
     private OkHttpClient client;
-    public String url = URLManager.MY_URL + "/gym_website/user/API/update-password.php"; // Accessing the URL
+    public String url = URLManager.MY_URL + "/User/api/update-password.php"; // Accessing the URL
     private EditText currentPasswordEditText;
     private EditText newPasswordEditText;
     private EditText confirmPasswordEditText;
@@ -63,11 +63,61 @@ public class ChangePassword extends AppCompatActivity {
                 String newPassword = newPasswordEditText.getText().toString().trim();
                 String confirmPassword = confirmPasswordEditText.getText().toString().trim();
 
-                // Call the changepass method
-                changepass(username, currentPassword, newPassword, confirmPassword);
+                // Perform input validation
+                if (currentPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                    // Show dialog with error message for empty fields
+                    showDialog("Error", "Please fill in all fields.");
+                    return; // Exit onClick method if any field is empty
+                }
+
+                if (!newPassword.equals(confirmPassword)) {
+                    // Show dialog with error message for password mismatch
+                    showDialog("Error", "Passwords do not match.");
+                    return; // Exit onClick method if passwords do not match
+                }
+
+                // Confirm password change with an AlertDialog
+                AlertDialog.Builder builder = new AlertDialog.Builder(ChangePassword.this);
+                builder.setTitle("Confirm Password Change");
+                builder.setMessage("Are you sure you want to change your password?");
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Call the changepass method with validated inputs
+                        changepass(username, currentPassword, newPassword, confirmPassword);
+                        dialog.dismiss(); // Dismiss the dialog after confirming
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); // Dismiss the dialog if user cancels
+                    }
+                });
+
+                // Create and show the AlertDialog
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             }
         });
 
+
+
+
+
+    }
+    // Method to display a dialog with a custom error message
+    private void showDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss(); // Dismiss the dialog when OK is clicked
+                    }
+                })
+                .show();
     }
 
     public void changepass(String username, String currentpassword, String newpassword, String confirmpassword) {

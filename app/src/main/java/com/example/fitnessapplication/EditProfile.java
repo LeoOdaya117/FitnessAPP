@@ -191,7 +191,7 @@ public class EditProfile extends AppCompatActivity {
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(URLManager.MY_URL+"/Gym_Website/user/update-profile.php")
+                .url(URLManager.MY_URL+"/User/update-profile.php")
                 .post(requestBody)
                 .build();
 
@@ -288,7 +288,7 @@ public class EditProfile extends AppCompatActivity {
 
         // Create request
         Request request = new Request.Builder()
-                .url(URLManager.MY_URL+"/Gym_Website/user/api/update_user_details.php")
+                .url(URLManager.MY_URL+"/User/api/update_user_details.php")
                 .post(formBody)
                 .build();
 
@@ -335,7 +335,7 @@ public class EditProfile extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username parameter
-        String fetchUrl = URLManager.MY_URL + "/Gym_Website/user/fetch_user_data.php?Username=" + username;
+        String fetchUrl = URLManager.MY_URL + "/User/fetch_user_data.php?Username=" + username;
 
         Request request = new Request.Builder()
                 .url(fetchUrl)
@@ -395,7 +395,7 @@ public class EditProfile extends AppCompatActivity {
         if (userData != null) {
             // Extract data from the JSON object
             try {
-                String profileImageUrl = URLManager.MY_URL + "/Gym_Website/" + userData.getString("photo");
+                String profileImageUrl = URLManager.MY_URL + "/" + userData.getString("photo");
                 String firstName = userData.getString("Firstname");
                 String lastName = userData.getString("Lastname");
                 String email = userData.getString("Username");
@@ -415,7 +415,7 @@ public class EditProfile extends AppCompatActivity {
                 ImageView imageViewProfile = findViewById(R.id.imageView_profile);
 
                 // Load profile image using Picasso
-                Picasso.get().load(profileImageUrl).placeholder(R.drawable.loading).into(imageViewProfile);
+                Picasso.get().load(profileImageUrl).placeholder(R.drawable.profile).into(imageViewProfile);
 
                 // Set data to UI elements
                 editText_first_name.setText(firstName);

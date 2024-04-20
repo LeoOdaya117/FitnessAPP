@@ -12,12 +12,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@drawable/loginlogo"
-        android:label="@string/app_name"
-        android:roundIcon="@drawable/loginlogo"
+        android:icon="@drawable/systemlogo"
+        android:label="Brown House Fitness Academy App"
+        android:roundIcon="@drawable/systemlogo"
         android:supportsRtl="true"
         android:theme="@style/Theme.FitnessApplication"
         tools:targetApi="31">
+        <activity
+            android:name=".SignupAllergy"
+            android:exported="false" />
         <activity
             android:name=".ChangePassword"
             android:exported="false" />

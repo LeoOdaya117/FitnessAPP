@@ -147,7 +147,7 @@ public class WorkoutPlans extends Fragment {
         UserDataManager userDataManager = UserDataManager.getInstance(requireContext());
         String username = userDataManager.getEmail();
         // Assuming your PHP server URL is stored in a constant named SERVER_URL
-        String url = URLManager.MY_URL + "/gym_website/user/api/get_workout_plans.php?IdNum=" + username;
+        String url = URLManager.MY_URL + "/User/api/get_workout_plans.php?IdNum=" + username;
 
         OkHttpClient client = new OkHttpClient();
 

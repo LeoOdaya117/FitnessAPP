@@ -11,10 +11,12 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +35,13 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private OkHttpClient client;
     //    public String posURL = "https://10fc-180-190-129-27.ngrok-free.app/gym_website/user/login.php";
-    public String url = URLManager.MY_URL + "/gym_website/user/login.php"; // Accessing the URL
+    public String url = URLManager.MY_URL + "/User/login.php"; // Accessing the URL
     private EditText editTextUsername;
     private EditText editTextPassword;
     private Button buttonLogin;
     private TextView edittextviewResponse;
+
+    private ImageView imageViewEye;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1001;
 
     @Override
@@ -61,6 +65,29 @@ public class MainActivity extends AppCompatActivity {
         buttonLogin = findViewById(R.id.buttonLogin);
         edittextviewResponse = findViewById(R.id.response);
 
+        imageViewEye = findViewById(R.id.imageViewEye);
+
+        imageViewEye.setOnClickListener(new View.OnClickListener() {
+            boolean isPasswordVisible = false;
+
+            @Override
+            public void onClick(View v) {
+                if (isPasswordVisible) {
+                    // Hide the password
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    isPasswordVisible = false;
+                    imageViewEye.setImageResource(R.drawable.eyeropen); // Change to closed eye icon
+                } else {
+                    // Show the password
+                    editTextPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    isPasswordVisible = true;
+                    imageViewEye.setImageResource(R.drawable.eyeclose); // Change to open eye icon
+                }
+
+                // Move cursor to the end of the input to maintain cursor position
+                editTextPassword.setSelection(editTextPassword.getText().length());
+            }
+        });
 //        editTextUsername.setEnabled(false);
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {

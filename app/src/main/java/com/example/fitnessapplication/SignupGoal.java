@@ -2,8 +2,11 @@ package com.example.fitnessapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,6 +34,10 @@ public class SignupGoal extends AppCompatActivity {
             public void onClick(View v) {
 
 
+                if(goal == null || TextUtils.isEmpty(goal)){
+                    showalert();
+                    return;
+                }
 //                Toast.makeText(SignupGoal.this, "Goal: " + goal, Toast.LENGTH_SHORT).show();
                 UserDataManager.getInstance(SignupGoal.this).saveGoal(goal);
 
@@ -44,6 +51,19 @@ public class SignupGoal extends AppCompatActivity {
 
             }
         });
+    }
+    public void showalert(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(SignupGoal.this);
+        builder.setTitle("Warning");
+        builder.setMessage("Please choose your Goal.");
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.show();
     }
 
     public void onCardClicked(View view) {
@@ -60,7 +80,7 @@ public class SignupGoal extends AppCompatActivity {
             maintainWeightcheck.setVisibility(View.INVISIBLE);
             gainMusclecheck.setVisibility(View.INVISIBLE);
 
-            goal = "Loss Weight";
+            goal = "Weight Loss";
         } else if (viewId == R.id.gainWeightCard) {
 
             lossWeightecheck.setVisibility(View.INVISIBLE);
@@ -76,14 +96,14 @@ public class SignupGoal extends AppCompatActivity {
             maintainWeightcheck.setVisibility(View.VISIBLE);
             gainMusclecheck.setVisibility(View.INVISIBLE);
 
-            goal = "Gain Weight";
+            goal = "Maintain Weight";
         } else if (viewId == R.id.gainMuscleCard) {
             lossWeightecheck.setVisibility(View.INVISIBLE);
             gainWeightcheck.setVisibility(View.INVISIBLE);
             maintainWeightcheck.setVisibility(View.INVISIBLE);
             gainMusclecheck.setVisibility(View.VISIBLE);
 
-            goal = "Gain Muscle";
+            goal = "Muscle Gain";
         }
         // Add more conditions for other cards if needed
     }
