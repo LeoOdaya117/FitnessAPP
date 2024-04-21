@@ -60,6 +60,9 @@ public class Report extends Fragment {
     private TextView currentWeight, goalText, BMIText, fitnessCategory, currentHeight;
     private String email;
 
+    private OkHttpClient client;
+
+
     public Report() {
         // Required empty public constructor
     }
@@ -77,6 +80,7 @@ public class Report extends Fragment {
         currentHeight = view.findViewById(R.id.currentHeight);
         fitnessCategory = view.findViewById(R.id.fitnessCategory);
 
+        client = new OkHttpClient();
         email = UserDataManager.getInstance(getContext()).getEmail();
         fetchWeightLog(email);
         fetchPredictedWeight(email);
@@ -103,7 +107,6 @@ public class Report extends Fragment {
     }
 
     private void fetchUseData(String userId) {
-        OkHttpClient client = new OkHttpClient();
 
         // Check network connectivity
         if (!isNetworkConnected()) {
@@ -317,7 +320,6 @@ public class Report extends Fragment {
 
 
     private void fetchWeightLog(String userId) {
-        OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", userId)
                 .build();
@@ -390,7 +392,6 @@ public class Report extends Fragment {
     }
 
     private void fetchPredictedWeight(String username) {
-        OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("username", username)
                 .build();
@@ -613,7 +614,6 @@ public class Report extends Fragment {
     }
 
     private void saveWeight(String userId, String weight) {
-        OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", userId)
                 .add("weight", weight)
@@ -650,7 +650,6 @@ public class Report extends Fragment {
     }
 
     private void saveHeight(String userId, String height) {
-        OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", userId)
                 .add("height", height)
@@ -693,6 +692,15 @@ public class Report extends Fragment {
             fetchUseData(email);
         } else {
             showAlert("Error", result);
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
         }
     }
 

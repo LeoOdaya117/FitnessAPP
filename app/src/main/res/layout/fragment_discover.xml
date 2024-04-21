@@ -109,13 +109,11 @@
 
 
     <!-- Content RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
+    <com.example.fitnessapplication.CustomRecyclerView
         android:id="@+id/recycler_view_content"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:visibility="visible"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical" />
 
     <!-- Scroll up button -->
     <ImageView

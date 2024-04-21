@@ -77,10 +77,14 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
     private boolean member = false;
 
+
+    private OkHttpClient client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
+
+        client = new OkHttpClient();
         String username = UserDataManager.getInstance(WEB.this).getEmail();
 
         // Initialize NoInternetFragment
@@ -117,67 +121,6 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 //        cookieManager.setAcceptThirdPartyCookies(webView, true);
 
         // Set a WebViewClient to handle page navigation
-        webView.setWebViewClient(new WebViewClient() {
-
-            @Override
-            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-                // Show a toast or perform any action to inform the user about the error
-                loadFragment(noInternetFragment);
-            }
-
-            @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                // Ignore SSL certificate errors
-                handler.proceed();
-            }
-
-            @Override
-            public void onPageFinished(WebView view, String url) {
-                super.onPageFinished(view, url);
-                if (!buttonClicked) {
-                    webView.loadUrl("javascript:(function() { document.querySelector('button').click(); })()");
-                    buttonClicked = true;
-                }
-
-                // Check the URL and take appropriate actions
-                if (url != null && url.endsWith("logout.php")) {
-                    // Navigate back to MainActivity
-                    Intent intent = new Intent(WEB.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish(); // Finish the current activity to prevent going back to it
-                }
-                if (url != null && url.endsWith("index.php")) {
-
-
-
-
-                }
-                String username = getIntent().getStringExtra("username");
-//                checkDietPlanRecord();
-//                checkUsersSubscription(username);
-
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                String url = request.getUrl().toString();
-
-                // Check if the clicked URL contains a specific class name
-                if (url.contains("type=plan")) {
-                    webView.setVisibility(View.GONE);
-
-//                    Toast.makeText(WEB.this, "Clicked on a clickable element", Toast.LENGTH_SHORT).show();
-                    return true; // Indicate that the URL has been handled
-                }
-
-                else {
-                    // Load the URL in the WebView
-                    view.loadUrl(url);
-                    return false; // Indicate that the WebView should handle the URL
-                }
-            }
-        });
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -270,7 +213,6 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         String mainUrl = URLManager.MY_URL;
         String url = mainUrl+ "/User/api/check_user_plans.php?email=" + username;
 
-        OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -376,7 +318,7 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     @Override
     public void onPlanSelected(String url) {
         String loadURL = websiteurl + "/User/";
-        webView.loadUrl(loadURL + "loadingpage.php");
+//        webView.loadUrl(loadURL + "loadingpage.php");
 //        webView.setVisibility(View.GONE);
 //        webView.loadUrl(url);
 //        webView.setVisibility(View.VISIBLE);
@@ -541,7 +483,6 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
     }
 
     private void checkUserPlan(String username) {
-        OkHttpClient client = new OkHttpClient();
 
         // Construct the URL using HttpUrl.Builder for safety
         String url = websiteurl + "/User/api/check_users_subscription_date.php?email=" + username;
@@ -589,7 +530,6 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
 
 
     private void checkUsersSubscription(String username) {
-        OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username
         String url = websiteurl + "/User/fetch_membership_user.php?Username=" + username;
@@ -744,6 +684,15 @@ public class WEB extends AppCompatActivity implements NoInternetFragment.RetryLi
         checkDietPlanRecord(username);
         checkUsersSubscription(username);
         checkUserPlan(username);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 
 }

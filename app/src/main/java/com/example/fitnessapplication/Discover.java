@@ -2,79 +2,68 @@ package com.example.fitnessapplication;
 
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
-import java.util.ArrayList;
-import java.util.List;
-import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Discover#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.example.fitnessapplication.CustomRecyclerView;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Discover extends Fragment {
 
+    private CustomRecyclerView recyclerView;
+    private boolean isCategoryChanging = false;
+
+    private boolean isScrollingEnabled = true;
     private TextView navWorkouts;
     private TextView navExercise;
     private TextView navFood;
-    private TextView navEquipment,navWarmup;
-    private RecyclerView recyclerView;
+    private TextView navEquipment;
+    private TextView navWarmup;
+
     private ExerciseAdapter exerciseAdapter;
     private List<Exercise> exerciseList;
 
     private EditText search_text;
-    private ImageView searchbutton, info_icon;
+    private ImageView searchbutton,scrollUpButton;
 
     private ScrollView workouts_container;
-    private ImageView scrollUpButton;
-    private CardView warmupcard,absBeginner,chestBeginner,armBeginner,legBeginner,backBeginner,absIntermediate,chestIntermediate,armIntermediate,legIntermediate,backIntermediate,absAdvanced,chestADVANCED,armADVANCED,legADVANCED,backADVANCED;
+    private CardView warmupcard, absBeginner, chestBeginner, armBeginner, legBeginner, backBeginner,
+            absIntermediate, chestIntermediate, armIntermediate, legIntermediate, backIntermediate,
+            absAdvanced, chestADVANCED, armADVANCED, legADVANCED, backADVANCED;
 
     private static String category;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     public Discover() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment Discover.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Discover newInstance(String param1, String param2) {
         Discover fragment = new Discover();
         Bundle args = new Bundle();
@@ -97,43 +86,42 @@ public class Discover extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_discover, container, false);
-        search_text = view.findViewById(R.id.search_input); // Initialize EditText for search
-        searchbutton = view.findViewById(R.id.searchbtn); // Initialize EditText for search
+
+
+        search_text = view.findViewById(R.id.search_input);
+        searchbutton = view.findViewById(R.id.searchbtn);
         workouts_container = view.findViewById(R.id.workouts_container);
-        workouts_container.setVisibility(View.VISIBLE); // Add this line to make it visible
+        workouts_container.setVisibility(View.VISIBLE);
 
         recyclerView = view.findViewById(R.id.recycler_view_content);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Initialize your exercise list with an empty list
         exerciseList = new ArrayList<>();
         exerciseAdapter = new ExerciseAdapter(exerciseList);
         recyclerView.setAdapter(exerciseAdapter);
 
         workouts_container.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
-        // Fetch data from the server
-
         scrollUpButton = view.findViewById(R.id.scroll_up_button);
 
-         warmupcard = view.findViewById(R.id.warmupcard);
-         absBeginner = view.findViewById(R.id.absBeginner);
-         chestBeginner = view.findViewById(R.id.chestBeginner);
-         armBeginner = view.findViewById(R.id.armBeginner);
-         legBeginner = view.findViewById(R.id.legBeginner);
-         backBeginner = view.findViewById(R.id.backBeginner);
-         absIntermediate = view.findViewById(R.id.absIntermediate);
-         chestIntermediate = view.findViewById(R.id.chestIntermediate);
-         armIntermediate = view.findViewById(R.id.armIntermediate);
-         legIntermediate = view.findViewById(R.id.legIntermediate);
-         backIntermediate = view.findViewById(R.id.backIntermediate);
-         absAdvanced = view.findViewById(R.id.absAdvanced);
-         chestADVANCED = view.findViewById(R.id.chestADVANCED);
-         armADVANCED = view.findViewById(R.id.armADVANCED);
-         legADVANCED = view.findViewById(R.id.legADVANCED);
-         backADVANCED = view.findViewById(R.id.backADVANCED);
+        // Initialize CardView instances
+        warmupcard = view.findViewById(R.id.warmupcard);
+        absBeginner = view.findViewById(R.id.absBeginner);
+        chestBeginner = view.findViewById(R.id.chestBeginner);
+        armBeginner = view.findViewById(R.id.armBeginner);
+        legBeginner = view.findViewById(R.id.legBeginner);
+        backBeginner = view.findViewById(R.id.backBeginner);
+        absIntermediate = view.findViewById(R.id.absIntermediate);
+        chestIntermediate = view.findViewById(R.id.chestIntermediate);
+        armIntermediate = view.findViewById(R.id.armIntermediate);
+        legIntermediate = view.findViewById(R.id.legIntermediate);
+        backIntermediate = view.findViewById(R.id.backIntermediate);
+        absAdvanced = view.findViewById(R.id.absAdvanced);
+        chestADVANCED = view.findViewById(R.id.chestADVANCED);
+        armADVANCED = view.findViewById(R.id.armADVANCED);
+        legADVANCED = view.findViewById(R.id.legADVANCED);
+        backADVANCED = view.findViewById(R.id.backADVANCED);
 
-        // Set click listener for all CardViews
+        // Set click listeners for category cards
         setCardClickListener(warmupcard, "Warm Up");
         setCardClickListener(absBeginner, "Abs Beginner");
         setCardClickListener(chestBeginner, "Chest Beginner");
@@ -151,8 +139,7 @@ public class Discover extends Fragment {
         setCardClickListener(legADVANCED, "Leg Advanced");
         setCardClickListener(backADVANCED, "Shoulder & Back Advanced");
 
-
-        // Set an OnClickListener to the scroll up button
+        // OnClickListener for scroll up button
         scrollUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,43 +166,32 @@ public class Discover extends Fragment {
             }
         });
 
-        searchbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                fetchData(search_text.getText().toString());
-            }
-        });
+
+
+
+        // Text changed listener for search
         search_text.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // This method is called to notify you that the text is about to change.
-                // You can use it to take any necessary actions before the text changes.
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                fetchData(s.toString());
             }
 
             @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                // This method is called to notify you that the text has changed.
-                // You can perform actions based on the changed text here.
-                String searchText = charSequence.toString();
-                fetchData(searchText); // Call fetchData with the entered search text
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                // This method is called to notify you that the text has changed after any transformations have been applied.
-                // You can use it to take any necessary actions after the text changes.
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
-        // Initialize TextViews
+        // Initialize TextViews for navigation
         navWorkouts = view.findViewById(R.id.nav_workouts);
         navWarmup = view.findViewById(R.id.nav_warmup);
         navExercise = view.findViewById(R.id.nav_exercise);
         navFood = view.findViewById(R.id.nav_food);
         navEquipment = view.findViewById(R.id.nav_equipment);
 
-        // Set OnClickListener for each TextView
+        // Set OnClickListener for each navigation item
         navWorkouts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -233,81 +209,15 @@ public class Discover extends Fragment {
             }
         });
 
-        navWarmup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Reset appearance of all TextViews
-                resetTextViewsAppearance();
-                category = "warmup";
+//        navWorkouts.setOnClickListener(v -> changeCategory("workouts"));
+        navWarmup.setOnClickListener(v -> changeCategory("warmup"));
+        navExercise.setOnClickListener(v -> changeCategory("exercise"));
+        navFood.setOnClickListener(v -> changeCategory("food"));
+        navEquipment.setOnClickListener(v -> changeCategory("equipment"));
 
-                // Update appearance of clicked TextView
-                navWarmup.setTypeface(null, Typeface.BOLD);
-                navWarmup.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-
-                fetchData(search_text.getText().toString());
-                workouts_container.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                // Handle click action for Workouts
-            }
-        });
-        navExercise.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Reset appearance of all TextViews
-                resetTextViewsAppearance();
-                category = "exercise";
-
-                // Update appearance of clicked TextView
-                navExercise.setTypeface(null, Typeface.BOLD);
-                navExercise.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-
-                fetchData(search_text.getText().toString());
-                workouts_container.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                // Handle click action for Workouts
-            }
-        });
-
-        navFood.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Reset appearance of all TextViews
-                resetTextViewsAppearance();
-                category = "food";
-                fetchData(search_text.getText().toString());
-                workouts_container.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                // Update appearance of clicked TextView
-                navFood.setTypeface(null, Typeface.BOLD);
-                navFood.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-
-                // Handle click action for Workouts
-            }
-        });
-
-        navEquipment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Reset appearance of all TextViews
-                resetTextViewsAppearance();
-                category = "equipment";
-                fetchData(search_text.getText().toString());
-                workouts_container.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                // Update appearance of clicked TextView
-                navEquipment.setTypeface(null, Typeface.BOLD);
-                navEquipment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-
-                // Handle click action for Workouts
-            }
-        });
-
-
-
-
-        // Inflate the layout for this fragment
         return view;
     }
+
 
     private void setCardClickListener(CardView cardView, final String category) {
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -320,17 +230,81 @@ public class Discover extends Fragment {
             }
         });
     }
-    private void showAlert(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.AlertDialogCustomStyle);
-        builder.setTitle(title)
-                .setMessage(message)
-                .setPositiveButton("OK", null); // You can add an OnClickListener if needed
-        AlertDialog dialog = builder.create();
-        dialog.show();
+
+    private void changeCategory(String category) {
+        workouts_container.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+        resetTextViewsAppearance();
+        // Update UI for selected category
+        TextView selectedTextView = getCategoryTextView(category);
+        if (selectedTextView != null) {
+            selectedTextView.setTypeface(null, Typeface.BOLD);
+            selectedTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+        }
+        // Disable RecyclerView interaction
+        isScrollingEnabled = false;
+
+        // Stop the RecyclerView from scrolling immediately
+        if (recyclerView != null) {
+            recyclerView.stopScroll();
+        }
+
+        // Update category data
+        fetchData(search_text.getText().toString());
+
+        // Delay category change to avoid conflicts with ongoing RecyclerView operations
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            this.category = category;
+            workouts_container.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            isScrollingEnabled = true; // Re-enable RecyclerView interaction
+            isCategoryChanging = false; // Allow next category change
+        }, 1000); // Adjust delay as needed
     }
+
+
 
     public static String getCategory() {
         return category;
+    }
+    private TextView getCategoryTextView(String category1) {
+        switch (category1) {
+            case "workouts":
+                category = "workouts";
+                return navWorkouts;
+            case "warmup":
+                category = "warmup";
+                return navWarmup;
+            case "exercise":
+                category = "exercise";
+                return navExercise;
+            case "food":
+                category = "food";
+                return navFood;
+            case "equipment":
+                category = "equipment";
+                return navEquipment;
+            default:
+                return null;
+        }
+    }
+
+    private void resetTextViewsAppearance() {
+        // Reset appearance of all TextViews
+        navWorkouts.setTypeface(null, Typeface.NORMAL);
+        navWorkouts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+        navWarmup.setTypeface(null, Typeface.NORMAL);
+        navWarmup.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+        navExercise.setTypeface(null, Typeface.NORMAL);
+        navExercise.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+        navFood.setTypeface(null, Typeface.NORMAL);
+        navFood.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+
+        navEquipment.setTypeface(null, Typeface.NORMAL);
+        navEquipment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
     }
 
     // Method to fetch data from the server
@@ -349,23 +323,5 @@ public class Discover extends Fragment {
             }
         });
         task.execute(search);
-    }
-
-
-    private void resetTextViewsAppearance() {
-        navWorkouts.setTypeface(null, Typeface.NORMAL);
-        navWorkouts.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-
-        navWarmup.setTypeface(null, Typeface.NORMAL);
-        navWarmup.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-
-        navExercise.setTypeface(null, Typeface.NORMAL);
-        navExercise.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-
-        navFood.setTypeface(null, Typeface.NORMAL);
-        navFood.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-
-        navEquipment.setTypeface(null, Typeface.NORMAL);
-        navEquipment.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
     }
 }

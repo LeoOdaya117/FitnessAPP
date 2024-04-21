@@ -38,6 +38,7 @@ public class WorkoutPlans extends Fragment {
 
     private View rootView; // Define rootView as a class-level variable
 
+    private OkHttpClient client;
     private RecyclerView recyclerView;
     private WorkoutPlanAdapter adapter;
     private List<WorkoutPlan> workoutPlanList;
@@ -92,6 +93,7 @@ public class WorkoutPlans extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_workout_plans, container, false); // Assign rootView here
 
+        client = new OkHttpClient();
         // Find the RecyclerView from the layout
         recyclerView = rootView.findViewById(R.id.workoutCon);
         currentweekTextView = rootView.findViewById(R.id.currentWeek);
@@ -149,7 +151,6 @@ public class WorkoutPlans extends Fragment {
         // Assuming your PHP server URL is stored in a constant named SERVER_URL
         String url = URLManager.MY_URL + "/User/api/get_workout_plans.php?IdNum=" + username;
 
-        OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -254,6 +255,15 @@ public class WorkoutPlans extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 
 

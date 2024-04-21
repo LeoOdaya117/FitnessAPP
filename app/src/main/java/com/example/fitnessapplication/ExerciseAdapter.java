@@ -497,10 +497,14 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             });
         }
 
+
         interface DataFetchCallback {
             void onSuccess(JSONObject result);
 
             void onFailure(String errorMessage);
         }
+
+
     }
+
 }

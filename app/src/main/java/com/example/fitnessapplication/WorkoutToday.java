@@ -163,4 +163,6 @@ public class WorkoutToday extends Fragment implements View.OnClickListener {
         restDayCard.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
     }
+
+
 }

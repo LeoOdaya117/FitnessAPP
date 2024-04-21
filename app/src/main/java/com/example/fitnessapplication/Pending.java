@@ -37,6 +37,7 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
     private List<PendingTransaction> pendingTransactions;
     private Handler handler = new Handler();
 
+    private OkHttpClient client;
     public String websiteurl = URLManager.MY_URL;
     private Runnable fetchPendingRunnable = new Runnable() {
         @Override
@@ -56,6 +57,8 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pending);
 
+
+        client = new OkHttpClient();
         String username = getIntent().getStringExtra("username");
         String posURL = getIntent().getStringExtra("posURL");
 
@@ -108,7 +111,6 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
     }
 
     private void fetchPendingTransactions(String username) {
-        OkHttpClient client = new OkHttpClient();
 
         RequestBody formBody = new FormBody.Builder()
                 .add("Username", username)
@@ -173,6 +175,9 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
     protected void onDestroy() {
         super.onDestroy();
         // Remove any pending callbacks to prevent memory leaks
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
         handler.removeCallbacksAndMessages(null);
     }
 
@@ -194,4 +199,6 @@ public class Pending extends AppCompatActivity implements PendingTransactionAdap
             });
         }
     }
+
+
 }

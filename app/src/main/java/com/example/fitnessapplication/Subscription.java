@@ -44,13 +44,14 @@ public class Subscription extends AppCompatActivity {
     private TextView textViewCurrentMembershipDetails;
 
     private ImageView backbutton;
-
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription);
 
+        client = new OkHttpClient();
         UserDataManager userDataManager = UserDataManager.getInstance(getApplicationContext());
 
         String username = userDataManager.getEmail();
@@ -112,7 +113,7 @@ public class Subscription extends AppCompatActivity {
     }
 
     private void fetchMembershipDetails(String username) {
-        OkHttpClient client = new OkHttpClient();
+
 
         // Construct the URL with the username
         String url = websiteurl + "/User/fetch_membership_user.php?Username=" + username;
@@ -191,4 +192,14 @@ public class Subscription extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
+    }
+
 }

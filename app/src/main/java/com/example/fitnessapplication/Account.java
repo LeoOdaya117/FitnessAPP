@@ -65,6 +65,7 @@ public class Account extends AppCompatActivity {
     private EditText editTextName, editTextEmail, editTextPassword;
     public String url = URLManager.MY_URL;
 
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class Account extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
 
-
+        client = new OkHttpClient();
         String username = UserDataManager.getInstance(Account.this).getEmail();
 
         // Inflate the dialog layout inside the onCreate method
@@ -158,139 +159,8 @@ public class Account extends AppCompatActivity {
     }
 
 
-    private void showEditProfileModal(String firstName, String lastName, String email, String password, String age, String gender,  String height , String weight) {
-        Dialog editProfileDialog = new Dialog(this);
-        editProfileDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        editProfileDialog.setContentView(R.layout.dialog_edit_profile);
-
-        // Find views from the inflated dialog layout
-        EditText editTextFirstName = editProfileDialog.findViewById(R.id.editText_first_name);
-        EditText editTextLastName = editProfileDialog.findViewById(R.id.editText_last_name);
-        EditText editTextEmail = editProfileDialog.findViewById(R.id.editText_email);
-        EditText editTextPassword = editProfileDialog.findViewById(R.id.editText_password);
-        EditText editTextWeight = editProfileDialog.findViewById(R.id.editText_weight);
-        EditText editTextHeight = editProfileDialog.findViewById(R.id.editText_height);
-        EditText editTextAge = editProfileDialog.findViewById(R.id.editText_age);
-        EditText editTextGender = editProfileDialog.findViewById(R.id.editText_gender);
-        Button btnSave = editProfileDialog.findViewById(R.id.button_save);
-        Button btnCancel = editProfileDialog.findViewById(R.id.button_cancel);
-
-        // Set values to EditText views
-        editTextFirstName.setText(firstName);
-        editTextLastName.setText(lastName);
-        editTextEmail.setText(email);
-        editTextPassword.setText(password);
-        editTextWeight.setText(weight);
-        editTextHeight.setText(height);
-        editTextAge.setText(age);
-        editTextGender.setText(gender);
-
-        // Set click listeners for buttons
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Retrieve text from EditText views
-                String updatedFirstName = editTextFirstName.getText().toString();
-                String updatedLastName = editTextLastName.getText().toString();
-                String updatedEmail = editTextEmail.getText().toString();
-                String updatedPassword = editTextPassword.getText().toString();
-                String updatedAge = editTextAge.getText().toString();
-                String updatedGender = editTextGender.getText().toString();
-                String updatedHeight = editTextHeight.getText().toString();
-                String updatedWeight = editTextWeight.getText().toString();
-
-                // Perform save operation
-                saveProfile(updatedFirstName, updatedLastName, updatedEmail, updatedPassword, updatedAge, updatedGender, updatedHeight, updatedWeight);
-
-                // Dismiss the dialog after saving
-                editProfileDialog.dismiss();
-            }
-        });
-
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Dismiss the dialog without saving
-                editProfileDialog.dismiss();
-            }
-        });
-
-        // Show the dialog
-        editProfileDialog.show();
-    }
-
-
-
-    private void saveProfile(String updatedFirstName, String updatedLastName, String updatedEmail, String updatedPassword, String updatedAge, String updatedGender, String updatedHeight, String updatedWeight) {
-        // Perform validation if needed
-        // Example: Check if fields are empty
-        if (updatedFirstName.isEmpty() || updatedLastName.isEmpty() || updatedEmail.isEmpty() || updatedPassword.isEmpty() || updatedAge.isEmpty() || updatedGender.isEmpty() || updatedHeight.isEmpty() || updatedWeight.isEmpty()) {
-            Toast.makeText(Account.this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Create OkHttp client
-        OkHttpClient client = new OkHttpClient();
-
-        // Create form body with the parameters
-        RequestBody formBody = new FormBody.Builder()
-                .add("FirstName", updatedFirstName)
-                .add("LastName", updatedLastName)
-                .add("Email", updatedEmail)
-                .add("Password", updatedPassword)
-                .add("Age", updatedAge)
-                .add("Gender", updatedGender)
-                .add("Height", updatedHeight)
-                .add("Weight", updatedWeight)
-                .build();
-
-        // Create request
-        Request request = new Request.Builder()
-                .url("YOUR_SERVER_URL")
-                .post(formBody)
-                .build();
-
-        // Execute the request asynchronously
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                // Handle failure
-                e.printStackTrace();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(Account.this, "Failed to save profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // Handle response
-                if (response.isSuccessful()) {
-                    // Profile saved successfully
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Account.this, "Profile saved successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    // Error saving profile
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(Account.this, "Failed to save profile: " + response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            }
-        });
-    }
 
     private  void fetchData(String username) {
-        OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username parameter
         String fetchUrl = url+ "/User/fetch_user_data.php?Username=" + username;
@@ -450,7 +320,6 @@ public class Account extends AppCompatActivity {
                 .build();
 
 
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url+"/User/update-profile.php")
                 .post(requestBody)
@@ -521,6 +390,15 @@ public class Account extends AppCompatActivity {
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 
     @Override

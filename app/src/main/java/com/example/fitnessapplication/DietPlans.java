@@ -32,6 +32,7 @@ public class DietPlans extends Fragment {
 
     private View rootView; // Declare rootView as a class-level variable
 
+    private OkHttpClient client;
     private TextView currentWeektext;
     private TextView currentDietplan, navplans, currentWeek;
     private RecyclerView recyclerView;
@@ -87,6 +88,8 @@ public class DietPlans extends Fragment {
         adapter = new DietPlanAdapter(dietPlanList);
         recyclerView.setAdapter(adapter);
 
+
+        client = new OkHttpClient();
         fetchDietPlans();
 
         navplans.setOnClickListener(new View.OnClickListener() {
@@ -122,7 +125,6 @@ public class DietPlans extends Fragment {
         String username = userDataManager.getEmail();
         String url = URLManager.MY_URL + "/User/api/get_diet_plans.php?IdNum=" + username;
 
-        OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
                 .url(url)
@@ -211,4 +213,12 @@ public class DietPlans extends Fragment {
         });
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
+    }
 }

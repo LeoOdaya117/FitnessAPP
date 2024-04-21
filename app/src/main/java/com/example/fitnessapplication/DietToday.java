@@ -415,4 +415,13 @@ public class DietToday extends Fragment implements View.OnClickListener {
         });
         builder.create().show();
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
+    }
 }

@@ -38,12 +38,15 @@ public class WeightLogs extends AppCompatActivity {
 
     private LinearLayout weightContainer;
     private ImageView back;
+    private OkHttpClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weight_logs);
 
+
+        client = new OkHttpClient();
         weightContainer = findViewById(R.id.weightContainer);
         back = findViewById(R.id.backButton);
 
@@ -111,7 +114,6 @@ public class WeightLogs extends AppCompatActivity {
     }
 
     private void fetchWeightLog(String userId) {
-        OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = new FormBody.Builder()
                 .add("email", userId)
                 .build();

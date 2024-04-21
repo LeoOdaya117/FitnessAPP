@@ -34,11 +34,12 @@ import okhttp3.Response;
 
 public class Workout extends AppCompatActivity {
 
+    private OkHttpClient client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_workout);
-
+        client = new OkHttpClient();
         // Retrieve the category name from the intent extras
         String category = getIntent().getStringExtra("category");
 
@@ -98,7 +99,7 @@ public class Workout extends AppCompatActivity {
     }
 
     private void fetchData(String workoutset) {
-        OkHttpClient client = new OkHttpClient();
+
         String apiurl = URLManager.MY_URL +"/User/api/fetch_workoutset.php?workoutset=" + workoutset;
         HttpUrl.Builder urlBuilder = HttpUrl.parse(URLManager.MY_URL + "/User/api/fetch_workoutset.php").newBuilder();
         urlBuilder.addQueryParameter("workoutset", workoutset);

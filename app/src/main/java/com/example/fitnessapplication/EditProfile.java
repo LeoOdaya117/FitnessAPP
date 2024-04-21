@@ -45,7 +45,7 @@ import okhttp3.Response;
 public class EditProfile extends AppCompatActivity {
     private JSONObject userData;
     private static final int PICK_IMAGE_REQUEST = 1;
-
+    private OkHttpClient client;
     private Uri imageurl;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +64,8 @@ public class EditProfile extends AppCompatActivity {
         ImageView backbtn = findViewById(R.id.backButton);
         TextView changeprof = findViewById(R.id.changeprof);
         TextView textViewSave = findViewById(R.id.textViewSave);
+
+        client = new OkHttpClient();
 
         String username = UserDataManager.getInstance(EditProfile.this).getEmail();
         fetchData(username);
@@ -189,7 +191,6 @@ public class EditProfile extends AppCompatActivity {
                 .build();
 
 
-        OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(URLManager.MY_URL+"/User/update-profile.php")
                 .post(requestBody)
@@ -273,7 +274,6 @@ public class EditProfile extends AppCompatActivity {
 //        }
 
         // Create OkHttp client
-        OkHttpClient client = new OkHttpClient();
 
         // Create form body with the parameters
         RequestBody formBody = new FormBody.Builder()
@@ -332,7 +332,6 @@ public class EditProfile extends AppCompatActivity {
         });
     }
     private void fetchData(String username) {
-        OkHttpClient client = new OkHttpClient();
 
         // Construct the URL with the username parameter
         String fetchUrl = URLManager.MY_URL + "/User/fetch_user_data.php?Username=" + username;
@@ -441,5 +440,14 @@ public class EditProfile extends AppCompatActivity {
                 .setMessage("Server Response: \n" + response )
                 .setPositiveButton("OK", null)
                 .show();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // Cancel ongoing OkHttpClient calls when fragment is destroyed
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
     }
 }

@@ -274,9 +274,13 @@ public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerci
         }
     }
 
+
+
     interface DataFetchCallback {
         void onSuccess(JSONObject result);
 
         void onFailure(String errorMessage);
     }
+
+
 }
