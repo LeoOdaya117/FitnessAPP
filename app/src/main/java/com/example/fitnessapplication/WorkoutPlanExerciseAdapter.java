@@ -312,6 +312,10 @@ public class WorkoutPlanExerciseAdapter extends RecyclerView.Adapter<WorkoutPlan
             if (set.isEmpty() && reps.isEmpty()) {
                 setRepsTextView.setText("Duration: " + duration);
                 durationTextView.setVisibility(View.GONE); // Hide duration TextView
+            }else if (!set.isEmpty() && reps.isEmpty()) {
+                setRepsTextView.setText("Sets: " + set);
+                durationTextView.setText("Duration: " + duration);
+                durationTextView.setVisibility(View.VISIBLE); // Hide duration TextView
             } else {
                 // Display sets and reps
                 setRepsTextView.setText("Sets: " + set);

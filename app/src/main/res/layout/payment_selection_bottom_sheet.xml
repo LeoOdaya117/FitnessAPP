@@ -39,9 +39,10 @@
         <TextView
             android:id="@+id/textViewCash"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/black"
-
+            android:textAlignment="textStart"
+            android:gravity="center"
             android:text="Cash"
             android:textSize="16sp"
             android:layout_marginStart="16dp"/>
@@ -73,9 +74,10 @@
         <TextView
             android:id="@+id/textViewGcash"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/black"
-
+            android:textAlignment="textStart"
+            android:gravity="center"
             android:text="GCash"
             android:textSize="16sp"
             android:layout_marginStart="16dp"/>

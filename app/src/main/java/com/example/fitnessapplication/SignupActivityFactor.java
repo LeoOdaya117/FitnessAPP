@@ -131,7 +131,7 @@ public class SignupActivityFactor extends AppCompatActivity {
 
     }
 
-    public double bmr() {
+    public double bmi() {
         // Get weight in kilograms and height in centimeters
         float weightKg = UserDataManager.getInstance(SignupActivityFactor.this).getWeight();
         float heightCm = UserDataManager.getInstance(SignupActivityFactor.this).getHeight();

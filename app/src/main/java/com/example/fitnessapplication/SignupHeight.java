@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 public class SignupHeight extends AppCompatActivity {
 
+    public double targetcal =0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,8 @@ public class SignupHeight extends AppCompatActivity {
                 }
 
 
+
+
                 if(currentheightText == null || TextUtils.isEmpty(currentheightText) ){
                     showalert();
                     return;
@@ -69,6 +73,12 @@ public class SignupHeight extends AppCompatActivity {
                 // Calculate BMI
                 double bmi = bmi(currentHeight);
 
+
+
+
+                float floatValue = (float)  bmr();
+
+                UserDataManager.getInstance(SignupHeight.this).saveBMR(floatValue);
 // Determine fitness category and recommendation
                 String fitnessCategory;
                 String fitnessGoal = "";
@@ -88,7 +98,7 @@ public class SignupHeight extends AppCompatActivity {
 
 // Display BMI, fitness category, and fitness goal recommendation
                 titleTextView.setText("Your Basal Mass Index (BMI)");
-                messageTextView.setText("Your BMI is: " + bmi + "\nFitness Category: " + fitnessCategory + "\n\n" + fitnessGoal);
+                messageTextView.setText("Your BMI is: " + bmi + "\nBMR: "+floatValue+"\nFitness Category: " + fitnessCategory + "\n\n" + fitnessGoal);
 
                 AlertDialog dialog = builder.create();
 
@@ -98,7 +108,7 @@ public class SignupHeight extends AppCompatActivity {
                         dialog.dismiss(); // Dismiss the dialog when the OK button is clicked
 
                         // Create an Intent to start the next activity
-                        Intent intent = new Intent(SignupHeight.this, SignupGoal.class);
+                        Intent intent = new Intent(SignupHeight.this, signup1.class);
                         // Put the selected card ID as an extra to the intent
 
                         // Start the activity
@@ -140,4 +150,41 @@ public class SignupHeight extends AppCompatActivity {
 
         return  bmi = Math.round(bmi * 100.0) / 100.0;
     }
+
+    public double bmr()
+    {
+        String goal = UserDataManager.getInstance(SignupHeight.this).getGoal();
+        String gender = UserDataManager.getInstance(SignupHeight.this).getGender();
+        int age = UserDataManager.getInstance(SignupHeight.this).getAge();
+        float weight = UserDataManager.getInstance(SignupHeight.this).getWeight();
+        float height = UserDataManager.getInstance(SignupHeight.this).getHeight();
+
+
+        if (age == 0 || gender == null || weight == 0 || height == 0) {
+//            showMissingDataDialog();
+
+        }
+        // Calculate BMR based on Harris-Benedict equation
+        double bmr;
+        if (gender.equalsIgnoreCase("Male")) { // Male
+            bmr = 88.362 + (13.397 * weight) + (4.799 * height) - (5.677 * age);
+        } else { // Female
+            bmr = 447.593 + (9.247 * weight) + (3.098 * height) - (4.330 * age);
+        }
+
+
+        double targetCalories = bmr;
+
+        targetCalories = Math.round(targetCalories * 100.0) / 100.0;
+
+        if(goal.equals("Loss Weight")){
+            targetCalories = targetCalories - 500;
+        } else if (goal.equals("Gain Weight")) {
+            targetCalories = targetCalories + 500;
+        }
+
+        return targetCalories;
+
+    }
+
 }

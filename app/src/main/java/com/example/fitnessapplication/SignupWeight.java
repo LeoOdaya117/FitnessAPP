@@ -10,16 +10,27 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-public class SignupWeight extends AppCompatActivity {
-
-
+public class  SignupWeight extends AppCompatActivity {
+    public LinearLayout targetWeightLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup_weight);
+        String fitnessGoal = UserDataManager.getInstance(SignupWeight.this).getGoal();
 
+        targetWeightLayout = findViewById(R.id.targetWeightLayout);
+        Toast.makeText(SignupWeight.this, "Fitness Goal: " + fitnessGoal, Toast.LENGTH_SHORT).show();
+
+        if(fitnessGoal.equals("Maintain Weight")){
+            targetWeightLayout.setVisibility(View.VISIBLE);
+        }
+        else{
+            targetWeightLayout.setVisibility(View.GONE);
+
+        }
 
         Button backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +69,7 @@ public class SignupWeight extends AppCompatActivity {
                 }
 //                Toast.makeText(SignupWeight.this, "Current Weight: " + currentWeight + " kg\nTarget Weight: " + targetWeight + " kg", Toast.LENGTH_SHORT).show();
 
-                if(currentWeightText == null || TextUtils.isEmpty(currentWeightText) || targetWeightText == null || TextUtils.isEmpty(targetWeightText)){
+                if(currentWeightText == null || TextUtils.isEmpty(currentWeightText)){
                     showalert();
                 }else{
                     UserDataManager.getInstance(SignupWeight.this).saveTargetWeight(targetWeight);

@@ -137,7 +137,7 @@ public class Plans extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Start SignupAge activity when user confirms
 
-                        Intent intent = new Intent(getActivity(), SignupGender.class);
+                        Intent intent = new Intent(getActivity(), SignupGoal.class);
                         startActivity(intent);
                     }
                 });

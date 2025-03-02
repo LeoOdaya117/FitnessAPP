@@ -137,7 +137,7 @@ public class signupFinish extends AppCompatActivity {
         float goalWeight = userDataManager.getTargetWeight();
         float height = userDataManager.getHeight();
         float bmr = userDataManager.getSBMR();
-        String fitnessGoal = userDataManager.getFL();
+        String fitnessGoal = userDataManager.getGoal();
 
         DecimalFormat decimalFormat = new DecimalFormat("#.##");
         String weightString = decimalFormat.format(weight);

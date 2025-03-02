@@ -3,6 +3,7 @@ package com.example.fitnessapplication;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,6 +63,7 @@ public class WorkoutPlanExerciseFetcher {
                     if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
                     String jsonData = response.body().string();
+                    Log.d("Workout today: ", jsonData);
                     List<WorkoutPlanExercise> exercises = parseJsonData(jsonData);
 
                     // Assuming you have a context available, you can use it to get the main looper
@@ -86,7 +88,6 @@ public class WorkoutPlanExerciseFetcher {
 
     private List<WorkoutPlanExercise> parseJsonData(String jsonData) {
         List<WorkoutPlanExercise> exercises = new ArrayList<>();
-
         try {
             JSONArray jsonArray = new JSONArray(jsonData);
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -102,7 +103,7 @@ public class WorkoutPlanExerciseFetcher {
                         jsonObject.getString("duration"),
                         jsonObject.getString("Difficulty")
                 );
-                exercises.add(exercise);
+                 exercises.add(exercise);
             }
         } catch (Exception e) {
             e.printStackTrace();

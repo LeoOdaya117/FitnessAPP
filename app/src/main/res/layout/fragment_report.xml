@@ -32,7 +32,7 @@
         <!-- Goal Weight TextView -->
         <Button
             android:id="@+id/log_button"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_weight="1"
             android:text="Log"
@@ -141,6 +141,98 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/secondCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:elevation="4dp"
+            android:padding="16dp"
+            app:cardCornerRadius="8dp"
+            android:layout_marginTop="20dp"
+            android:visibility="gone">
+
+            <!-- Linear Layout containing weightTEXT and lineChart -->
+            <LinearLayout
+                android:id="@+id/predictlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+
+                <!-- Linear Layout containing TextViews -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Current Weight TextView -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Current"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp"
+                        />
+
+                    <!-- Goal Weight TextView -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Target Weight"
+                        android:textColor="@color/text_color"
+                        android:textSize="15sp"
+                        android:gravity="end" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center_vertical">
+                    <!-- Current Weight TextView -->
+                    <TextView
+                        android:id="@+id/current"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="No data"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <!-- Goal Weight TextView -->
+                    <TextView
+                        android:id="@+id/target"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="No data"
+                        android:textColor="@color/black"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:gravity="end" />
+
+                </LinearLayout>
+
+                <!-- LineChart -->
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart2"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:foregroundTint="@color/black"
+                    />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,7 +256,7 @@
     </LinearLayout>
     <!-- Second CardView -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/secondCardView"
+        android:id="@+id/thirdCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="4dp"

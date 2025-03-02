@@ -41,7 +41,7 @@ public class SignupGoal extends AppCompatActivity {
 //                Toast.makeText(SignupGoal.this, "Goal: " + goal, Toast.LENGTH_SHORT).show();
                 UserDataManager.getInstance(SignupGoal.this).saveGoal(goal);
 
-                Intent intent = new Intent(SignupGoal.this, SignupActivityFactor.class);
+                Intent intent = new Intent(SignupGoal.this, SignupGender.class);
                 // Put the selected card ID as an extra to the intent
 
                 // Start the activity

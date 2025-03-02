@@ -187,7 +187,7 @@ public class SubscriptionAdapter extends RecyclerView.Adapter<SubscriptionAdapte
                 public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                     if (response.isSuccessful()) {
                         // Handle subscription success
-                        showToast("Subscription Request successful!: ");
+                        showToast(response.body().string());
                     } else {
                         // Handle subscription failure
                         showToast("Subscription failed: " + response.message());

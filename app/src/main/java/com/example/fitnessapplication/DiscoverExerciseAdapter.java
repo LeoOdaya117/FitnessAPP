@@ -62,12 +62,17 @@ public class DiscoverExerciseAdapter extends RecyclerView.Adapter<DiscoverExerci
         if (set.isEmpty() && reps.isEmpty()) {
             holder.setRepsTextView.setText("Duration: " + duration);
             holder.durationTextView.setVisibility(View.GONE); // Hide duration TextView
+        }else if (!set.isEmpty() && reps.isEmpty()) {
+            holder.setRepsTextView.setText("Sets: " + set);
+            holder.durationTextView.setText("Duration: " + duration);
+            holder.durationTextView.setVisibility(View.VISIBLE); // Hide duration TextView
         } else {
             // Display sets and reps
             holder.setRepsTextView.setText("Sets: " + set);
             holder.durationTextView.setText("Reps: " + reps);
             holder.durationTextView.setVisibility(View.VISIBLE); // Show duration TextView
         }
+
         holder.todayExerciseCard.setTag(item.getExerciseId());
         holder.infoImageView.setTag(item.getExerciseId());
         holder.exerciseNameTextView.setText(item.getName());

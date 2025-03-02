@@ -205,6 +205,15 @@ public class UserDataManager {
         return sharedPreferences.getString("name", "");
     }
 
+    public void saveCreatedDate(String date) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("cdate", date);
+        editor.apply();
+    }
+
+    public String getCreatedDate() {
+        return sharedPreferences.getString("cdate", "");
+    }
 
 }
 

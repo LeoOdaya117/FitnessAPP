@@ -2,6 +2,7 @@ package com.example.fitnessapplication;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -38,6 +39,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
@@ -50,7 +52,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import android.os.Bundle;
+import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatter;
 public class Report extends Fragment {
 
     private LineChart chart;
@@ -58,11 +71,12 @@ public class Report extends Fragment {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private TextView currentWeight, goalText, BMIText, fitnessCategory, currentHeight;
-    private String email;
+    public String email, goal;
 
     private OkHttpClient client;
 
-
+    private float currentweight, targetweight;
+    public double CurWeight,UserpredictedWeight;
     public Report() {
         // Required empty public constructor
     }
@@ -83,9 +97,11 @@ public class Report extends Fragment {
         client = new OkHttpClient();
         email = UserDataManager.getInstance(getContext()).getEmail();
         fetchWeightLog(email);
-        fetchPredictedWeight(email);
-        fetchUseData(email);
+        fetchUserDataAndPredictedWeight(email);
 
+//        String jsonresult = calculateWeightProgress(currentweight, targetweight);
+
+//        showAlert("Predicted Wieght", jsonresult);
         Button log_button = view.findViewById(R.id.log_button);
         log_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +118,8 @@ public class Report extends Fragment {
                 showAlertInputDialog("Height", "Update Your Height");
             }
         });
+
+
 
         return view;
     }
@@ -133,9 +151,11 @@ public class Report extends Fragment {
 
             @Override
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
                 if (response.isSuccessful()) {
                     try {
                         String jsonData = response.body().string();
+                        Log.d("USER DATA", jsonData);
                         JSONObject jsonObject = new JSONObject(jsonData);
 
                         // Check if user data exists
@@ -169,6 +189,10 @@ public class Report extends Fragment {
                 } else {
                     getActivity().runOnUiThread(() -> {
                         // Handle HTTP error
+                        String jsonData = response.message().toString();
+                        Log.d("USER DATA", jsonData); // Log the actual response data
+
+
                         showAlert("Error", "Failed to fetch user data. Status code: " + response.code());
                     });
                 }
@@ -176,12 +200,43 @@ public class Report extends Fragment {
         });
     }
 
+
+    public String calculateWeightProgress(float currentWeightKg, float targetWeightKg) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate targetDate = currentDate.plusWeeks((long) Math.ceil((currentWeightKg - targetWeightKg) / 1.5f));
+
+        JSONArray jsonArray = new JSONArray();
+
+        float currentWeight = currentWeightKg;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        for (LocalDate date = currentDate; date.isBefore(targetDate) || date.isEqual(targetDate); date = date.plusWeeks(1)) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("date", date.format(formatter));
+                jsonObject.put("weight", currentWeight + " kg");
+                jsonArray.put(jsonObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            currentWeight -= 1.5; // Assuming a linear decrease in weight each week
+
+            if (currentWeight < targetWeightKg) {
+                break;
+            }
+        }
+
+        return jsonArray.toString();
+    }
     // Helper method to check network connectivity
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
+
+
 
 
 
@@ -197,8 +252,10 @@ public class Report extends Fragment {
             // User data is available, proceed with updating the UI
             String currentHeightValue = jsonObject.getString("Height");
             String currentWeightValue = jsonObject.getString("Weight");
+            goal = jsonObject.getString("fitnessGoal");
             double heightInMeters = Double.parseDouble(currentHeightValue) / 100.0;
             double weightInKg = Double.parseDouble(currentWeightValue);
+            CurWeight = Double.parseDouble(currentWeightValue);
             double BMI = weightInKg / (heightInMeters * heightInMeters);
             String formattedBMI = String.format("%.2f", BMI);
             String goalweight = jsonObject.getString("goalweight") + " kg";
@@ -422,9 +479,12 @@ public class Report extends Fragment {
                                     if (jsonResponse.has("predicted_date") && jsonResponse.has("predicted_weight")) {
                                         String predictedDate = jsonResponse.getString("predicted_date");
                                         float predictedWeight = (float) jsonResponse.getDouble("predicted_weight");
-
+                                        UserpredictedWeight  = (float) jsonResponse.getDouble("predicted_weight");
                                         goalText.setText(jsonResponse.getString("predicted_weight") + " kg");
                                         handlePredictedWeightResponse(predictedWeight, predictedDate);
+                                        if (CurWeight != 0 && UserpredictedWeight != 0 && goal != null) {
+                                            showProgressRecommendationDialog(CurWeight, UserpredictedWeight, goal);
+                                        }
                                     } else {
 //                                        showAlert("Error", "Invalid response format. Missing predicted_date or predicted_weight.");
                                     }
@@ -451,6 +511,12 @@ public class Report extends Fragment {
                 }
             }
         });
+    }
+
+    private void fetchUserDataAndPredictedWeight(String userId) {
+        // Call both fetchUserData and fetchPredictedWeight asynchronously
+        fetchUseData(userId);
+        fetchPredictedWeight(userId);
     }
 
     private void handleWeightLogsResponse(ArrayList<Float> weights, ArrayList<String> dates) {
@@ -638,6 +704,7 @@ public class Report extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         fetchUseData(email);
                         fetchWeightLog(email);
+                        fetchPredictedWeight(email);
                         handleSaveResult(result);
                     });
                 } else {
@@ -683,6 +750,54 @@ public class Report extends Fragment {
                 }
             }
         });
+    }
+    public void showProgressRecommendationDialog(double curWeight, double userPredictedWeight, String fitnessGoal) {
+        // Calculate the difference between predicted weight and current weight
+        double weightDifference = userPredictedWeight - curWeight;
+
+        // Create AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Progress Recommendation");
+
+        // Check fitness goal and weight difference to provide recommendation
+        if (fitnessGoal != null) {
+            if (fitnessGoal.equals("Loss Weight")) {
+                if (weightDifference >= 0) {
+                    builder.setMessage("Your weight is not decreasing. Here are some tips:\n1. Maintain a balanced diet.\n2. Increase physical activity.");
+                } else {
+                    builder.setMessage("Your weight is decreasing. Keep up the good work!");
+                }
+            } else if (fitnessGoal.equals("Maintain Weight")) {
+                if (Math.abs(weightDifference) > 0.5) { // Adjust threshold as needed
+                    builder.setMessage("Your weight has changed. Here are some tips to maintain weight:\n1. Monitor your food intake.\n2. Stay active.");
+                } else {
+                    builder.setMessage("Your weight is stable. Well done!");
+                }
+            } else if (fitnessGoal.equals("Gain Weight")) {
+                if (weightDifference <= 0) {
+                    builder.setMessage("Your weight is not increasing. Here are some tips:\n1. Increase calorie intake with healthy foods.\n2. Incorporate strength training.");
+                } else {
+                    builder.setMessage("Your weight is increasing. Good job!");
+                }
+            } else {
+                // Handle unknown fitness goals
+                builder.setMessage("Unknown fitness goal. Please consult a fitness expert for personalized recommendations.");
+            }
+        } else {
+            // Handle null fitness goal
+            builder.setMessage("Fitness goal is null. Please set a valid fitness goal:  " + weightDifference);
+        }
+
+        // Add OK button
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss(); // Dismiss the dialog when OK is clicked
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void handleSaveResult(String result) {

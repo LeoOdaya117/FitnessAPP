@@ -150,18 +150,22 @@ public class Discover extends Fragment {
             }
         });
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new CustomRecyclerView.OnScrollListener() {
+            private static final int SCROLL_THRESHOLD = 20; // Adjust this threshold as needed
+
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                // Check if the user has scrolled past a certain threshold
-                if (dy > 0 && scrollUpButton.getVisibility() == View.GONE) {
-                    // Scrolling down, show the scroll up button
-                    scrollUpButton.setVisibility(View.VISIBLE);
-                } else if (dy < 0 && scrollUpButton.getVisibility() == View.VISIBLE) {
-                    // Scrolling up, hide the scroll up button
-                    scrollUpButton.setVisibility(View.GONE);
+                // Check if the absolute value of dy is greater than the threshold (indicating a significant scroll)
+                if (Math.abs(dy) > SCROLL_THRESHOLD) {
+                    if (dy > 0 && scrollUpButton.getVisibility() != View.VISIBLE) {
+                        // Scrolling downward, show the scroll up button
+                        scrollUpButton.setVisibility(View.VISIBLE);
+                    } else if (dy < 0 && scrollUpButton.getVisibility() == View.VISIBLE) {
+                        // Scrolling upward, hide the scroll up button
+                        scrollUpButton.setVisibility(View.GONE);
+                    }
                 }
             }
         });

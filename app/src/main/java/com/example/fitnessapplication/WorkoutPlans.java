@@ -117,7 +117,7 @@ public class WorkoutPlans extends Fragment {
         CurrentWorkPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                UserDataManager.getInstance(getContext()).saveCreatedDate(CurrentWorkPlan.getTag().toString());
                 UserDataManager.getInstance(getContext()).saveWorkoutPlanId(currentweekTextView.getText().toString());
                 FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -204,14 +204,17 @@ public class WorkoutPlans extends Fragment {
                                         throw new RuntimeException(e);
                                     }
                                     String currentTitle = null;
+                                    String datecreated = null;
                                     try {
                                         currentTitle = currentPlan.getString("WorkoutPlanID");
+                                        datecreated = currentPlan.getString("DateCreated");
                                     } catch (JSONException e) {
                                         throw new RuntimeException(e);
                                     }
                                     String currentDetails = "Workout Plan details for Week " + currentTitle;
                                     currentweekTextView.setText(currentTitle);
                                     currentdetailsTextView.setText(currentDetails);
+                                    CurrentWorkPlan.setTag(datecreated);
                                 }
 
                                 // Process the previous workout plans
@@ -228,7 +231,9 @@ public class WorkoutPlans extends Fragment {
                                             JSONObject previousPlan = previousPlans.getJSONObject(i);
                                             String title = previousPlan.getString("WorkoutPlanID");
                                             String details = "Workout Plan details for Week " + title;
-                                            workoutPlanList.add(new WorkoutPlan(title, details));
+                                            String date = previousPlan.getString("DateCreated");
+
+                                            workoutPlanList.add(new WorkoutPlan(title, details,date));
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -257,14 +262,14 @@ public class WorkoutPlans extends Fragment {
         });
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // Cancel ongoing OkHttpClient calls when fragment is destroyed
-        if (client != null) {
-            client.dispatcher().cancelAll();
+        @Override
+        public void onDestroyView() {
+            super.onDestroyView();
+            // Cancel ongoing OkHttpClient calls when fragment is destroyed
+            if (client != null) {
+                client.dispatcher().cancelAll();
+            }
         }
-    }
 
 
 

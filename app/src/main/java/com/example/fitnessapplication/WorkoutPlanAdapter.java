@@ -33,8 +33,11 @@ public class WorkoutPlanAdapter extends RecyclerView.Adapter<WorkoutPlanAdapter.
     @Override
     public void onBindViewHolder(@NonNull WorkoutPlanViewHolder holder, int position) {
         WorkoutPlan workoutPlan = workoutPlanList.get(position);
+
+        holder.workoutplansCard.setTag(workoutPlan.getdate());
         holder.titleTextView.setText(workoutPlan.getTitle());
         holder.detailsTextView.setText(workoutPlan.getDetails());
+
 
 
     }
@@ -65,6 +68,7 @@ public class WorkoutPlanAdapter extends RecyclerView.Adapter<WorkoutPlanAdapter.
 
                     // Save workout plan ID
                     String workoutPlanId = titleTextView.getText().toString();
+
                     UserDataManager.getInstance(context).saveWorkoutPlanId(workoutPlanId);
 
                     // Navigate to WorkoutPlanDays fragment

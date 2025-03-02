@@ -178,13 +178,13 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
                     android:padding="8dp"
-                    android:src="@drawable/maintain" />
+                    android:src="@drawable/target" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
-                    android:text="Maintain Weight"
+                    android:text="Reach target Goal"
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     android:textStyle="bold" />

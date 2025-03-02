@@ -3,10 +3,12 @@ public class WorkoutPlan {
     private String title;
     private String details;
     private String id;
+    private String date;
 
-    public WorkoutPlan(String title, String details) {
+    public WorkoutPlan(String title, String details, String date) {
         this.title = title;
         this.details = details;
+        this.date = date;
 
     }
 
@@ -20,6 +22,9 @@ public class WorkoutPlan {
 
     public String getID() {
         return id;
+    }
+    public String getdate() {
+        return date;
     }
 }
 

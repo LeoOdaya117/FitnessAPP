@@ -158,7 +158,7 @@ public class ForgotPassword extends AppCompatActivity {
                     String responseBody = response.body().string();
                     // Handle the response from the server (e.g., show success message)
                     runOnUiThread(() -> {
-                        Toast.makeText(ForgotPassword.this, "Token Save!: " + responseBody, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ForgotPassword.this, "Token Save!: " + responseBody, Toast.LENGTH_SHORT).show();
                     });
                 } else {
                     // Handle HTTP error
